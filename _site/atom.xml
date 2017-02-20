@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>No Excuses CCIE</title>
- <link href="http://localhost:4000/atom.xml" rel="self"/>
- <link href="http://localhost:4000/"/>
- <updated>2017-02-20T16:22:26-05:00</updated>
- <id>http://localhost:4000</id>
+ <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
+ <link href="http://bsrandall.github.io/"/>
+ <updated>2017-02-20T16:39:21-05:00</updated>
+ <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
    <email></email>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Hello World</title>
-   <link href="http://localhost:4000/general/2017/02/20/Hello-World/"/>
+   <link href="http://bsrandall.github.io/general/2017/02/20/Hello-World/"/>
    <updated>2017-02-20T00:00:00-05:00</updated>
-   <id>http://localhost:4000/general/2017/02/20/Hello World</id>
+   <id>http://bsrandall.github.io/general/2017/02/20/Hello-World</id>
    <content type="html">&lt;p&gt;This is my first post in my newly launched blog. I decided to go with Jekyll and a GitHub page for my blog backend. I wanted my content to be in Markdown, as that seems to be the authoring flavor of the day. Jekyll and GitHub just made sense due to their support of Markdown.&lt;/p&gt;
 
 &lt;p&gt;Our knowledge is at its pinnacle when we can fluidly explain topics to others. That is my main motivation for this blog. There most likely will not be any ground breaking content, but I hope to explain some of the topics in a way that makes sense.&lt;/p&gt;
@@ -31,6 +31,28 @@ SW1# switchport mode trunk
 &lt;/div&gt;
 
 &lt;p&gt;Well I am off to the races. Or as most of those who have gone before me stress, off to start the marathon!&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Git</title>
+   <link href="http://bsrandall.github.io/2017/02/20/Git/"/>
+   <updated>2017-02-20T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/2017/02/20/Git</id>
+   <content type="html">&lt;p&gt;layout: post
+title: Git
+category: General
+tag: tools
+—&lt;/p&gt;
+
+&lt;p&gt;I am not a git master, nor do I strive to become one. But I do need to know some basic details to manage this blog as well as my INE VIRL configurations. There are probably better ways to do this, but for my purposes, these are the commands I am running to push my updates from my MacBook to by GitHub page:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git add --all
+~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git commit -m &quot;update notes&quot;
+~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git push -u origin master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 </content>
  </entry>
