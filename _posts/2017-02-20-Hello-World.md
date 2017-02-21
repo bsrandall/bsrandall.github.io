@@ -4,8 +4,6 @@ title: Hello World
 category: General
 tag: inspiration
 ---
-
-
 This is my first post in my newly launched blog. I decided to go with Jekyll and a GitHub page for my blog backend. I wanted my content to be in Markdown, as that seems to be the authoring flavor of the day. Jekyll and GitHub just made sense due to their support of Markdown.
 
 Our knowledge is at its pinnacle when we can fluidly explain topics to others. That is my main motivation for this blog. There most likely will not be any ground breaking content, but I hope to explain some of the topics in a way that makes sense.

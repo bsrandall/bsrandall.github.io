@@ -162,29 +162,24 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
       <div class="container content">
         <div class="post">
   <h1 class="post-title">VLANs</h1>
-  <span class="post-date">20 Feb 2017</span>
+  <span class="post-date">21 Feb 2017</span>
    | 
   
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
   
   
   <article>
-    <h4 id="standard-vlans">Standard VLANs</h4>
-<p>Cisco calls VLANS 1 - 1005 Normal VLANs. Of those, VLAN 1 is the Cisco default. You can use this VLAN, but your are not allowed to delete it. VLANs 1002 - 1005 are the Cisco defaults for FDDI and Token Ring. These also cannot be deleted.</p>
+    <p>By default, all VLANs are allowed to traverse an 802.1Q trunk once it is active. To restrict which VLANs are allowed to cross a trunk, you must go into IOS and explicitly define the VLANs that are allowed.</p>
 
-<p>That leaves us VLANs 2 - 1001 as Normal VLANs that we can add or delete as we wish.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1# switchport trunk allow VLAN 15-20,22,25
 
-<p>VLANs 2 - 1001 are pruning eligible, while VLANs 1006 - 4094 are not.</p>
+SW1# switchport trunk allowed vlan add 27
 
-<p>When you delete a VLAN, any LAN ports configured as access ports for that VLAN become inactive until you assign them to a new VLAN.</p>
+SW1# switchport trunk allowed vlan remove 18
+</code></pre>
+</div>
 
-<h4 id="extended-vlans">Extended VLANs</h4>
-<p>Extended VLANs are in the range of 1006 - 4094. Extended range VLANs are not controlled by VTP and cannot be pruned. The router must be in VTP transparent mode in order to create extended VLANs.</p>
-
-<p>Extended range VLANs are not stored in van.dat</p>
-
-<h4 id="vlan-database">VLAN Database</h4>
-<p>Only applies to standard VLANs.</p>
+<p>You must remember that if an allowed VLAN list is already configured on a trunk, issuing the <code class="highlighter-rouge">SW1# switchport trunk allowed vlan 16-20,2,25</code> command will overwrite the previously defined VLANs. You must use the <em>add</em> and <em>remove</em> commands if there is already an allowed clan configuration in the running config.</p>
 
   </article>
 </div>
@@ -195,8 +190,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/layer%202/2017/02/21/Access-Ports/">
-            Access Ports
+          <a href="/vlan/2017/02/21/Dot1q/">
+            Dot1q
             <small>21 Feb 2017</small>
           </a>
         </h3>
@@ -204,18 +199,18 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/general/2017/02/20/Hello-World/">
-            Hello World
-            <small>20 Feb 2017</small>
+          <a href="/vlan/2017/02/21/DTP/">
+            Dynamic Trunking Protocol (DTP)
+            <small>21 Feb 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general/2017/02/20/Git/">
-            Git
-            <small>20 Feb 2017</small>
+          <a href="/vlan/2017/02/21/Access-Ports/">
+            Access Ports
+            <small>21 Feb 2017</small>
           </a>
         </h3>
       </li>
@@ -229,8 +224,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <div id="disqus_thread"></div>
   <script>
 var disqus_config = function () {
-  this.page.url = 'http://bsrandall.github.io/layer%202/2017/02/20/VLANs/'; // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = '/layer%202/2017/02/20/VLANs'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+  this.page.url = 'http://bsrandall.github.io/vlan/2017/02/21/Allowed-VLANs/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/vlan/2017/02/21/Allowed-VLANs'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 };
 (function() {
   var d = document, s = d.createElement('script');

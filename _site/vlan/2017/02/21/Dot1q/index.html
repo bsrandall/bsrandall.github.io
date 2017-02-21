@@ -11,7 +11,7 @@
 
   <title>
     
-      Access Ports &middot; No Excuses CCIE
+      Dot1q &middot; No Excuses CCIE
     
   </title>
 
@@ -161,7 +161,7 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Access Ports</h1>
+  <h1 class="post-title">Dot1q</h1>
   <span class="post-date">21 Feb 2017</span>
    | 
   
@@ -169,12 +169,33 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   
   <article>
-    <p>Access ports are those ports that are connected to end devices, not other switches. We define an access port on the command line with 
-	SW1# switchport mode access</p>
+    <h4 id="trunks">Trunks</h4>
+<p>Dot1q is the standard trunking protocol used for transporting multiple VLANs across a trunk port. A trunk is a point-to-point link that carries the traffic for multiple VLANs across a single trunk. Dot1q is a standard that tags VLANs for identification. The receiving switch will then strip the VLAN tag from the frame before passing it to the appropriate access port.</p>
 
-<p>We will see later with Spanning Tree, that PortFast can and should be used on access ports. This does two things. First, it allows the port to skip the listening phase for faster availability. Second, it prevents the access port from sending TCNs (Topology Change Notifications) every time a user plugs or unplugs a device into the port.</p>
+<p>The full name for Dot1q is IEEE 802.1Q.</p>
 
-<p>Another Spanning Tree feature which will relate to Access ports is BPDU Guard. With BPDU Guard, if the switch receives a BPDU on a port where BPDU Guard was enabled, the port will transition to the errdisabled state.</p>
+<p>The 802.1Q Tagged frame looks like this:
+<img src="http://bsrandall.github.io/public/img/802.1q.png" alt="" /></p>
+
+<ul>
+  <li>The PRI field is the 3-bit 802.1p priority field.</li>
+  <li>The CFI field is always set to 0 for Ethernet switches</li>
+  <li>VLAN ID is a 12-bit field</li>
+</ul>
+
+<p>Because of the extra fields, an 802.1Q frame has an MTU of 1522 bytes.</p>
+
+<p>If a non-802.1Q enabled device or an access port receives a tagged frame, it simply ignores the frame and forwards it as usual.</p>
+
+<h4 id="native-vlan">Native VLAN</h4>
+<p>A Native VLAN on a trunk is the VLAN to which untagged traffic belongs. Across a trunk, the Native VLANs should match on each end.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1# show interface trunk
+</code></pre>
+</div>
+
+<p>will show the Native VLAN for each interface that has active trunking.</p>
+
 
   </article>
 </div>
@@ -185,27 +206,27 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/layer%202/2017/02/20/VLANs/">
+          <a href="/vlan/2017/02/21/DTP/">
+            Dynamic Trunking Protocol (DTP)
+            <small>21 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/vlan/2017/02/21/Allowed-VLANs/">
             VLANs
-            <small>20 Feb 2017</small>
+            <small>21 Feb 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general/2017/02/20/Hello-World/">
-            Hello World
-            <small>20 Feb 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/general/2017/02/20/Git/">
-            Git
-            <small>20 Feb 2017</small>
+          <a href="/vlan/2017/02/21/Access-Ports/">
+            Access Ports
+            <small>21 Feb 2017</small>
           </a>
         </h3>
       </li>
@@ -219,8 +240,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <div id="disqus_thread"></div>
   <script>
 var disqus_config = function () {
-  this.page.url = 'http://bsrandall.github.io/layer%202/2017/02/21/Access-Ports/'; // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = '/layer%202/2017/02/21/Access-Ports'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+  this.page.url = 'http://bsrandall.github.io/vlan/2017/02/21/Dot1q/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/vlan/2017/02/21/Dot1q'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 };
 (function() {
   var d = document, s = d.createElement('script');

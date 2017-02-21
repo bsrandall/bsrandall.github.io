@@ -11,7 +11,7 @@
 
   <title>
     
-      Categories &middot; No Excuses CCIE
+      Dynamic Trunking Protocol (DTP) &middot; No Excuses CCIE
     
   </title>
 
@@ -91,7 +91,7 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
             
             
             
-              <a class="sidebar-nav-item sidebar-nav-item-sub active" href="/blog/categories/">
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
                 Categories
               </a>
           
@@ -160,82 +160,80 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
       </div>
 
       <div class="container content">
-        <div class="page">
-  <h1 class="page-title">Categories</h1>
-  <div class="tags-expo">
-  <div class="tags-expo-list">
-    
-    <a href="#general" class="post-tag">General</a>
-    
-    <a href="#vlan" class="post-tag">VLAN</a>
-    
-  </div>
-  <hr/>
-  <div class="tags-expo-section">
-    
-    <h2 id="general">General</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/general/2017/02/20/Hello-World/">
-      <li>
-        Hello World
-      <small class="post-date">20 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/general/2017/02/20/Git/">
-      <li>
-        Git
-      <small class="post-date">20 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
-    
-    <h2 id="vlan">VLAN</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/vlan/2017/02/21/Dot1q/">
-      <li>
-        Dot1q
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/DTP/">
-      <li>
-        Dynamic Trunking Protocol (DTP)
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/Allowed-VLANs/">
-      <li>
-        VLANs
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/Access-Ports/">
-      <li>
-        Access Ports
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/20/VLANs/">
-      <li>
-        VLANs
-      <small class="post-date">20 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
-    
-  </div>
+        <div class="post">
+  <h1 class="post-title">Dynamic Trunking Protocol (DTP)</h1>
+  <span class="post-date">21 Feb 2017</span>
+   | 
+  
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+  
+  
+  <article>
+    <p>Dynamic Trunking Protocol is a Cisco proprietary protocol that, when configured, attempts to negotiate trunking between two connected ports. It will try to negotiate trunking as well as the encapsulation type.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1# switchport mode dynamic auto - allows the interfaces to become a trunk if the neighboring trunk is set to trunk or desirable mode - this is the default setting for newer Cisco switches - if both ends of a trunk are set to dynamic auto, they will not form a trunk
+SW1# switchport mode dynamic desireable - makes the interface actively attempt to negotiate trunking - the link will become a trunk if the neighbor interface is set to trunk, auto, or desirable
+SW1# switchport nonegotiate - prevents the interface from sending DTP frames - can use this when the interface switch port mode is *access* or *trunk* only - if enabled, to establish a trunk the neighbor interface must be manually set to *trunk*
+</code></pre>
 </div>
 
+
+  </article>
 </div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/vlan/2017/02/21/Dot1q/">
+            Dot1q
+            <small>21 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/vlan/2017/02/21/Allowed-VLANs/">
+            VLANs
+            <small>21 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/vlan/2017/02/21/Access-Ports/">
+            Access Ports
+            <small>21 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+<div class="comments">
+  <h2>Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'http://bsrandall.github.io/vlan/2017/02/21/DTP/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/vlan/2017/02/21/DTP'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = '//your_short_name.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
 
       </div>
     </div>
