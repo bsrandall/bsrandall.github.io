@@ -68,6 +68,28 @@
 					<integer>12</integer>
 				</dict>
 			</dict>
+			<key>2017-02-20-VLANs.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>509320886.45471102</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>22</integer>
+				</dict>
+			</dict>
+			<key>2017-02-21-Access-Ports.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>509370972.80973601</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>23</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>3</integer>
+				</dict>
+			</dict>
 		</dict>
 	</dict>
 	<key>sheetClusters</key>
@@ -87,6 +109,12 @@
 		<array>
 			<string>2017-02-20-Git.md</string>
 		</array>
+		<array>
+			<string>2017-02-20-VLANs.md</string>
+		</array>
+		<array>
+			<string>2017-02-21-Access-Ports.md</string>
+		</array>
 	</array>
 	<key>storeFormatVersion</key>
 	<integer>1</integer>
@@ -95,7 +123,9 @@
 		<key>sheetClusters</key>
 		<dict>
 			<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-			<integer>15</integer>
+			<integer>23</integer>
+			<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+			<integer>4</integer>
 		</dict>
 	</dict>
 </dict>

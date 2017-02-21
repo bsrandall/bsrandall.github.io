@@ -4,13 +4,51 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-02-20T16:40:25-05:00</updated>
+ <updated>2017-02-21T11:29:07-05:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Access Ports</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/02/21/Access-Ports/"/>
+   <updated>2017-02-21T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/02/21/Access-Ports</id>
+   <content type="html">&lt;p&gt;Access ports are those ports that are connected to end devices, not other switches. We define an access port on the command line with 
+	SW1# switchport mode access&lt;/p&gt;
+
+&lt;p&gt;We will see later with Spanning Tree, that PortFast can and should be used on access ports. This does two things. First, it allows the port to skip the listening phase for faster availability. Second, it prevents the access port from sending TCNs (Topology Change Notifications) every time a user plugs or unplugs a device into the port.&lt;/p&gt;
+
+&lt;p&gt;Another Spanning Tree feature which will relate to Access ports is BPDU Guard. With BPDU Guard, if the switch receives a BPDU on a port where BPDU Guard was enabled, the port will transition to the errdisabled state.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>VLANs</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/02/20/VLANs/"/>
+   <updated>2017-02-20T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/02/20/VLANs</id>
+   <content type="html">&lt;h4 id=&quot;standard-vlans&quot;&gt;Standard VLANs&lt;/h4&gt;
+&lt;p&gt;Cisco calls VLANS 1 - 1005 Normal VLANs. Of those, VLAN 1 is the Cisco default. You can use this VLAN, but your are not allowed to delete it. VLANs 1002 - 1005 are the Cisco defaults for FDDI and Token Ring. These also cannot be deleted.&lt;/p&gt;
+
+&lt;p&gt;That leaves us VLANs 2 - 1001 as Normal VLANs that we can add or delete as we wish.&lt;/p&gt;
+
+&lt;p&gt;VLANs 2 - 1001 are pruning eligible, while VLANs 1006 - 4094 are not.&lt;/p&gt;
+
+&lt;p&gt;When you delete a VLAN, any LAN ports configured as access ports for that VLAN become inactive until you assign them to a new VLAN.&lt;/p&gt;
+
+&lt;h4 id=&quot;extended-vlans&quot;&gt;Extended VLANs&lt;/h4&gt;
+&lt;p&gt;Extended VLANs are in the range of 1006 - 4094. Extended range VLANs are not controlled by VTP and cannot be pruned. The router must be in VTP transparent mode in order to create extended VLANs.&lt;/p&gt;
+
+&lt;p&gt;Extended range VLANs are not stored in van.dat&lt;/p&gt;
+
+&lt;h4 id=&quot;vlan-database&quot;&gt;VLAN Database&lt;/h4&gt;
+&lt;p&gt;Only applies to standard VLANs.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Hello World</title>
