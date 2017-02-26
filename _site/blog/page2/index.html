@@ -288,15 +288,22 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
       <p>Dynamic Trunking Protocol is a Cisco proprietary protocol that, when configured, attempts to negotiate trunking between two connected ports. It will try to negotiate trunking as well as the encapsulation type.</p>
 
 <p>```SW1# switchport mode dynamic auto
-`- allows the interfaces to become a trunk if the neighboring trunk is set to trunk or desirable mode</p>
+`</p>
 <ul>
+  <li>allows the interfaces to become a trunk if the neighboring trunk is set to trunk or desirable mode</li>
   <li>this is the default setting for newer Cisco switches</li>
-  <li>if both ends of a trunk are set to dynamic auto, they will not form a trunk
-```SW1# switchport mode dynamic desireable
-`- makes the interface actively attempt to negotiate trunking</li>
-  <li>the link will become a trunk if the neighbor interface is set to trunk, auto, or desirable
-```SW1# switchport nonegotiate
-`- prevents the interface from sending DTP frames</li>
+  <li>if both ends of a trunk are set to dynamic auto, they will not form a trunk</li>
+</ul>
+
+<p>```SW1# switchport mode dynamic desireable
+`- makes the interface actively attempt to negotiate trunking</p>
+<ul>
+  <li>the link will become a trunk if the neighbor interface is set to trunk, auto, or desirable</li>
+</ul>
+
+<p>```SW1# switchport nonegotiate
+`- prevents the interface from sending DTP frames</p>
+<ul>
   <li>can use this when the interface switch port mode is <em>access</em> or <em>trunk</em> only</li>
   <li>if enabled, to establish a trunk the neighbor interface must be manually set to <em>trunk</em></li>
 </ul>
