@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-02-26T16:32:15-05:00</updated>
+ <updated>2017-02-26T17:21:17-05:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -28,7 +28,7 @@
 &lt;p&gt;&lt;em&gt;Administrative key&lt;/em&gt; defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.&lt;/p&gt;
 
 &lt;p&gt;Sample Configuration:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1# interface range GigabitEthernet0/1-2
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# interface range GigabitEthernet0/1-2
 SW1# channel-group 1 mode active
 SW1# exit
 SW1# interface port-channel 1
@@ -36,8 +36,8 @@ SW1# switchport trunk encapsulation dot1q
 SW1# switchport mode trunk
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;
-A successful Layer 2 EtherChannel will show SU with the command &lt;/code&gt;show etherchannel summary`. An unsuccessful layer 2 will show SD.&lt;/p&gt;
+
+&lt;p&gt;A successful Layer 2 EtherChannel will show SU with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;show etherchannel summary&lt;/code&gt;. An unsuccessful layer 2 will show SD.&lt;/p&gt;
 </content>
  </entry>
  
