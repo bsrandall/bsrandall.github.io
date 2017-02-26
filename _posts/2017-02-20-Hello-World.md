@@ -12,8 +12,8 @@ The other two benefits to my blog is hopefully improving on my Markdown and typi
 
 This is some sample IOS commands using Markdown:
 
-	SW1# switchport trunk encapsulation dot1q
-	SW1# switchport mode trunk
+```SW1# switchport trunk encapsulation dot1q```
+```SW1# switchport mode trunk```
 
 Well I am off to the races. Or as most of those who have gone before me stress, off to start the marathon!
 

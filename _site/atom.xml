@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-02-26T16:20:01-05:00</updated>
+ <updated>2017-02-26T16:28:27-05:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -28,8 +28,7 @@
 &lt;p&gt;&lt;em&gt;Administrative key&lt;/em&gt; defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.&lt;/p&gt;
 
 &lt;p&gt;Sample Configuration:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# interface range GigabitEthernet0/1-2
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1# interface range GigabitEthernet0/1-2
 SW1# channel-group 1 mode active
 SW1# exit
 SW1# interface port-channel 1
@@ -37,8 +36,8 @@ SW1# switchport trunk encapsulation dot1q
 SW1# switchport mode trunk
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-
-&lt;p&gt;A successful Layer 2 EtherChannel will show SU with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;show etherchannel summary&lt;/code&gt;. An unsuccessful layer 2 will show SD.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;
+A successful Layer 2 EtherChannel will show SU with the command &lt;/code&gt;show etherchannel summary`. An unsuccessful layer 2 will show SD.&lt;/p&gt;
 </content>
  </entry>
  
@@ -173,9 +172,7 @@ SW1# switchport mode trunk
 &lt;h4 id=&quot;native-vlan&quot;&gt;Native VLAN&lt;/h4&gt;
 &lt;p&gt;A Native VLAN on a trunk is the VLAN to which untagged traffic belongs. Across a trunk, the Native VLANs should match on each end.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# show interface trunk
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# show interface trunk&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;will show the Native VLAN for each interface that has active trunking.&lt;/p&gt;
 
@@ -220,13 +217,11 @@ SW1# switchport mode trunk
    <id>http://bsrandall.github.io/vlan/2017/02/21/Allowed-VLANs</id>
    <content type="html">&lt;p&gt;By default, all VLANs are allowed to traverse an 802.1Q trunk once it is active. To restrict which VLANs are allowed to cross a trunk, you must go into IOS and explicitly define the VLANs that are allowed.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# switchport trunk allow VLAN 15-20,22,25
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport trunk allow VLAN 15-20,22,25&lt;/code&gt;&lt;/p&gt;
 
-SW1# switchport trunk allowed vlan add 27
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport trunk allowed vlan add 27&lt;/code&gt;&lt;/p&gt;
 
-SW1# switchport trunk allowed vlan remove 18
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport trunk allowed vlan remove 18&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;You must remember that if an allowed VLAN list is already configured on a trunk, issuing the &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport trunk allowed vlan 16-20,2,25&lt;/code&gt; command will overwrite the previously defined VLANs. You must use the &lt;em&gt;add&lt;/em&gt; and &lt;em&gt;remove&lt;/em&gt; commands if there is already an allowed clan configuration in the running config.&lt;/p&gt;
 </content>
@@ -238,7 +233,7 @@ SW1# switchport trunk allowed vlan remove 18
    <updated>2017-02-21T00:00:00-05:00</updated>
    <id>http://bsrandall.github.io/vlan/2017/02/21/Access-Ports</id>
    <content type="html">&lt;p&gt;Access ports are those ports that are connected to end devices, not other switches. We define an access port on the command line with 
-	SW1# switchport mode access&lt;/p&gt;
+SW1# switchport mode access&lt;/p&gt;
 
 &lt;p&gt;We will see later with Spanning Tree, that PortFast can and should be used on access ports. This does two things. First, it allows the port to skip the listening phase for faster availability. Second, it prevents the access port from sending TCNs (Topology Change Notifications) every time a user plugs or unplugs a device into the port.&lt;/p&gt;
 
@@ -283,10 +278,8 @@ SW1# switchport trunk allowed vlan remove 18
 
 &lt;p&gt;This is some sample IOS commands using Markdown:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# switchport trunk encapsulation dot1q
-SW1# switchport mode trunk
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport trunk encapsulation dot1q&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport mode trunk&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;Well I am off to the races. Or as most of those who have gone before me stress, off to start the marathon!&lt;/p&gt;
 
@@ -300,11 +293,9 @@ SW1# switchport mode trunk
    <id>http://bsrandall.github.io/general/2017/02/20/Git</id>
    <content type="html">&lt;p&gt;I am not a git master, nor do I strive to become one. But I do need to know some basic details to manage this blog as well as my INE VIRL configurations. There are probably better ways to do this, but for my purposes, these are the commands I am running to push my updates from my MacBook to by GitHub page:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git add --all
-~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git commit -m &quot;update notes&quot;
-~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git push -u origin master
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git add --all&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt; ~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git commit -m &quot;update notes&quot;&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git push -u origin master&lt;/code&gt;&lt;/p&gt;
 
 </content>
  </entry>

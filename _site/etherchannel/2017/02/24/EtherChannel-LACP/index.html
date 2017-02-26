@@ -180,8 +180,7 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 <p><em>Administrative key</em> defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.</p>
 
 <p>Sample Configuration:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# interface range GigabitEthernet0/1-2
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW1# interface range GigabitEthernet0/1-2
 SW1# channel-group 1 mode active
 SW1# exit
 SW1# interface port-channel 1
@@ -189,8 +188,8 @@ SW1# switchport trunk encapsulation dot1q
 SW1# switchport mode trunk
 </code></pre>
 </div>
-
-<p>A successful Layer 2 EtherChannel will show SU with the command <code class="highlighter-rouge">show etherchannel summary</code>. An unsuccessful layer 2 will show SD.</p>
+<p><code class="highlighter-rouge">
+A successful Layer 2 EtherChannel will show SU with the command </code>show etherchannel summary`. An unsuccessful layer 2 will show SD.</p>
 
   </article>
 </div>
