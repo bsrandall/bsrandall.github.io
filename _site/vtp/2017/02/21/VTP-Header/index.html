@@ -11,7 +11,7 @@
 
   <title>
     
-      Categories &middot; No Excuses CCIE
+      VTP Messages &middot; No Excuses CCIE
     
   </title>
 
@@ -91,7 +91,7 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
             
             
             
-              <a class="sidebar-nav-item sidebar-nav-item-sub active" href="/blog/categories/">
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
                 Categories
               </a>
           
@@ -160,145 +160,103 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
       </div>
 
       <div class="container content">
-        <div class="page">
-  <h1 class="page-title">Categories</h1>
-  <div class="tags-expo">
-  <div class="tags-expo-list">
-    
-    <a href="#general" class="post-tag">General</a>
-    
-    <a href="#vlan" class="post-tag">VLAN</a>
-    
-    <a href="#vtp" class="post-tag">VTP</a>
-    
-    <a href="#mst" class="post-tag">MST</a>
-    
-    <a href="#etherchannel" class="post-tag">EtherChannel</a>
-    
-  </div>
-  <hr/>
-  <div class="tags-expo-section">
-    
-    <h2 id="general">General</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/general/2017/02/20/Hello-World/">
-      <li>
-        Hello World
-      <small class="post-date">20 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/general/2017/02/20/Git/">
-      <li>
-        Git
-      <small class="post-date">20 Feb 2017</small>
-      </li>
-      </a>
-      
+        <div class="post">
+  <h1 class="post-title">VTP Messages</h1>
+  <span class="post-date">21 Feb 2017</span>
+   | 
+  
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+  
+  
+  <article>
+    <p>All VTP packets contain these fields in the header:</p>
+<ul>
+  <li>VTP version (1, 2, or 3)</li>
+  <li>VTP Message Type
+    <ul>
+      <li>Summary advertisements</li>
+      <li>Subset advertisement</li>
+      <li>Advertisement requests</li>
+      <li>VTP Join Messages</li>
     </ul>
-    
-    <h2 id="vlan">VLAN</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/vlan/2017/02/21/Dot1q/">
-      <li>
-        Dot1q
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/DTP/">
-      <li>
-        Dynamic Trunking Protocol (DTP)
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/Allowed-VLANs/">
-      <li>
-        VLANs
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/Access-Ports/">
-      <li>
-        Access Ports
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/20/VLANs/">
-      <li>
-        VLANs
-      <small class="post-date">20 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
-    
-    <h2 id="vtp">VTP</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/vtp/2017/02/22/VTP-Pruning/">
-      <li>
-        VTP Pruning
-      <small class="post-date">22 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vtp/2017/02/21/VTP-Versions/">
-      <li>
-        VTP Versions
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vtp/2017/02/21/VTP-Header/">
-      <li>
-        VTP Messages
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
-    
-    <h2 id="mst">MST</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/mst/2017/02/23/MST-IST/">
-      <li>
-        MST IST
-      <small class="post-date">23 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/mst/2017/02/22/MST/">
-      <li>
-        Multiple Spanning Tree
-      <small class="post-date">22 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
-    
-    <h2 id="etherchannel">EtherChannel</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/etherchannel/2017/02/24/EtherChannel-LACP/">
-      <li>
-        EtherChannel LACP
-      <small class="post-date">24 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
-    
-  </div>
+  </li>
+  <li>Management domain length</li>
+  <li>Management domain name</li>
+</ul>
+
+<p>Most VTP packets contain the <em>configuration revision number</em> of the sender. This is used to determine if the received information is more recent than the current version.</p>
+
+<p>By default, <em>summary advertisements</em> are sent every 5 minutes. The summary advertisement contains the VTP domain name and the current configuration revision number. If the VTP domain matches the switch’s configured VTP domain, and the configuration revision number is higher than its own revision, the switch will send an <em>advertisement request</em>. Otherwise, it ignores the packet.</p>
+
+<h4 id="summary-advertisement-packet-format">Summary Advertisement Packet Format</h4>
+<p><img src="http://www.cisco.com/c/dam/en/us/support/docs/lan-switching/vtp/10558-21c.gif" alt="" /></p>
+
+<p>A <em>subset advertisement</em> will follow a summary advertisement - it is the message that actually contains a list (or a subset of a list) of the VLANs being advertised.</p>
+
+<p>A switch will send an <em>advertisement request</em> in these situations:</p>
+<ul>
+  <li>the switch has been reset</li>
+  <li>the VTP domain name has been changed on the switch</li>
+  <li>the switch has received a VTP summary advertisement with a higher configuration than its own</li>
+</ul>
+
+
+  </article>
 </div>
 
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/etherchannel/2017/02/24/EtherChannel-LACP/">
+            EtherChannel LACP
+            <small>24 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/mst/2017/02/23/MST-IST/">
+            MST IST
+            <small>23 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/vtp/2017/02/22/VTP-Pruning/">
+            VTP Pruning
+            <small>22 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
 </div>
+
+
+<div class="comments">
+  <h2>Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'http://bsrandall.github.io/vtp/2017/02/21/VTP-Header/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/vtp/2017/02/21/VTP-Header'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = '//your_short_name.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
 
       </div>
     </div>

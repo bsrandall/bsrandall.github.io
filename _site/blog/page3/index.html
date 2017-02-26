@@ -11,7 +11,7 @@
 
   <title>
     
-      Categories &middot; No Excuses CCIE
+      Blog &middot; No Excuses CCIE
     
   </title>
 
@@ -91,7 +91,7 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
             
             
             
-              <a class="sidebar-nav-item sidebar-nav-item-sub active" href="/blog/categories/">
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
                 Categories
               </a>
           
@@ -160,145 +160,135 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
       </div>
 
       <div class="container content">
-        <div class="page">
-  <h1 class="page-title">Categories</h1>
-  <div class="tags-expo">
-  <div class="tags-expo-list">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/vlan/2017/02/20/VLANs/">
+        VLANs
+      </a>
+    </h1>
+
+    <span class="post-date">20 Feb 2017</span>
+     | 
     
-    <a href="#general" class="post-tag">General</a>
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
     
-    <a href="#vlan" class="post-tag">VLAN</a>
     
-    <a href="#vtp" class="post-tag">VTP</a>
-    
-    <a href="#mst" class="post-tag">MST</a>
-    
-    <a href="#etherchannel" class="post-tag">EtherChannel</a>
-    
-  </div>
-  <hr/>
-  <div class="tags-expo-section">
-    
-    <h2 id="general">General</h2>
-    <ul class="tags-expo-posts">
+
+    <article>
+      <h4 id="standard-vlans">Standard VLANs</h4>
+<p>Cisco calls VLANS 1 - 1005 Normal VLANs. Of those, VLAN 1 is the Cisco default. You can use this VLAN, but your are not allowed to delete it. VLANs 1002 - 1005 are the Cisco defaults for FDDI and Token Ring. These also cannot be deleted.</p>
+
+<p>That leaves us VLANs 2 - 1001 as Normal VLANs that we can add or delete as we wish.</p>
+
+<p>VLANs 2 - 1001 are pruning eligible, while VLANs 1006 - 4094 are not.</p>
+
+<p>When you delete a VLAN, any LAN ports configured as access ports for that VLAN become inactive until you assign them to a new VLAN.</p>
+
+<h4 id="extended-vlans">Extended VLANs</h4>
+<p>Extended VLANs are in the range of 1006 - 4094. Extended range VLANs are not controlled by VTP and cannot be pruned. The router must be in VTP transparent mode in order to create extended VLANs.</p>
+
+<p>Extended range VLANs are not stored in van.dat</p>
+
+<h4 id="vlan-database">VLAN Database</h4>
+<p>Only applies to standard VLANs.</p>
+
+    <article>
+    <div class="post-more">
       
-        <a class="post-title" href="/general/2017/02/20/Hello-World/">
-      <li>
+      <a href="/vlan/2017/02/20/VLANs/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/vlan/2017/02/20/VLANs/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general/2017/02/20/Hello-World/">
         Hello World
-      <small class="post-date">20 Feb 2017</small>
-      </li>
       </a>
-      
-        <a class="post-title" href="/general/2017/02/20/Git/">
-      <li>
-        Git
-      <small class="post-date">20 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
+    </h1>
+
+    <span class="post-date">20 Feb 2017</span>
+     | 
     
-    <h2 id="vlan">VLAN</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/vlan/2017/02/21/Dot1q/">
-      <li>
-        Dot1q
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/DTP/">
-      <li>
-        Dynamic Trunking Protocol (DTP)
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/Allowed-VLANs/">
-      <li>
-        VLANs
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/21/Access-Ports/">
-      <li>
-        Access Ports
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vlan/2017/02/20/VLANs/">
-      <li>
-        VLANs
-      <small class="post-date">20 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
+    <a href="/blog/tags/#inspiration" class="post-tag">inspiration</a>
     
-    <h2 id="vtp">VTP</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/vtp/2017/02/22/VTP-Pruning/">
-      <li>
-        VTP Pruning
-      <small class="post-date">22 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vtp/2017/02/21/VTP-Versions/">
-      <li>
-        VTP Versions
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/vtp/2017/02/21/VTP-Header/">
-      <li>
-        VTP Messages
-      <small class="post-date">21 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
     
-    <h2 id="mst">MST</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/mst/2017/02/23/MST-IST/">
-      <li>
-        MST IST
-      <small class="post-date">23 Feb 2017</small>
-      </li>
-      </a>
-      
-        <a class="post-title" href="/mst/2017/02/22/MST/">
-      <li>
-        Multiple Spanning Tree
-      <small class="post-date">22 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
-    
-    <h2 id="etherchannel">EtherChannel</h2>
-    <ul class="tags-expo-posts">
-      
-        <a class="post-title" href="/etherchannel/2017/02/24/EtherChannel-LACP/">
-      <li>
-        EtherChannel LACP
-      <small class="post-date">24 Feb 2017</small>
-      </li>
-      </a>
-      
-    </ul>
-    
-  </div>
+
+    <article>
+      <p>This is my first post in my newly launched blog. I decided to go with Jekyll and a GitHub page for my blog backend. I wanted my content to be in Markdown, as that seems to be the authoring flavor of the day. Jekyll and GitHub just made sense due to their support of Markdown.</p>
+
+<p>Our knowledge is at its pinnacle when we can fluidly explain topics to others. That is my main motivation for this blog. There most likely will not be any ground breaking content, but I hope to explain some of the topics in a way that makes sense.</p>
+
+<p>The other two benefits to my blog is hopefully improving on my Markdown and typing skills. It is sad that I still type as badly as I do, considering how much I type. I will use Markdown highlighting for code samples. TextExpander should make all of this a little easier.</p>
+
+<p>This is some sample IOS commands using Markdown:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1# switchport trunk encapsulation dot1q
+SW1# switchport mode trunk
+</code></pre>
 </div>
 
+<p>Well I am off to the races. Or as most of those who have gone before me stress, off to start the marathon!</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general/2017/02/20/Hello-World/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general/2017/02/20/Hello-World/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general/2017/02/20/Git/">
+        Git
+      </a>
+    </h1>
+
+    <span class="post-date">20 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#tools" class="post-tag">tools</a>
+    
+    
+
+    <article>
+      <p>I am not a git master, nor do I strive to become one. But I do need to know some basic details to manage this blog as well as my INE VIRL configurations. There are probably better ways to do this, but for my purposes, these are the commands I am running to push my updates from my MacBook to by GitHub page:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git add --all
+~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git commit -m "update notes"
+~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git push -u origin master
+</code></pre>
 </div>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general/2017/02/20/Git/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general/2017/02/20/Git/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <span class="pagination-item older">Older</span>
+  
+  
+    
+      <a class="pagination-item newer" href="/blog/page2">Newer</a>
+    
+  
+</div>
+
 
       </div>
     </div>

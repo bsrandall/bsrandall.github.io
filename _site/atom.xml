@@ -4,13 +4,148 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-02-21T14:26:29-05:00</updated>
+ <updated>2017-02-26T15:53:28-05:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>EtherChannel LACP</title>
+   <link href="http://bsrandall.github.io/etherchannel/2017/02/24/EtherChannel-LACP/"/>
+   <updated>2017-02-24T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/etherchannel/2017/02/24/EtherChannel-LACP</id>
+   <content type="html">&lt;p&gt;LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG.&lt;/p&gt;
+
+&lt;p&gt;LACP assigns system priority, port priority, and and an administrative key.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;System priority&lt;/em&gt; and the MAC address form the System ID. Between two LACP neighbors, the switch with the lowest System ID will be the decision maker using the LACP Port Priority&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Port priority&lt;/em&gt; and the port number form the port identifier. The switch uses the port identifier to decide which ports to put in standby mode when a hardware limitation prevents all ports from aggregating. Port priority is also used when more than 8 physical ports are put into a channel group. Port priority will decide which 8 ports will be the active ports in the etherchannel.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Administrative key&lt;/em&gt; defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.&lt;/p&gt;
+
+&lt;p&gt;Sample Configuration:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# interface range GigabitEthernet0/1-2
+SW1# channel-group 1 mode active
+SW1# exit
+SW1# interface port-channel 1
+SW1# switchport trunk encapsulation dot1q
+SW1# switchport mode trunk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A successful Layer 2 EtherChannel will show SU with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;show etherchannel summary&lt;/code&gt;. An unsuccessful layer 2 will show SD.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>MST IST</title>
+   <link href="http://bsrandall.github.io/mst/2017/02/23/MST-IST/"/>
+   <updated>2017-02-23T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/mst/2017/02/23/MST-IST</id>
+   <content type="html">&lt;p&gt;IST is the Internal Spanning Tree, also known as instance 0. This instance is designated to carry all STP information, including information from other instances. MSTP does not send BPDUs for ever instance separately - these are all contained within the IST BPDU.&lt;/p&gt;
+
+&lt;p&gt;To accommodate, the other instances information is carried within the IST BPDU using special M-Record fields - one for every active MSTI. These fields carry carry MSTP information such as bridge priority, root path cost, and port priority.&lt;/p&gt;
+
+&lt;p&gt;IST also plays a huge role in multiple MSTP region configurations. When a switch receives a BPDU from another region, it marks the corresponding port as MSTP &lt;em&gt;boundary&lt;/em&gt;. The interconnected, different region switches then form a CIST spanning across the regions.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-physical-topology.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>VTP Pruning</title>
+   <link href="http://bsrandall.github.io/vtp/2017/02/22/VTP-Pruning/"/>
+   <updated>2017-02-22T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/vtp/2017/02/22/VTP-Pruning</id>
+   <content type="html">&lt;p&gt;The principal of VTP pruning is if a client sends a broadcast to its connected switch’s access port, that switch will flood the broadcast to all other connected switches in the VTP / Layer 2 domain. Because of VTP, all the other switches would be aware of the client VLAN, and would thus be required to flood the broadcast to all other switches.&lt;/p&gt;
+
+&lt;p&gt;But what if the other switches do not have any clients connected to access ports in that VLAN? They are still having to process the request, and the network segment still has to bear the broadcast traffic.&lt;/p&gt;
+
+&lt;p&gt;When you enable VTP pruning, you are enabling it for the entire VTP domain.&lt;/p&gt;
+
+&lt;p&gt;NEED TO FINISH&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Multiple Spanning Tree</title>
+   <link href="http://bsrandall.github.io/mst/2017/02/22/MST/"/>
+   <updated>2017-02-22T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/mst/2017/02/22/MST</id>
+   <content type="html">&lt;p&gt;Multiple Spanning Tree (MST) was developed to overcome the high resource requirements of PVST. In reality, there are only a few logical redundant design on a network, regardless of the number of VLANs or the number of physical links. With MST you can run several different logical topologies (instances), and map VLANs to those instances. You get the benefit of running a redundant, fully utilized network without the resource overhead on the switches.&lt;/p&gt;
+
+&lt;p&gt;So the end result is that with PVST, a port is either forwarding or discarding for a VLAN, while with MST, a port is either forwarding or discarding for an instance which contains multiple VLANs.&lt;/p&gt;
+
+&lt;p&gt;MST is defined by IEEE 802.1s. A special instance, instance 0 or the Internal Spanning Tree (IST), is designated to carry all STP information. The BPDUs for IST carry all the standard RSTP information, as well as the configuration name, revision number, and a &lt;em&gt;hash value&lt;/em&gt; calculated over the VLAN to instance mapping.&lt;/p&gt;
+
+&lt;p&gt;You should not run MSTP on access ports.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>VTP Versions</title>
+   <link href="http://bsrandall.github.io/vtp/2017/02/21/VTP-Versions/"/>
+   <updated>2017-02-21T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/vtp/2017/02/21/VTP-Versions</id>
+   <content type="html">&lt;p&gt;VTP is a Cisco proprietary protocol that allows VLAN administration to be shared across switches. It gives an administrator the capability to centrally administer VLAN creation across one or two switches, and have those VLANs propagate across a VTP domain made up of any number of switches.&lt;/p&gt;
+
+&lt;p&gt;There are 3 versions of VTP, versions 1, 2, and 3.  There are not many significant changes between versions 1 and 2, except version 2 introduced support for Token Ring VLANs.&lt;/p&gt;
+
+&lt;p&gt;Version 3 introduced the following enhancements:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;hidden authentication (does not appear in plain text in the configuration file)&lt;/li&gt;
+  &lt;li&gt;Extended VLAN support. Versions 1 and 2 only support VLANs 1 - 1000 only.&lt;/li&gt;
+  &lt;li&gt;Support for private VLANs&lt;/li&gt;
+  &lt;li&gt;Support for MST&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>VTP Messages</title>
+   <link href="http://bsrandall.github.io/vtp/2017/02/21/VTP-Header/"/>
+   <updated>2017-02-21T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/vtp/2017/02/21/VTP-Header</id>
+   <content type="html">&lt;p&gt;All VTP packets contain these fields in the header:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;VTP version (1, 2, or 3)&lt;/li&gt;
+  &lt;li&gt;VTP Message Type
+    &lt;ul&gt;
+      &lt;li&gt;Summary advertisements&lt;/li&gt;
+      &lt;li&gt;Subset advertisement&lt;/li&gt;
+      &lt;li&gt;Advertisement requests&lt;/li&gt;
+      &lt;li&gt;VTP Join Messages&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Management domain length&lt;/li&gt;
+  &lt;li&gt;Management domain name&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Most VTP packets contain the &lt;em&gt;configuration revision number&lt;/em&gt; of the sender. This is used to determine if the received information is more recent than the current version.&lt;/p&gt;
+
+&lt;p&gt;By default, &lt;em&gt;summary advertisements&lt;/em&gt; are sent every 5 minutes. The summary advertisement contains the VTP domain name and the current configuration revision number. If the VTP domain matches the switch’s configured VTP domain, and the configuration revision number is higher than its own revision, the switch will send an &lt;em&gt;advertisement request&lt;/em&gt;. Otherwise, it ignores the packet.&lt;/p&gt;
+
+&lt;h4 id=&quot;summary-advertisement-packet-format&quot;&gt;Summary Advertisement Packet Format&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;http://www.cisco.com/c/dam/en/us/support/docs/lan-switching/vtp/10558-21c.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A &lt;em&gt;subset advertisement&lt;/em&gt; will follow a summary advertisement - it is the message that actually contains a list (or a subset of a list) of the VLANs being advertised.&lt;/p&gt;
+
+&lt;p&gt;A switch will send an &lt;em&gt;advertisement request&lt;/em&gt; in these situations:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;the switch has been reset&lt;/li&gt;
+  &lt;li&gt;the VTP domain name has been changed on the switch&lt;/li&gt;
+  &lt;li&gt;the switch has received a VTP summary advertisement with a higher configuration than its own&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>Dot1q</title>
@@ -54,11 +189,19 @@
    <id>http://bsrandall.github.io/vlan/2017/02/21/DTP</id>
    <content type="html">&lt;p&gt;Dynamic Trunking Protocol is a Cisco proprietary protocol that, when configured, attempts to negotiate trunking between two connected ports. It will try to negotiate trunking as well as the encapsulation type.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# switchport mode dynamic auto - allows the interfaces to become a trunk if the neighboring trunk is set to trunk or desirable mode - this is the default setting for newer Cisco switches - if both ends of a trunk are set to dynamic auto, they will not form a trunk
-SW1# switchport mode dynamic desireable - makes the interface actively attempt to negotiate trunking - the link will become a trunk if the neighbor interface is set to trunk, auto, or desirable
-SW1# switchport nonegotiate - prevents the interface from sending DTP frames - can use this when the interface switch port mode is *access* or *trunk* only - if enabled, to establish a trunk the neighbor interface must be manually set to *trunk*
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport mode dynamic auto&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;allows the interfaces to become a trunk if the neighboring trunk is set to trunk or desirable mode&lt;/li&gt;
+  &lt;li&gt;this is the default setting for newer Cisco switches&lt;/li&gt;
+  &lt;li&gt;if both ends of a trunk are set to dynamic auto, they will not form a trunk
+  SW1# switchport mode dynamic desireable&lt;/li&gt;
+  &lt;li&gt;makes the interface actively attempt to negotiate trunking&lt;/li&gt;
+  &lt;li&gt;the link will become a trunk if the neighbor interface is set to trunk, auto, or desirable
+  SW1# switchport nonegotiate&lt;/li&gt;
+  &lt;li&gt;prevents the interface from sending DTP frames&lt;/li&gt;
+  &lt;li&gt;can use this when the interface switch port mode is &lt;em&gt;access&lt;/em&gt; or &lt;em&gt;trunk&lt;/em&gt; only&lt;/li&gt;
+  &lt;li&gt;if enabled, to establish a trunk the neighbor interface must be manually set to &lt;em&gt;trunk&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 </content>
  </entry>
