@@ -1,0 +1,31 @@
+<p>All VTP packets contain these fields in the header:</p>
+<ul>
+  <li>VTP version (1, 2, or 3)</li>
+  <li>VTP Message Type
+    <ul>
+      <li>Summary advertisements</li>
+      <li>Subset advertisement</li>
+      <li>Advertisement requests</li>
+      <li>VTP Join Messages</li>
+    </ul>
+  </li>
+  <li>Management domain length</li>
+  <li>Management domain name</li>
+</ul>
+
+<p>Most VTP packets contain the <em>configuration revision number</em> of the sender. This is used to determine if the received information is more recent than the current version.</p>
+
+<p>By default, <em>summary advertisements</em> are sent every 5 minutes. The summary advertisement contains the VTP domain name and the current configuration revision number. If the VTP domain matches the switch’s configured VTP domain, and the configuration revision number is higher than its own revision, the switch will send an <em>advertisement request</em>. Otherwise, it ignores the packet.</p>
+
+<h4 id="summary-advertisement-packet-format">Summary Advertisement Packet Format</h4>
+<p><img src="http://www.cisco.com/c/dam/en/us/support/docs/lan-switching/vtp/10558-21c.gif" alt="" /></p>
+
+<p>A <em>subset advertisement</em> will follow a summary advertisement - it is the message that actually contains a list (or a subset of a list) of the VLANs being advertised.</p>
+
+<p>A switch will send an <em>advertisement request</em> in these situations:</p>
+<ul>
+  <li>the switch has been reset</li>
+  <li>the VTP domain name has been changed on the switch</li>
+  <li>the switch has received a VTP summary advertisement with a higher configuration than its own</li>
+</ul>
+

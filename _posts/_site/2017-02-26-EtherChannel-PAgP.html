@@ -1,0 +1,22 @@
+<p>Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.</p>
+
+<p>The two modes of PAgP are:</p>
+<ul>
+  <li>auto: places a port into a passive negotiating state</li>
+  <li>desirable: places a port into active negotiating state</li>
+</ul>
+
+<p>For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.</p>
+
+<p>PAgP supports up to 8 Ethernet ports of the same type.</p>
+
+<p>For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:</p>
+<ul>
+  <li>Allowed-VLAN list</li>
+  <li>Spanning-tree path cost for each VLAN</li>
+  <li>Spanning-tree port priority for each VLAN</li>
+  <li>Spanning-tree Port Fast setting</li>
+</ul>
+
+<p>For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.</p>
+

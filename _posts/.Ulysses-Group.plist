@@ -6,46 +6,16 @@
 	<dict>
 		<key>sheetClusters</key>
 		<dict>
-			<key>2013-12-31-whats-jekyll.md</key>
+			<key>02-27-2017-EtherChannel-Layer3.md</key>
 			<dict>
-				<key>explicitUnassignment</key>
-				<true/>
-				<key>firstUnassignment</key>
-				<real>509318537.06232703</real>
 				<key>lastModification</key>
-				<real>509318537.06232703</real>
+				<real>509932744.57746899</real>
 				<key>version</key>
 				<dict>
 					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>7</integer>
-				</dict>
-			</dict>
-			<key>2014-01-01-example-content.md</key>
-			<dict>
-				<key>explicitUnassignment</key>
-				<true/>
-				<key>firstUnassignment</key>
-				<real>509318530.91120398</real>
-				<key>lastModification</key>
-				<real>509318530.91120398</real>
-				<key>version</key>
-				<dict>
-					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>5</integer>
-				</dict>
-			</dict>
-			<key>2014-01-02-introducing-lanyon.md</key>
-			<dict>
-				<key>explicitUnassignment</key>
-				<true/>
-				<key>firstUnassignment</key>
-				<real>509318534.15951401</real>
-				<key>lastModification</key>
-				<real>509318534.15951401</real>
-				<key>version</key>
-				<dict>
-					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>6</integer>
+					<integer>73</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>16</integer>
 				</dict>
 			</dict>
 			<key>2017-02-20-Git.md</key>
@@ -174,16 +144,44 @@
 					<integer>11</integer>
 				</dict>
 			</dict>
-			<key>2017-02-23-MST-IST.md</key>
+			<key>2017-02-23-EtherChannel-General.md</key>
 			<dict>
 				<key>lastModification</key>
-				<real>509588755.62251502</real>
+				<real>509945707.13514602</real>
 				<key>version</key>
 				<dict>
 					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>54</integer>
+					<integer>86</integer>
 					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
-					<integer>12</integer>
+					<integer>16</integer>
+				</dict>
+			</dict>
+			<key>2017-02-23-MST-IST-CIST.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>509850663.468077</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>61</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>16</integer>
+				</dict>
+			</dict>
+			<key>2017-02-23-MST-IST.md</key>
+			<dict>
+				<key>explicitUnassignment</key>
+				<true/>
+				<key>firstUnassignment</key>
+				<real>510502833.88167298</real>
+				<key>lastModification</key>
+				<real>510502833.88167298</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>57</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>17</integer>
 				</dict>
 			</dict>
 			<key>2017-02-24-EtherChannel-LACP.md</key>
@@ -198,35 +196,70 @@
 					<integer>15</integer>
 				</dict>
 			</dict>
-			<key>Untitled.md</key>
+			<key>2017-02-26-EtherChannel-Load-Balancing.md</key>
 			<dict>
-				<key>explicitUnassignment</key>
-				<true/>
-				<key>firstUnassignment</key>
-				<real>509674056.62511998</real>
 				<key>lastModification</key>
-				<real>509674056.62511998</real>
+				<real>509859752.951886</real>
 				<key>version</key>
 				<dict>
 					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>57</integer>
+					<integer>69</integer>
 					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
 					<integer>16</integer>
+				</dict>
+			</dict>
+			<key>2017-02-26-EtherChannel-PAgP.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>509855726.32768899</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>65</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>16</integer>
+				</dict>
+			</dict>
+			<key>2017-02-27-EtherChannel-MultiChassis.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>509945036.38357198</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>79</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>16</integer>
+				</dict>
+			</dict>
+			<key>2017-03-06-CDP-Basics.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>510540470.957295</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>89</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
+			<key>2017-03-06-CDP-Configuration.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>510545296.83980101</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>93</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
 				</dict>
 			</dict>
 		</dict>
 	</dict>
 	<key>sheetClusters</key>
 	<array>
-		<array>
-			<string>2013-12-31-whats-jekyll.md</string>
-		</array>
-		<array>
-			<string>2014-01-02-introducing-lanyon.md</string>
-		</array>
-		<array>
-			<string>2014-01-01-example-content.md</string>
-		</array>
 		<array>
 			<string>2017-02-20-Hello-World.md</string>
 		</array>
@@ -261,13 +294,34 @@
 			<string>2017-02-22-MST.md</string>
 		</array>
 		<array>
-			<string>2017-02-23-MST-IST.md</string>
+			<string>2017-02-23-MST-IST-CIST.md</string>
 		</array>
 		<array>
-			<string>Untitled.md</string>
+			<string>2017-02-23-EtherChannel-General.md</string>
 		</array>
 		<array>
 			<string>2017-02-24-EtherChannel-LACP.md</string>
+		</array>
+		<array>
+			<string>2017-02-26-EtherChannel-PAgP.md</string>
+		</array>
+		<array>
+			<string>2017-02-26-EtherChannel-Load-Balancing.md</string>
+		</array>
+		<array>
+			<string>02-27-2017-EtherChannel-Layer3.md</string>
+		</array>
+		<array>
+			<string>2017-02-27-EtherChannel-MultiChassis.md</string>
+		</array>
+		<array>
+			<string>2017-02-23-MST-IST.md</string>
+		</array>
+		<array>
+			<string>2017-03-06-CDP-Basics.md</string>
+		</array>
+		<array>
+			<string>2017-03-06-CDP-Configuration.md</string>
 		</array>
 	</array>
 	<key>storeFormatVersion</key>
@@ -277,9 +331,9 @@
 		<key>sheetClusters</key>
 		<dict>
 			<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-			<integer>57</integer>
+			<integer>94</integer>
 			<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
-			<integer>16</integer>
+			<integer>18</integer>
 		</dict>
 	</dict>
 </dict>

@@ -4,7 +4,9 @@ title: EtherChannel LACP
 category: EtherChannel
 tag: knowledge
 ---
-LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG.
+LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG. The official name is IEEE 802.3ad Link Aggregation (LAG).
+
+LACP supports up to 16 Ethernet ports of the same type. Up to eight ports can be active, and up to eight ports can be in standby mode.
 
 LACP assigns system priority, port priority, and and an administrative key.
 
@@ -23,5 +25,18 @@ SW1# interface port-channel 1
 SW1# switchport trunk encapsulation dot1q
 SW1# switchport mode trunk
 ```
+
+```
+SW2# interface range GigabitEthernet0/1-2
+SW2# channel-group 1 mode active
+SW2# exit
+SW2# interface port-channel 1
+SW2# switchport trunk encapsulation dot1q
+SW2# switchport mode trunk
+```
+
+You can also start with the `interface port-channel 1` command and then define the channel group. For Layer 3 ether channel, you would want to define the port-channel first and then issue the `no switchport` interface command.
+
+The `interface port-channel 1` is the logical interface. The channel-group command binds the logical interface to a physical port. The port-channel interface (numbered 1 - 48) correspond to the one specified with the channel-group interface configuration command.
 
 A successful Layer 2 EtherChannel will show SU with the command `show etherchannel summary`. An unsuccessful layer 2 will show SD.

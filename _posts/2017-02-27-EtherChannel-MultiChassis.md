@@ -1,0 +1,26 @@
+---
+layout: post
+title: MultiChassis EtherChannel
+category: EtherChannel
+tag: knowledge
+---
+A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.
+
+With MultiChassis EtherChannel, we trick the server into running LAG between two different access switches. There are multiple ways to do this using different protocols made by different vendors. We generically call it MLAG.
+
+The protocol must take a physical triangle as seen below, and make it into a logical point-to-point. Many problems arise that the protocol must deal with. If NIC A sends traffic to Switch A, Switch A must know not to send that to Switch B, or else a loop might form.
+![][image-1]
+The protocols are so customized, that different platforms from the same vendor cannot even run MLAG. The control place has to be identical. Cisco therefore has a couple of implementations.
+
+*Stackwise Cross-Stack EtherChannel* has control plane over dedicated stacking cables. These stack cables create a bidirectional closed loop as seen below. One control plane is shared amongst members as well as one management plane. So if you were to log into one switch, you are actually viewing the configuration for the stack. This is used on the Access Platforms such as Catalyst 3750/3850. StackWise can have more than 2 members, up to the stack limit
+![][image-2]
+
+*Virtual Switching System (VSS)* is used on the aggregation platforms such as Catalyst 4500/6500/6800. VSS is similar to Stackwise as there is one management plane and one control plane shared between connected switches. Typically with VSL, the links are going to be 2x10G LAG. VSS switches are udeployed in pairs and will usually have 1 active supervisor and 3 standby supervisors.
+
+*Virtual Port Channel (vPC)* is very similar to VSS but it runs on the Data Center platforms such as Nexus 5000/7000/9000. The control plane is synchronized over a vPC Peer Link, which are typically 2x10GigE LAG. The biggest difference between vPC and VSS, is that vPC has *2* independent control planes and *2* independent management planes. vPC like VSS is deployed in pairs.
+
+
+
+
+[image-1]:	http://www.cisco.com/c/dam/en/us/td/i/200001-300000/220001-230000/226001-227000/226936.eps/_jcr_content/renditions/226936.jpg
+[image-2]:	https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRguQ7GRPRoSYAmPfJ4MCMN2r160qFDougT6yyluxFXu6n42Foxgg

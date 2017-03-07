@@ -169,7 +169,9 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   
   <article>
-    <p>LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG.</p>
+    <p>LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG. The official name is IEEE 802.3ad Link Aggregation (LAG).</p>
+
+<p>LACP supports up to 16 Ethernet ports of the same type. Up to eight ports can be active, and up to eight ports can be in standby mode.</p>
 
 <p>LACP assigns system priority, port priority, and and an administrative key.</p>
 
@@ -189,6 +191,19 @@ SW1# switchport mode trunk
 </code></pre>
 </div>
 
+<div class="highlighter-rouge"><pre class="highlight"><code>SW2# interface range GigabitEthernet0/1-2
+SW2# channel-group 1 mode active
+SW2# exit
+SW2# interface port-channel 1
+SW2# switchport trunk encapsulation dot1q
+SW2# switchport mode trunk
+</code></pre>
+</div>
+
+<p>You can also start with the <code class="highlighter-rouge">interface port-channel 1</code> command and then define the channel group. For Layer 3 ether channel, you would want to define the port-channel first and then issue the <code class="highlighter-rouge">no switchport</code> interface command.</p>
+
+<p>The <code class="highlighter-rouge">interface port-channel 1</code> is the logical interface. The channel-group command binds the logical interface to a physical port. The port-channel interface (numbered 1 - 48) correspond to the one specified with the channel-group interface configuration command.</p>
+
 <p>A successful Layer 2 EtherChannel will show SU with the command <code class="highlighter-rouge">show etherchannel summary</code>. An unsuccessful layer 2 will show SD.</p>
 
   </article>
@@ -200,27 +215,27 @@ SW1# switchport mode trunk
     
       <li>
         <h3>
-          <a href="/mst/2017/02/23/MST-IST/">
-            MST IST
-            <small>23 Feb 2017</small>
+          <a href="/cdp/2017/03/06/CDP-Configuration/">
+            CDP Configuration
+            <small>06 Mar 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/vtp/2017/02/22/VTP-Pruning/">
-            VTP Pruning
-            <small>22 Feb 2017</small>
+          <a href="/cdp/2017/03/06/CDP-Basics/">
+            CDP Basics
+            <small>06 Mar 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/mst/2017/02/22/MST/">
-            Multiple Spanning Tree
-            <small>22 Feb 2017</small>
+          <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
+            MultiChassis EtherChannel
+            <small>27 Feb 2017</small>
           </a>
         </h3>
       </li>

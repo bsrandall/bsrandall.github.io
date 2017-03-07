@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-02-26T17:21:17-05:00</updated>
+ <updated>2017-03-06T21:21:35-05:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -13,11 +13,165 @@
 
  
  <entry>
+   <title>CDP Configuration</title>
+   <link href="http://bsrandall.github.io/cdp/2017/03/06/CDP-Configuration/"/>
+   <updated>2017-03-06T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/cdp/2017/03/06/CDP-Configuration</id>
+   <content type="html">&lt;p&gt;To enable CDP globally we use &lt;code class=&quot;highlighter-rouge&quot;&gt;cdp run&lt;/code&gt;. To enable CDP on a per-interface basis, use &lt;code class=&quot;highlighter-rouge&quot;&gt;cdp enable&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cdp timer *seconds*&lt;/code&gt;  specifies the frequency of CDP update transmissions.
+&lt;code class=&quot;highlighter-rouge&quot;&gt;cdp holdtime *seconds*&lt;/code&gt; specifies the amount of time a receiving device should hold the information sent by your device before discarding it.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>CDP Basics</title>
+   <link href="http://bsrandall.github.io/cdp/2017/03/06/CDP-Basics/"/>
+   <updated>2017-03-06T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/cdp/2017/03/06/CDP-Basics</id>
+   <content type="html">&lt;p&gt;CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.&lt;/p&gt;
+
+&lt;p&gt;SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.&lt;/p&gt;
+
+&lt;p&gt;CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The &lt;em&gt;Length&lt;/em&gt; is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.&lt;/p&gt;
+
+&lt;h4 id=&quot;type&quot;&gt;Type&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Device ID - 0x0001&lt;/li&gt;
+  &lt;li&gt;Address - 0x0002&lt;/li&gt;
+  &lt;li&gt;Port ID - 0x0003&lt;/li&gt;
+  &lt;li&gt;Capabilities - 0x0004&lt;/li&gt;
+  &lt;li&gt;Version - 0x0005&lt;/li&gt;
+  &lt;li&gt;Platform - 0x0006&lt;/li&gt;
+  &lt;li&gt;IP Prefix - 0x0007&lt;/li&gt;
+  &lt;li&gt;VTP Management Domain - 0x0009 {: .red}&lt;/li&gt;
+  &lt;li&gt;Native VLAN - 0x000a {: .red}&lt;/li&gt;
+  &lt;li&gt;Duplex Status - 0x000b {: .red}&lt;/li&gt;
+  &lt;li&gt;Appliance ID - 0x000c {: .red}&lt;/li&gt;
+  &lt;li&gt;Power consumption - 0x0010 {: .red}&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;value&quot;&gt;Value&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Device ID - MAC address in ASCII or the FQDN&lt;/li&gt;
+  &lt;li&gt;Address&lt;/li&gt;
+  &lt;li&gt;Port ID - ASCII string that names the port from which the message was sent&lt;/li&gt;
+  &lt;li&gt;Capabilities - has a value describing the device capabilities:
+    &lt;ul&gt;
+      &lt;li&gt;0x01 - level 3 routing&lt;/li&gt;
+      &lt;li&gt;0x02 - level 2 transparent bridging&lt;/li&gt;
+      &lt;li&gt;0x04 - level 2 source-route bridging&lt;/li&gt;
+      &lt;li&gt;0x08 - level 2 switching not running Spanning Tree&lt;/li&gt;
+      &lt;li&gt;0x10 - sends and receives packets for a network layer protocol&lt;/li&gt;
+      &lt;li&gt;0x20 - the device does not forward IGMP reports&lt;/li&gt;
+      &lt;li&gt;0x40 - level 1 function&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Version - software version running the device&lt;/li&gt;
+  &lt;li&gt;Platform - ASCII string describing the device (e.g. Cisco 7000)&lt;/li&gt;
+  &lt;li&gt;IP Prefix - a set of 0 or more IP Prefixes&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.&lt;/p&gt;
+
+&lt;p&gt;The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>MultiChassis EtherChannel</title>
+   <link href="http://bsrandall.github.io/etherchannel/2017/02/27/EtherChannel-MultiChassis/"/>
+   <updated>2017-02-27T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/etherchannel/2017/02/27/EtherChannel-MultiChassis</id>
+   <content type="html">&lt;p&gt;A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.&lt;/p&gt;
+
+&lt;p&gt;With MultiChassis EtherChannel, we trick the server into running LAG between two different access switches. There are multiple ways to do this using different protocols made by different vendors. We generically call it MLAG.&lt;/p&gt;
+
+&lt;p&gt;The protocol must take a physical triangle as seen below, and make it into a logical point-to-point. Many problems arise that the protocol must deal with. If NIC A sends traffic to Switch A, Switch A must know not to send that to Switch B, or else a loop might form.
+&lt;img src=&quot;http://www.cisco.com/c/dam/en/us/td/i/200001-300000/220001-230000/226001-227000/226936.eps/_jcr_content/renditions/226936.jpg&quot; alt=&quot;&quot; /&gt;
+The protocols are so customized, that different platforms from the same vendor cannot even run MLAG. The control place has to be identical. Cisco therefore has a couple of implementations.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Stackwise Cross-Stack EtherChannel&lt;/em&gt; has control plane over dedicated stacking cables. These stack cables create a bidirectional closed loop as seen below. One control plane is shared amongst members as well as one management plane. So if you were to log into one switch, you are actually viewing the configuration for the stack. This is used on the Access Platforms such as Catalyst 3750/3850. StackWise can have more than 2 members, up to the stack limit
+&lt;img src=&quot;https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRguQ7GRPRoSYAmPfJ4MCMN2r160qFDougT6yyluxFXu6n42Foxgg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Virtual Switching System (VSS)&lt;/em&gt; is used on the aggregation platforms such as Catalyst 4500/6500/6800. VSS is similar to Stackwise as there is one management plane and one control plane shared between connected switches. Typically with VSL, the links are going to be 2x10G LAG. VSS switches are udeployed in pairs and will usually have 1 active supervisor and 3 standby supervisors.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Virtual Port Channel (vPC)&lt;/em&gt; is very similar to VSS but it runs on the Data Center platforms such as Nexus 5000/7000/9000. The control plane is synchronized over a vPC Peer Link, which are typically 2x10GigE LAG. The biggest difference between vPC and VSS, is that vPC has &lt;em&gt;2&lt;/em&gt; independent control planes and &lt;em&gt;2&lt;/em&gt; independent management planes. vPC like VSS is deployed in pairs.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>EtherChannel PaGP</title>
+   <link href="http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-PAgP/"/>
+   <updated>2017-02-26T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-PAgP</id>
+   <content type="html">&lt;p&gt;Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.&lt;/p&gt;
+
+&lt;p&gt;The two modes of PAgP are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;auto: places a port into a passive negotiating state&lt;/li&gt;
+  &lt;li&gt;desirable: places a port into active negotiating state&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.&lt;/p&gt;
+
+&lt;p&gt;PAgP supports up to 8 Ethernet ports of the same type.&lt;/p&gt;
+
+&lt;p&gt;For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Allowed-VLAN list&lt;/li&gt;
+  &lt;li&gt;Spanning-tree path cost for each VLAN&lt;/li&gt;
+  &lt;li&gt;Spanning-tree port priority for each VLAN&lt;/li&gt;
+  &lt;li&gt;Spanning-tree Port Fast setting&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>EtherChannel Load-Balancing</title>
+   <link href="http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-Load-Balancing/"/>
+   <updated>2017-02-26T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-Load-Balancing</id>
+   <content type="html">&lt;p&gt;The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.&lt;/p&gt;
+
+&lt;p&gt;To configure the load-balancing method by using the&lt;code class=&quot;highlighter-rouge&quot;&gt;port-channel load-balance&lt;/code&gt; global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.&lt;/p&gt;
+
+&lt;p&gt;The selected load balancing mode applies to all ether channels on a switch.&lt;/p&gt;
+
+&lt;p&gt;With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the &lt;em&gt;incoming&lt;/em&gt; packet. So packets from the same host use the same port in the channel.&lt;/p&gt;
+
+&lt;p&gt;With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.&lt;/p&gt;
+
+&lt;p&gt;With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.&lt;/p&gt;
+
+&lt;p&gt;IP based forwarding has the same principles as the MAC based forwarding outlined above.&lt;/p&gt;
+
+&lt;p&gt;To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.&lt;/p&gt;
+
+&lt;p&gt;To configure EtherChannel load-balancing, in global config use the following:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+The default is src-mac.&lt;/p&gt;
+
+&lt;p&gt;One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>EtherChannel LACP</title>
    <link href="http://bsrandall.github.io/etherchannel/2017/02/24/EtherChannel-LACP/"/>
    <updated>2017-02-24T00:00:00-05:00</updated>
    <id>http://bsrandall.github.io/etherchannel/2017/02/24/EtherChannel-LACP</id>
-   <content type="html">&lt;p&gt;LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG.&lt;/p&gt;
+   <content type="html">&lt;p&gt;LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG. The official name is IEEE 802.3ad Link Aggregation (LAG).&lt;/p&gt;
+
+&lt;p&gt;LACP supports up to 16 Ethernet ports of the same type. Up to eight ports can be active, and up to eight ports can be in standby mode.&lt;/p&gt;
 
 &lt;p&gt;LACP assigns system priority, port priority, and and an administrative key.&lt;/p&gt;
 
@@ -37,15 +191,28 @@ SW1# switchport mode trunk
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW2# interface range GigabitEthernet0/1-2
+SW2# channel-group 1 mode active
+SW2# exit
+SW2# interface port-channel 1
+SW2# switchport trunk encapsulation dot1q
+SW2# switchport mode trunk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can also start with the &lt;code class=&quot;highlighter-rouge&quot;&gt;interface port-channel 1&lt;/code&gt; command and then define the channel group. For Layer 3 ether channel, you would want to define the port-channel first and then issue the &lt;code class=&quot;highlighter-rouge&quot;&gt;no switchport&lt;/code&gt; interface command.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;interface port-channel 1&lt;/code&gt; is the logical interface. The channel-group command binds the logical interface to a physical port. The port-channel interface (numbered 1 - 48) correspond to the one specified with the channel-group interface configuration command.&lt;/p&gt;
+
 &lt;p&gt;A successful Layer 2 EtherChannel will show SU with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;show etherchannel summary&lt;/code&gt;. An unsuccessful layer 2 will show SD.&lt;/p&gt;
 </content>
  </entry>
  
  <entry>
-   <title>MST IST</title>
-   <link href="http://bsrandall.github.io/mst/2017/02/23/MST-IST/"/>
+   <title>MST IST-CIST</title>
+   <link href="http://bsrandall.github.io/mst/2017/02/23/MST-IST-CIST/"/>
    <updated>2017-02-23T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/mst/2017/02/23/MST-IST</id>
+   <id>http://bsrandall.github.io/mst/2017/02/23/MST-IST-CIST</id>
    <content type="html">&lt;p&gt;IST is the Internal Spanning Tree, also known as instance 0. This instance is designated to carry all STP information, including information from other instances. MSTP does not send BPDUs for ever instance separately - these are all contained within the IST BPDU.&lt;/p&gt;
 
 &lt;p&gt;To accommodate, the other instances information is carried within the IST BPDU using special M-Record fields - one for every active MSTI. These fields carry carry MSTP information such as bridge priority, root path cost, and port priority.&lt;/p&gt;
@@ -54,6 +221,41 @@ SW1# switchport mode trunk
 
 &lt;p&gt;&lt;img src=&quot;http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-physical-topology.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
+&lt;p&gt;Remember, an IST is internal to a region while a CIST is the IST spanning across multiple regions.&lt;/p&gt;
+
+&lt;p&gt;Here is a sample MST BPDU:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-cst-mstp-packet-format.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The CIST Root is elected among all regions while the CIST Regional Root is elected in every region. The IST Root = CIST Regional Root in cases where multiple MST regions interoperate. The CIST Root is the bridge that has the lowest Bridge Id among all regions - the CIST Root could be a bridge inside a region or a boundary switch in a region. The CIST Regional Root is a &lt;em&gt;boundary switch&lt;/em&gt; elected for every region based on the shortest external path cost to reach the CIST Root. As mentioned above, it is important to remember that the CIST Regional Root becomes the root of the IST for the given region as well - the region changes its IST election process to make the CIST Regional Root the IST root.&lt;/p&gt;
+
+&lt;p&gt;When an MST switch boots up, it declares itself the CIST Root and CIST Regional Root and announce that it its outgoing BPDUs on all internal ports. On boundary ports (those that have received BPDUs from another region), the switch will only advertise its CIST Root Bridge ID and CIST External Root Path Cost, hiding the details of the region’s inner topology.&lt;/p&gt;
+
+&lt;p&gt;The region that contains the CIST Root automatically places all of its boundary ports in an unblocked state.&lt;/p&gt;
+
+&lt;p&gt;The &lt;em&gt;CIST External Root Path Cost&lt;/em&gt; is the cost to reach the CIST Root across the links connecting the boundary ports. When a BPDU is received on an internal link, this cost is not changed.&lt;/p&gt;
+
+&lt;p&gt;Only a boundary switch can be elected as the CIST Regional Root, and this is the switch with the lowest cost to reach the CIST Root. If a boundary switch receives a BPDU with a lower CIST External Root Path cost on one of its internal ports, it will stop announcing itself as the CIST Regional Root and start announcing the new metric out of its boundary ports.&lt;/p&gt;
+
+&lt;p&gt;If a switch is a CIST Regional Root, it elects one of its boundary ports as the CIST Root port and blocks all other boundary ports. If a boundary switch is not the CIST Regional Root, it will mark its boundary ports as Designated or Alternate, Designate only if it has a better External Root Path cost or in case of a tie, lower CIST Regional Root Bridge ID.&lt;/p&gt;
+
+&lt;p&gt;The regional MSTIs are constructed independently at every region, but they have to be mapped to the CIST at the boundary ports. This equates to the inability to load-balance VLAN traffic on the boundary links by mapping VLANs to different instances.&lt;/p&gt;
+
+&lt;p&gt;A topology change in the CST could change all paths in the topology thus requiring massive MAC address relearning.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>EtherChannel</title>
+   <link href="http://bsrandall.github.io/etherchannel/2017/02/23/EtherChannel-General/"/>
+   <updated>2017-02-23T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/etherchannel/2017/02/23/EtherChannel-General</id>
+   <content type="html">&lt;p&gt;LAG goal is to trick our Spanning Tree Protocol into forwarding active/active across multiple links. The risk we take is an infinite loop in the data plane, as there is no TTL with Ethernet. The LAG negotiation protocols help to mitigate this risk. Static LAG is supported but not recommended, as a failure to LAG can cause an STP Loop. If you do deploy Static LAG, it is recommended to deploy EtherChannel Guard to help mitigate the chances of a loop.&lt;/p&gt;
+
+&lt;p&gt;PAgP and LACP accomplish the exact same thing, just in different ways.&lt;/p&gt;
+
+&lt;p&gt;Since both PAgP and LACP both require the member ports to have the same characteristics, a good command to start with is &lt;code class=&quot;highlighter-rouge&quot;&gt;show interfaces status&lt;/code&gt;.&lt;/p&gt;
 </content>
  </entry>
  

@@ -1,0 +1,13 @@
+<p>To configure Layer 3 EtherChannels, you have to ensure that the ports that are part of the EtherChannel are first set to <code class="highlighter-rouge">no switchport</code> before adding them to the channel-group. An example LACP config follows:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>`interface port-channel 1
+  no switch port
+  ip address 10.0.0.1 255.255.255.0
+
+interface GigabitEthernet0/1
+  no ip address
+  no switchport
+  channel-group 1 mode active
+</code></pre>
+</div>
+<p>`</p>

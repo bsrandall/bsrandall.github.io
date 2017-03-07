@@ -1,0 +1,36 @@
+<p>LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG. The official name is IEEE 802.3ad Link Aggregation (LAG).</p>
+
+<p>LACP supports up to 16 Ethernet ports of the same type. Up to eight ports can be active, and up to eight ports can be in standby mode.</p>
+
+<p>LACP assigns system priority, port priority, and and an administrative key.</p>
+
+<p><em>System priority</em> and the MAC address form the System ID. Between two LACP neighbors, the switch with the lowest System ID will be the decision maker using the LACP Port Priority</p>
+
+<p><em>Port priority</em> and the port number form the port identifier. The switch uses the port identifier to decide which ports to put in standby mode when a hardware limitation prevents all ports from aggregating. Port priority is also used when more than 8 physical ports are put into a channel group. Port priority will decide which 8 ports will be the active ports in the etherchannel.</p>
+
+<p><em>Administrative key</em> defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.</p>
+
+<p>Sample Configuration:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1# interface range GigabitEthernet0/1-2
+SW1# channel-group 1 mode active
+SW1# exit
+SW1# interface port-channel 1
+SW1# switchport trunk encapsulation dot1q
+SW1# switchport mode trunk
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SW2# interface range GigabitEthernet0/1-2
+SW2# channel-group 1 mode active
+SW2# exit
+SW2# interface port-channel 1
+SW2# switchport trunk encapsulation dot1q
+SW2# switchport mode trunk
+</code></pre>
+</div>
+
+<p>You can also start with the <code class="highlighter-rouge">interface port-channel 1</code> command and then define the channel group. For Layer 3 ether channel, you would want to define the port-channel first and then issue the <code class="highlighter-rouge">no switchport</code> interface command.</p>
+
+<p>The <code class="highlighter-rouge">interface port-channel 1</code> is the logical interface. The channel-group command binds the logical interface to a physical port. The port-channel interface (numbered 1 - 48) correspond to the one specified with the channel-group interface configuration command.</p>
+
+<p>A successful Layer 2 EtherChannel will show SU with the command <code class="highlighter-rouge">show etherchannel summary</code>. An unsuccessful layer 2 will show SD.</p>

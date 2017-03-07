@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      MST IST-CIST &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">MST IST-CIST</h1>
+  <span class="post-date">23 Feb 2017</span>
+   | 
+  
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+  
+  
+  <article>
+    <p>IST is the Internal Spanning Tree, also known as instance 0. This instance is designated to carry all STP information, including information from other instances. MSTP does not send BPDUs for ever instance separately - these are all contained within the IST BPDU.</p>
+
+<p>To accommodate, the other instances information is carried within the IST BPDU using special M-Record fields - one for every active MSTI. These fields carry carry MSTP information such as bridge priority, root path cost, and port priority.</p>
+
+<p>IST also plays a huge role in multiple MSTP region configurations. When a switch receives a BPDU from another region, it marks the corresponding port as MSTP <em>boundary</em>. The interconnected, different region switches then form a CIST spanning across the regions.</p>
+
+<p><img src="http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-physical-topology.png" alt="" /></p>
+
+<p>Remember, an IST is internal to a region while a CIST is the IST spanning across multiple regions.</p>
+
+<p>Here is a sample MST BPDU:</p>
+
+<p><img src="http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-cst-mstp-packet-format.png" alt="" /></p>
+
+<p>The CIST Root is elected among all regions while the CIST Regional Root is elected in every region. The IST Root = CIST Regional Root in cases where multiple MST regions interoperate. The CIST Root is the bridge that has the lowest Bridge Id among all regions - the CIST Root could be a bridge inside a region or a boundary switch in a region. The CIST Regional Root is a <em>boundary switch</em> elected for every region based on the shortest external path cost to reach the CIST Root. As mentioned above, it is important to remember that the CIST Regional Root becomes the root of the IST for the given region as well - the region changes its IST election process to make the CIST Regional Root the IST root.</p>
+
+<p>When an MST switch boots up, it declares itself the CIST Root and CIST Regional Root and announce that it its outgoing BPDUs on all internal ports. On boundary ports (those that have received BPDUs from another region), the switch will only advertise its CIST Root Bridge ID and CIST External Root Path Cost, hiding the details of the region’s inner topology.</p>
+
+<p>The region that contains the CIST Root automatically places all of its boundary ports in an unblocked state.</p>
+
+<p>The <em>CIST External Root Path Cost</em> is the cost to reach the CIST Root across the links connecting the boundary ports. When a BPDU is received on an internal link, this cost is not changed.</p>
+
+<p>Only a boundary switch can be elected as the CIST Regional Root, and this is the switch with the lowest cost to reach the CIST Root. If a boundary switch receives a BPDU with a lower CIST External Root Path cost on one of its internal ports, it will stop announcing itself as the CIST Regional Root and start announcing the new metric out of its boundary ports.</p>
+
+<p>If a switch is a CIST Regional Root, it elects one of its boundary ports as the CIST Root port and blocks all other boundary ports. If a boundary switch is not the CIST Regional Root, it will mark its boundary ports as Designated or Alternate, Designate only if it has a better External Root Path cost or in case of a tie, lower CIST Regional Root Bridge ID.</p>
+
+<p>The regional MSTIs are constructed independently at every region, but they have to be mapped to the CIST at the boundary ports. This equates to the inability to load-balance VLAN traffic on the boundary links by mapping VLANs to different instances.</p>
+
+<p>A topology change in the CST could change all paths in the topology thus requiring massive MAC address relearning.</p>
+
+
+  </article>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/cdp/2017/03/06/CDP-Configuration/">
+            CDP Configuration
+            <small>06 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/cdp/2017/03/06/CDP-Basics/">
+            CDP Basics
+            <small>06 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
+            MultiChassis EtherChannel
+            <small>27 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+<div class="comments">
+  <h2>Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'http://bsrandall.github.io/mst/2017/02/23/MST-IST-CIST/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/mst/2017/02/23/MST-IST-CIST'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = '//your_short_name.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

@@ -1,0 +1,24 @@
+<p>The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.</p>
+
+<p>To configure the load-balancing method by using the<code class="highlighter-rouge">port-channel load-balance</code> global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.</p>
+
+<p>The selected load balancing mode applies to all ether channels on a switch.</p>
+
+<p>With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the <em>incoming</em> packet. So packets from the same host use the same port in the channel.</p>
+
+<p>With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.</p>
+
+<p>With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.</p>
+
+<p>IP based forwarding has the same principles as the MAC based forwarding outlined above.</p>
+
+<p>To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.</p>
+
+<p>To configure EtherChannel load-balancing, in global config use the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
+</code></pre>
+</div>
+<p>`
+The default is src-mac.</p>
+
+<p>One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.</p>
