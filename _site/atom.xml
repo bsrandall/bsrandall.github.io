@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-03-06T21:26:43-05:00</updated>
+ <updated>2017-03-06T23:19:24-05:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -13,23 +13,57 @@
 
  
  <entry>
-   <title>CDP Configuration</title>
-   <link href="http://bsrandall.github.io/cdp/2017/03/06/CDP-Configuration/"/>
+   <title>LLDP</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/06/LLDP/"/>
    <updated>2017-03-06T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/cdp/2017/03/06/CDP-Configuration</id>
+   <id>http://bsrandall.github.io/layer%202/2017/03/06/LLDP</id>
+   <content type="html">&lt;p&gt;LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks.&lt;/p&gt;
+
+&lt;p&gt;One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1#(config-if) description LINK_SW1_SW2&lt;/code&gt;, that description would show up under Switch 2 LLDP like this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW2# show lldp neighbors detail
+
+Casis id: 0019.569d.571a
+Port id: Fa0/24
+Port Description: LINK_SW1_SW2
+System Name: SW1.cisco.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>CDP Configuration</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/06/CDP-Configuration/"/>
+   <updated>2017-03-06T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/06/CDP-Configuration</id>
    <content type="html">&lt;p&gt;To enable CDP globally we use &lt;code class=&quot;highlighter-rouge&quot;&gt;cdp run&lt;/code&gt;. To enable CDP on a per-interface basis, use &lt;code class=&quot;highlighter-rouge&quot;&gt;cdp enable&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) cdp timer seconds&lt;/code&gt;  specifies the frequency of CDP update transmissions.&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) cdp holdtime seconds&lt;/code&gt; specifies the amount of time a receiving device should hold the information sent by your device before discarding it.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) no cdp adertise-v2&lt;/code&gt; disables the advertisement of CDPv2 advertisements if for some crazy reason you need to.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) clear cdp counters&lt;/code&gt; resets the traffic counters to zero.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) clear cdp table&lt;/code&gt; deletes the CDP table of information about neighbors&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) show cdp&lt;/code&gt; displays the interval between CDP transmissions, the number of seconds a CDP advertisement is valid for a given port, and the version of the advertisement&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) show cdp interface [type number]&lt;/code&gt; displays information about interfaces on which CDP is enabled&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) show cdp entry device-name&lt;/code&gt; displays information about a specific neighbor&lt;/p&gt;
+
 </content>
  </entry>
  
  <entry>
    <title>CDP Basics</title>
-   <link href="http://bsrandall.github.io/cdp/2017/03/06/CDP-Basics/"/>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/06/CDP-Basics/"/>
    <updated>2017-03-06T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/cdp/2017/03/06/CDP-Basics</id>
+   <id>http://bsrandall.github.io/layer%202/2017/03/06/CDP-Basics</id>
    <content type="html">&lt;p&gt;CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.&lt;/p&gt;
 
 &lt;p&gt;SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.&lt;/p&gt;

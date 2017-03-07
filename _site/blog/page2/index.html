@@ -164,6 +164,55 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/">
+        EtherChannel Load-Balancing
+      </a>
+    </h1>
+
+    <span class="post-date">26 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.</p>
+
+<p>To configure the load-balancing method by using the<code class="highlighter-rouge">port-channel load-balance</code> global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.</p>
+
+<p>The selected load balancing mode applies to all ether channels on a switch.</p>
+
+<p>With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the <em>incoming</em> packet. So packets from the same host use the same port in the channel.</p>
+
+<p>With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.</p>
+
+<p>With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.</p>
+
+<p>IP based forwarding has the same principles as the MAC based forwarding outlined above.</p>
+
+<p>To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.</p>
+
+<p>To configure EtherChannel load-balancing, in global config use the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
+</code></pre>
+</div>
+<p>`
+The default is src-mac.</p>
+
+<p>One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/etherchannel/2017/02/24/EtherChannel-LACP/">
         EtherChannel LACP
       </a>
@@ -337,39 +386,6 @@ SW2# switchport mode trunk
       <a href="/vtp/2017/02/22/VTP-Pruning/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
       <a href="/vtp/2017/02/22/VTP-Pruning/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/mst/2017/02/22/MST/">
-        Multiple Spanning Tree
-      </a>
-    </h1>
-
-    <span class="post-date">22 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Multiple Spanning Tree (MST) was developed to overcome the high resource requirements of PVST. In reality, there are only a few logical redundant design on a network, regardless of the number of VLANs or the number of physical links. With MST you can run several different logical topologies (instances), and map VLANs to those instances. You get the benefit of running a redundant, fully utilized network without the resource overhead on the switches.</p>
-
-<p>So the end result is that with PVST, a port is either forwarding or discarding for a VLAN, while with MST, a port is either forwarding or discarding for an instance which contains multiple VLANs.</p>
-
-<p>MST is defined by IEEE 802.1s. A special instance, instance 0 or the Internal Spanning Tree (IST), is designated to carry all STP information. The BPDUs for IST carry all the standard RSTP information, as well as the configuration name, revision number, and a <em>hash value</em> calculated over the VLAN to instance mapping.</p>
-
-<p>You should not run MSTP on access ports.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/mst/2017/02/22/MST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/mst/2017/02/22/MST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

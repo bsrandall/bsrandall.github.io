@@ -256,10 +256,41 @@
 					<integer>18</integer>
 				</dict>
 			</dict>
+			<key>2017-03-06-LLDP.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>510553092.18253303</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>110</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
+			<key>Untitled.md</key>
+			<dict>
+				<key>explicitUnassignment</key>
+				<true/>
+				<key>firstUnassignment</key>
+				<real>510552429.40237099</real>
+				<key>lastModification</key>
+				<real>510552429.40237099</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>101</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
 		</dict>
 	</dict>
 	<key>sheetClusters</key>
 	<array>
+		<array>
+			<string>Untitled.md</string>
+		</array>
 		<array>
 			<string>2017-02-20-Hello-World.md</string>
 		</array>
@@ -323,6 +354,9 @@
 		<array>
 			<string>2017-03-06-CDP-Configuration.md</string>
 		</array>
+		<array>
+			<string>2017-03-06-LLDP.md</string>
+		</array>
 	</array>
 	<key>storeFormatVersion</key>
 	<integer>1</integer>
@@ -331,7 +365,7 @@
 		<key>sheetClusters</key>
 		<dict>
 			<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-			<integer>94</integer>
+			<integer>110</integer>
 			<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
 			<integer>18</integer>
 		</dict>

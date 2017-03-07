@@ -11,7 +11,7 @@
 
   <title>
     
-      EtherChannel Load-Balancing &middot; No Excuses CCIE
+      CDP Basics &middot; No Excuses CCIE
     
   </title>
 
@@ -161,38 +161,61 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">EtherChannel Load-Balancing</h1>
-  <span class="post-date">26 Feb 2017</span>
+  <h1 class="post-title">CDP Basics</h1>
+  <span class="post-date">06 Mar 2017</span>
    | 
   
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
   
   
   <article>
-    <p>The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.</p>
+    <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
 
-<p>To configure the load-balancing method by using the<code class="highlighter-rouge">port-channel load-balance</code> global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.</p>
+<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
 
-<p>The selected load balancing mode applies to all ether channels on a switch.</p>
+<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
 
-<p>With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the <em>incoming</em> packet. So packets from the same host use the same port in the channel.</p>
+<h4 id="type">Type</h4>
+<ul>
+  <li>Device ID - 0x0001</li>
+  <li>Address - 0x0002</li>
+  <li>Port ID - 0x0003</li>
+  <li>Capabilities - 0x0004</li>
+  <li>Version - 0x0005</li>
+  <li>Platform - 0x0006</li>
+  <li>IP Prefix - 0x0007</li>
+  <li>VTP Management Domain - 0x0009 {: .red}</li>
+  <li>Native VLAN - 0x000a {: .red}</li>
+  <li>Duplex Status - 0x000b {: .red}</li>
+  <li>Appliance ID - 0x000c {: .red}</li>
+  <li>Power consumption - 0x0010 {: .red}</li>
+</ul>
 
-<p>With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.</p>
+<h4 id="value">Value</h4>
+<ul>
+  <li>Device ID - MAC address in ASCII or the FQDN</li>
+  <li>Address</li>
+  <li>Port ID - ASCII string that names the port from which the message was sent</li>
+  <li>Capabilities - has a value describing the device capabilities:
+    <ul>
+      <li>0x01 - level 3 routing</li>
+      <li>0x02 - level 2 transparent bridging</li>
+      <li>0x04 - level 2 source-route bridging</li>
+      <li>0x08 - level 2 switching not running Spanning Tree</li>
+      <li>0x10 - sends and receives packets for a network layer protocol</li>
+      <li>0x20 - the device does not forward IGMP reports</li>
+      <li>0x40 - level 1 function</li>
+    </ul>
+  </li>
+  <li>Version - software version running the device</li>
+  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
+  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
+</ul>
 
-<p>With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.</p>
+<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
 
-<p>IP based forwarding has the same principles as the MAC based forwarding outlined above.</p>
+<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
 
-<p>To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.</p>
-
-<p>To configure EtherChannel load-balancing, in global config use the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
-</code></pre>
-</div>
-<p>`
-The default is src-mac.</p>
-
-<p>One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.</p>
 
   </article>
 </div>
@@ -221,9 +244,9 @@ The default is src-mac.</p>
     
       <li>
         <h3>
-          <a href="/layer%202/2017/03/06/CDP-Basics/">
-            CDP Basics
-            <small>06 Mar 2017</small>
+          <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
+            MultiChassis EtherChannel
+            <small>27 Feb 2017</small>
           </a>
         </h3>
       </li>
@@ -237,8 +260,8 @@ The default is src-mac.</p>
   <div id="disqus_thread"></div>
   <script>
 var disqus_config = function () {
-  this.page.url = 'http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-Load-Balancing/'; // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = '/etherchannel/2017/02/26/EtherChannel-Load-Balancing'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+  this.page.url = 'http://bsrandall.github.io/layer%202/2017/03/06/CDP-Basics/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/layer%202/2017/03/06/CDP-Basics'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 };
 (function() {
   var d = document, s = d.createElement('script');

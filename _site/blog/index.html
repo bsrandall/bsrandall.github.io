@@ -164,7 +164,45 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/cdp/2017/03/06/CDP-Configuration/">
+      <a href="/layer%202/2017/03/06/LLDP/">
+        LLDP
+      </a>
+    </h1>
+
+    <span class="post-date">06 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks.</p>
+
+<p>One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with <code class="highlighter-rouge">SW1#(config-if) description LINK_SW1_SW2</code>, that description would show up under Switch 2 LLDP like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW2# show lldp neighbors detail
+
+Casis id: 0019.569d.571a
+Port id: Fa0/24
+Port Description: LINK_SW1_SW2
+System Name: SW1.cisco.com
+</code></pre>
+</div>
+<p>`
+An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/06/LLDP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/06/LLDP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/06/CDP-Configuration/">
         CDP Configuration
       </a>
     </h1>
@@ -183,18 +221,31 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
 <p><code class="highlighter-rouge">R1#(config) cdp holdtime seconds</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
 
+<p><code class="highlighter-rouge">R1#(config) no cdp adertise-v2</code> disables the advertisement of CDPv2 advertisements if for some crazy reason you need to.</p>
+
+<p><code class="highlighter-rouge">R1#(config) clear cdp counters</code> resets the traffic counters to zero.</p>
+
+<p><code class="highlighter-rouge">R1#(config) clear cdp table</code> deletes the CDP table of information about neighbors</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp</code> displays the interval between CDP transmissions, the number of seconds a CDP advertisement is valid for a given port, and the version of the advertisement</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp interface [type number]</code> displays information about interfaces on which CDP is enabled</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp entry device-name</code> displays information about a specific neighbor</p>
+
+
     <article>
     <div class="post-more">
       
-      <a href="/cdp/2017/03/06/CDP-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/06/CDP-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/cdp/2017/03/06/CDP-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/06/CDP-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/cdp/2017/03/06/CDP-Basics/">
+      <a href="/layer%202/2017/03/06/CDP-Basics/">
         CDP Basics
       </a>
     </h1>
@@ -258,9 +309,9 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     <article>
     <div class="post-more">
       
-      <a href="/cdp/2017/03/06/CDP-Basics/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/06/CDP-Basics/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/cdp/2017/03/06/CDP-Basics/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/06/CDP-Basics/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
@@ -348,55 +399,6 @@ The protocols are so customized, that different platforms from the same vendor c
       <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
       <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/">
-        EtherChannel Load-Balancing
-      </a>
-    </h1>
-
-    <span class="post-date">26 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.</p>
-
-<p>To configure the load-balancing method by using the<code class="highlighter-rouge">port-channel load-balance</code> global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.</p>
-
-<p>The selected load balancing mode applies to all ether channels on a switch.</p>
-
-<p>With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the <em>incoming</em> packet. So packets from the same host use the same port in the channel.</p>
-
-<p>With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.</p>
-
-<p>With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.</p>
-
-<p>IP based forwarding has the same principles as the MAC based forwarding outlined above.</p>
-
-<p>To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.</p>
-
-<p>To configure EtherChannel load-balancing, in global config use the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
-</code></pre>
-</div>
-<p>`
-The default is src-mac.</p>
-
-<p>One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

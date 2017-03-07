@@ -11,7 +11,7 @@
 
   <title>
     
-      CDP Configuration &middot; No Excuses CCIE
+      LLDP &middot; No Excuses CCIE
     
   </title>
 
@@ -161,19 +161,27 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">CDP Configuration</h1>
+  <h1 class="post-title">LLDP</h1>
   <span class="post-date">06 Mar 2017</span>
    | 
   
-    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
   
   
   <article>
-    <p>To enable CDP globally we use <code class="highlighter-rouge">cdp run</code>. To enable CDP on a per-interface basis, use <code class="highlighter-rouge">cdp enable</code>.</p>
+    <p>LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks.</p>
 
-<p><code class="highlighter-rouge">R1#(config) cdp timer seconds</code>  specifies the frequency of CDP update transmissions.</p>
+<p>One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with <code class="highlighter-rouge">SW1#(config-if) description LINK_SW1_SW2</code>, that description would show up under Switch 2 LLDP like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW2# show lldp neighbors detail
 
-<p><code class="highlighter-rouge">R1#(config) cdp holdtime seconds</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
+Casis id: 0019.569d.571a
+Port id: Fa0/24
+Port Description: LINK_SW1_SW2
+System Name: SW1.cisco.com
+</code></pre>
+</div>
+<p>`
+An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).</p>
 
   </article>
 </div>
@@ -184,7 +192,16 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/cdp/2017/03/06/CDP-Basics/">
+          <a href="/layer%202/2017/03/06/CDP-Configuration/">
+            CDP Configuration
+            <small>06 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/layer%202/2017/03/06/CDP-Basics/">
             CDP Basics
             <small>06 Mar 2017</small>
           </a>
@@ -200,15 +217,6 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
         </h3>
       </li>
     
-      <li>
-        <h3>
-          <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/">
-            EtherChannel PaGP
-            <small>26 Feb 2017</small>
-          </a>
-        </h3>
-      </li>
-    
   </ul>
 </div>
 
@@ -218,8 +226,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <div id="disqus_thread"></div>
   <script>
 var disqus_config = function () {
-  this.page.url = 'http://bsrandall.github.io/cdp/2017/03/06/CDP-Configuration/'; // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = '/cdp/2017/03/06/CDP-Configuration'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+  this.page.url = 'http://bsrandall.github.io/layer%202/2017/03/06/LLDP/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/layer%202/2017/03/06/LLDP'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 };
 (function() {
   var d = document, s = d.createElement('script');

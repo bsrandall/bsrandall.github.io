@@ -1,7 +1,7 @@
 ---
 layout: post
 title: CDP Basics
-category: CDP
+category: Layer 2
 tag: knowledge
 ---
 CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default. 

@@ -11,7 +11,7 @@
 
   <title>
     
-      CDP Basics &middot; No Excuses CCIE
+      CDP Configuration &middot; No Excuses CCIE
     
   </title>
 
@@ -161,60 +161,31 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">CDP Basics</h1>
+  <h1 class="post-title">CDP Configuration</h1>
   <span class="post-date">06 Mar 2017</span>
    | 
   
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
   
   
   <article>
-    <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
+    <p>To enable CDP globally we use <code class="highlighter-rouge">cdp run</code>. To enable CDP on a per-interface basis, use <code class="highlighter-rouge">cdp enable</code>.</p>
 
-<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
+<p><code class="highlighter-rouge">R1#(config) cdp timer seconds</code>  specifies the frequency of CDP update transmissions.</p>
 
-<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
+<p><code class="highlighter-rouge">R1#(config) cdp holdtime seconds</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
 
-<h4 id="type">Type</h4>
-<ul>
-  <li>Device ID - 0x0001</li>
-  <li>Address - 0x0002</li>
-  <li>Port ID - 0x0003</li>
-  <li>Capabilities - 0x0004</li>
-  <li>Version - 0x0005</li>
-  <li>Platform - 0x0006</li>
-  <li>IP Prefix - 0x0007</li>
-  <li>VTP Management Domain - 0x0009 {: .red}</li>
-  <li>Native VLAN - 0x000a {: .red}</li>
-  <li>Duplex Status - 0x000b {: .red}</li>
-  <li>Appliance ID - 0x000c {: .red}</li>
-  <li>Power consumption - 0x0010 {: .red}</li>
-</ul>
+<p><code class="highlighter-rouge">R1#(config) no cdp adertise-v2</code> disables the advertisement of CDPv2 advertisements if for some crazy reason you need to.</p>
 
-<h4 id="value">Value</h4>
-<ul>
-  <li>Device ID - MAC address in ASCII or the FQDN</li>
-  <li>Address</li>
-  <li>Port ID - ASCII string that names the port from which the message was sent</li>
-  <li>Capabilities - has a value describing the device capabilities:
-    <ul>
-      <li>0x01 - level 3 routing</li>
-      <li>0x02 - level 2 transparent bridging</li>
-      <li>0x04 - level 2 source-route bridging</li>
-      <li>0x08 - level 2 switching not running Spanning Tree</li>
-      <li>0x10 - sends and receives packets for a network layer protocol</li>
-      <li>0x20 - the device does not forward IGMP reports</li>
-      <li>0x40 - level 1 function</li>
-    </ul>
-  </li>
-  <li>Version - software version running the device</li>
-  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
-  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
-</ul>
+<p><code class="highlighter-rouge">R1#(config) clear cdp counters</code> resets the traffic counters to zero.</p>
 
-<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
+<p><code class="highlighter-rouge">R1#(config) clear cdp table</code> deletes the CDP table of information about neighbors</p>
 
-<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
+<p><code class="highlighter-rouge">R1#(config) show cdp</code> displays the interval between CDP transmissions, the number of seconds a CDP advertisement is valid for a given port, and the version of the advertisement</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp interface [type number]</code> displays information about interfaces on which CDP is enabled</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp entry device-name</code> displays information about a specific neighbor</p>
 
 
   </article>
@@ -226,8 +197,17 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/cdp/2017/03/06/CDP-Configuration/">
-            CDP Configuration
+          <a href="/layer%202/2017/03/06/LLDP/">
+            LLDP
+            <small>06 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/layer%202/2017/03/06/CDP-Basics/">
+            CDP Basics
             <small>06 Mar 2017</small>
           </a>
         </h3>
@@ -242,15 +222,6 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
         </h3>
       </li>
     
-      <li>
-        <h3>
-          <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/">
-            EtherChannel PaGP
-            <small>26 Feb 2017</small>
-          </a>
-        </h3>
-      </li>
-    
   </ul>
 </div>
 
@@ -260,8 +231,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <div id="disqus_thread"></div>
   <script>
 var disqus_config = function () {
-  this.page.url = 'http://bsrandall.github.io/cdp/2017/03/06/CDP-Basics/'; // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = '/cdp/2017/03/06/CDP-Basics'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+  this.page.url = 'http://bsrandall.github.io/layer%202/2017/03/06/CDP-Configuration/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/layer%202/2017/03/06/CDP-Configuration'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 };
 (function() {
   var d = document, s = d.createElement('script');
