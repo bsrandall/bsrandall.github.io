@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-03-06T23:19:24-05:00</updated>
+ <updated>2017-03-06T23:21:54-05:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -20,16 +20,16 @@
    <content type="html">&lt;p&gt;LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks.&lt;/p&gt;
 
 &lt;p&gt;One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1#(config-if) description LINK_SW1_SW2&lt;/code&gt;, that description would show up under Switch 2 LLDP like this:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW2# show lldp neighbors detail
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW2# show lldp neighbors detail
 
-Casis id: 0019.569d.571a
+Chasis id: 0019.569d.571a
 Port id: Fa0/24
 Port Description: LINK_SW1_SW2
 System Name: SW1.cisco.com
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;`
-An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).&lt;/p&gt;
+
+&lt;p&gt;An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).&lt;/p&gt;
 </content>
  </entry>
  
