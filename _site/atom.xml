@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-03-06T21:21:35-05:00</updated>
+ <updated>2017-03-06T21:26:43-05:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -19,8 +19,9 @@
    <id>http://bsrandall.github.io/cdp/2017/03/06/CDP-Configuration</id>
    <content type="html">&lt;p&gt;To enable CDP globally we use &lt;code class=&quot;highlighter-rouge&quot;&gt;cdp run&lt;/code&gt;. To enable CDP on a per-interface basis, use &lt;code class=&quot;highlighter-rouge&quot;&gt;cdp enable&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cdp timer *seconds*&lt;/code&gt;  specifies the frequency of CDP update transmissions.
-&lt;code class=&quot;highlighter-rouge&quot;&gt;cdp holdtime *seconds*&lt;/code&gt; specifies the amount of time a receiving device should hold the information sent by your device before discarding it.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) cdp timer seconds&lt;/code&gt;  specifies the frequency of CDP update transmissions.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) cdp holdtime seconds&lt;/code&gt; specifies the amount of time a receiving device should hold the information sent by your device before discarding it.&lt;/p&gt;
 </content>
  </entry>
  

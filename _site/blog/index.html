@@ -179,8 +179,9 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     <article>
       <p>To enable CDP globally we use <code class="highlighter-rouge">cdp run</code>. To enable CDP on a per-interface basis, use <code class="highlighter-rouge">cdp enable</code>.</p>
 
-<p><code class="highlighter-rouge">cdp timer *seconds*</code>  specifies the frequency of CDP update transmissions.
-<code class="highlighter-rouge">cdp holdtime *seconds*</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
+<p><code class="highlighter-rouge">R1#(config) cdp timer seconds</code>  specifies the frequency of CDP update transmissions.</p>
+
+<p><code class="highlighter-rouge">R1#(config) cdp holdtime seconds</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
 
     <article>
     <div class="post-more">
