@@ -18,6 +18,54 @@
 					<integer>16</integer>
 				</dict>
 			</dict>
+			<key>03-09-2017-SPAN.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>510740172.41392201</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>125</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
+			<key>03-11-2017-SPAN-Configuration.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>510977417.17489201</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>129</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
+			<key>03-13-2017-VSS.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>511113229.66537303</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>133</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
+			<key>03-17-2017-Spanning-Tree-Types.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>511481049.95530999</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>134</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>21</integer>
+				</dict>
+			</dict>
 			<key>2017-02-20-Git.md</key>
 			<dict>
 				<key>lastModification</key>
@@ -168,22 +216,6 @@
 					<integer>16</integer>
 				</dict>
 			</dict>
-			<key>2017-02-23-MST-IST.md</key>
-			<dict>
-				<key>explicitUnassignment</key>
-				<true/>
-				<key>firstUnassignment</key>
-				<real>510502833.88167298</real>
-				<key>lastModification</key>
-				<real>510502833.88167298</real>
-				<key>version</key>
-				<dict>
-					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>57</integer>
-					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
-					<integer>17</integer>
-				</dict>
-			</dict>
 			<key>2017-02-24-EtherChannel-LACP.md</key>
 			<dict>
 				<key>lastModification</key>
@@ -268,18 +300,38 @@
 					<integer>18</integer>
 				</dict>
 			</dict>
-			<key>Untitled.md</key>
+			<key>2017-03-07-UDLD.md</key>
 			<dict>
-				<key>explicitUnassignment</key>
-				<true/>
-				<key>firstUnassignment</key>
-				<real>510552429.40237099</real>
 				<key>lastModification</key>
-				<real>510552429.40237099</real>
+				<real>510627638.00550699</real>
 				<key>version</key>
 				<dict>
 					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>101</integer>
+					<integer>113</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
+			<key>2017-03-08-CST.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>510715017.20111197</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>121</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>18</integer>
+				</dict>
+			</dict>
+			<key>2017-03-08-Spanning-Tree-Intro.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>510706358.41209501</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>117</integer>
 					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
 					<integer>18</integer>
 				</dict>
@@ -288,9 +340,6 @@
 	</dict>
 	<key>sheetClusters</key>
 	<array>
-		<array>
-			<string>Untitled.md</string>
-		</array>
 		<array>
 			<string>2017-02-20-Hello-World.md</string>
 		</array>
@@ -346,9 +395,6 @@
 			<string>2017-02-27-EtherChannel-MultiChassis.md</string>
 		</array>
 		<array>
-			<string>2017-02-23-MST-IST.md</string>
-		</array>
-		<array>
 			<string>2017-03-06-CDP-Basics.md</string>
 		</array>
 		<array>
@@ -356,6 +402,27 @@
 		</array>
 		<array>
 			<string>2017-03-06-LLDP.md</string>
+		</array>
+		<array>
+			<string>2017-03-07-UDLD.md</string>
+		</array>
+		<array>
+			<string>2017-03-08-Spanning-Tree-Intro.md</string>
+		</array>
+		<array>
+			<string>2017-03-08-CST.md</string>
+		</array>
+		<array>
+			<string>03-09-2017-SPAN.md</string>
+		</array>
+		<array>
+			<string>03-11-2017-SPAN-Configuration.md</string>
+		</array>
+		<array>
+			<string>03-13-2017-VSS.md</string>
+		</array>
+		<array>
+			<string>03-17-2017-Spanning-Tree-Types.md</string>
 		</array>
 	</array>
 	<key>storeFormatVersion</key>
@@ -365,9 +432,9 @@
 		<key>sheetClusters</key>
 		<dict>
 			<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-			<integer>110</integer>
+			<integer>134</integer>
 			<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
-			<integer>18</integer>
+			<integer>22</integer>
 		</dict>
 	</dict>
 </dict>

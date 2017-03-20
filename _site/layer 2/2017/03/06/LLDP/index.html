@@ -169,7 +169,9 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   
   <article>
-    <p>LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks.</p>
+    <p>LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks. LLDP is described under IEEE 802.1AB LLDP.</p>
+
+<p>LLDP, like CDP, also uses TLVs to describe neighbor devices and capabilities.</p>
 
 <p>One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with <code class="highlighter-rouge">SW1#(config-if) description LINK_SW1_SW2</code>, that description would show up under Switch 2 LLDP like this:</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>SW2# show lldp neighbors detail
@@ -183,6 +185,10 @@ System Name: SW1.cisco.com
 
 <p>An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).</p>
 
+<p>One difference between CDP and LLDP is that with LLDP the Hello timer is set to 30 seconds by default and the hold time is set to 4 times the Hello time. CDP is 60 seconds and the hold timer is 3 times the Hello time, as a reminder. Another difference is that LLDP has a reinitialization delay (default 2 seconds).  This is the time that an LLDP port waits before reinitializing LLDP transmission. The command to set the reinitialization period is <code class="highlighter-rouge">SW1#(config) lldp reinit</code>.</p>
+
+<p>You can also set LLDP up to only transmit and not receive LLDP packets. This is done by using the <code class="highlighter-rouge">SW1#(config) no lldp receive</code> command. You can also do this on a per-interface basis. Likewise, you can also disallow sending LLDP packets with the <code class="highlighter-rouge">SW1#(config) no lldp transmit</code> command, which can also be done at the interface level.</p>
+
   </article>
 </div>
 
@@ -192,27 +198,27 @@ System Name: SW1.cisco.com
     
       <li>
         <h3>
-          <a href="/layer%202/2017/03/06/CDP-Configuration/">
-            CDP Configuration
-            <small>06 Mar 2017</small>
+          <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/">
+            Spanning Tree Intro
+            <small>08 Mar 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/layer%202/2017/03/06/CDP-Basics/">
-            CDP Basics
-            <small>06 Mar 2017</small>
+          <a href="/spanning%20tree/2017/03/08/CST/">
+            Common Spanning Tree
+            <small>08 Mar 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
-            MultiChassis EtherChannel
-            <small>27 Feb 2017</small>
+          <a href="/layer%202/2017/03/07/UDLD/">
+            UDLD
+            <small>07 Mar 2017</small>
           </a>
         </h3>
       </li>

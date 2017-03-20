@@ -11,7 +11,7 @@
 
   <title>
     
-      CDP Basics &middot; No Excuses CCIE
+      Spanning Tree Intro &middot; No Excuses CCIE
     
   </title>
 
@@ -161,60 +161,27 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">CDP Basics</h1>
-  <span class="post-date">06 Mar 2017</span>
+  <h1 class="post-title">Spanning Tree Intro</h1>
+  <span class="post-date">08 Mar 2017</span>
    | 
   
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
   
   
   <article>
-    <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
+    <p><img src="https://networklessons.com/wp-content/uploads/2013/01/switches-redundant-cable-1.png" alt="" /></p>
 
-<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
+<p>Imagine in the above diagram that H1 sends out an ARP request, which is a broadcast frame. SW1 will forward this broadcast frame on ports Fa0/0 and Fa1/0 toward SW2.</p>
 
-<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
+<p>SW2 will forward the broadcast frame it received on Fa0/0 out Fa1/0 and the interface connected to H2. This cycle will continue and continue. By introducing redundancy, we have created an environment that is friendly to Layer 2 loops. And since Ethernet frames do not have a TTL, they will loop around forever.</p>
 
-<h4 id="type">Type</h4>
-<ul>
-  <li>Device ID - 0x0001</li>
-  <li>Address - 0x0002</li>
-  <li>Port ID - 0x0003</li>
-  <li>Capabilities - 0x0004</li>
-  <li>Version - 0x0005</li>
-  <li>Platform - 0x0006</li>
-  <li>IP Prefix - 0x0007</li>
-  <li>VTP Management Domain - 0x0009 {: .red}</li>
-  <li>Native VLAN - 0x000a {: .red}</li>
-  <li>Duplex Status - 0x000b {: .red}</li>
-  <li>Appliance ID - 0x000c {: .red}</li>
-  <li>Power consumption - 0x0010 {: .red}</li>
-</ul>
+<p>Spanning Tree is a Layer 2 protocol that was created to deal with the possible loop creation that is introduced with redundant Layer 2 loops. Spanning Tree takes over the Layer 2 forwarding decisions, and places certain ports in a blocking state to prevent the possibility of these loops occurring.</p>
 
-<h4 id="value">Value</h4>
-<ul>
-  <li>Device ID - MAC address in ASCII or the FQDN</li>
-  <li>Address</li>
-  <li>Port ID - ASCII string that names the port from which the message was sent</li>
-  <li>Capabilities - has a value describing the device capabilities:
-    <ul>
-      <li>0x01 - level 3 routing</li>
-      <li>0x02 - level 2 transparent bridging</li>
-      <li>0x04 - level 2 source-route bridging</li>
-      <li>0x08 - level 2 switching not running Spanning Tree</li>
-      <li>0x10 - sends and receives packets for a network layer protocol</li>
-      <li>0x20 - the device does not forward IGMP reports</li>
-      <li>0x40 - level 1 function</li>
-    </ul>
-  </li>
-  <li>Version - software version running the device</li>
-  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
-  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
-</ul>
+<p>When Spanning Tree is enabled, switches send out a special frame called a BPDU (Bridge Protocol Data Unit). Included in this BPDU is the Switch’s Priority and MAC Address, which concatenated equals the Bridge Id. Among connected Switch’s, the Switch with the lowest Bridge Id becomes the Root Bridge.</p>
 
-<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
+<p>A Root Bridge marks all of its ports as Designated, which are placed in a forwarding state. Designated ports lead away from the Root bridge.</p>
 
-<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
+<p>For the remaining switches, we have to elect one root port on each switch. The root port will be the port whose path has the lowest cost to the root bridge</p>
 
 
   </article>
@@ -223,15 +190,6 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
-    
-      <li>
-        <h3>
-          <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/">
-            Spanning Tree Intro
-            <small>08 Mar 2017</small>
-          </a>
-        </h3>
-      </li>
     
       <li>
         <h3>
@@ -251,6 +209,15 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
         </h3>
       </li>
     
+      <li>
+        <h3>
+          <a href="/layer%202/2017/03/06/LLDP/">
+            LLDP
+            <small>06 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
   </ul>
 </div>
 
@@ -260,8 +227,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <div id="disqus_thread"></div>
   <script>
 var disqus_config = function () {
-  this.page.url = 'http://bsrandall.github.io/layer%202/2017/03/06/CDP-Basics/'; // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = '/layer%202/2017/03/06/CDP-Basics'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+  this.page.url = 'http://bsrandall.github.io/spanning%20tree/2017/03/08/Spanning-Tree-Intro/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/spanning%20tree/2017/03/08/Spanning-Tree-Intro'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 };
 (function() {
   var d = document, s = d.createElement('script');

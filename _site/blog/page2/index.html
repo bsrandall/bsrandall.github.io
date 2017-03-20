@@ -164,6 +164,165 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/layer%202/2017/03/06/CDP-Basics/">
+        CDP Basics
+      </a>
+    </h1>
+
+    <span class="post-date">06 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
+
+<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
+
+<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
+
+<h4 id="type">Type</h4>
+<ul>
+  <li>Device ID - 0x0001</li>
+  <li>Address - 0x0002</li>
+  <li>Port ID - 0x0003</li>
+  <li>Capabilities - 0x0004</li>
+  <li>Version - 0x0005</li>
+  <li>Platform - 0x0006</li>
+  <li>IP Prefix - 0x0007</li>
+  <li>VTP Management Domain - 0x0009 {: .red}</li>
+  <li>Native VLAN - 0x000a {: .red}</li>
+  <li>Duplex Status - 0x000b {: .red}</li>
+  <li>Appliance ID - 0x000c {: .red}</li>
+  <li>Power consumption - 0x0010 {: .red}</li>
+</ul>
+
+<h4 id="value">Value</h4>
+<ul>
+  <li>Device ID - MAC address in ASCII or the FQDN</li>
+  <li>Address</li>
+  <li>Port ID - ASCII string that names the port from which the message was sent</li>
+  <li>Capabilities - has a value describing the device capabilities:
+    <ul>
+      <li>0x01 - level 3 routing</li>
+      <li>0x02 - level 2 transparent bridging</li>
+      <li>0x04 - level 2 source-route bridging</li>
+      <li>0x08 - level 2 switching not running Spanning Tree</li>
+      <li>0x10 - sends and receives packets for a network layer protocol</li>
+      <li>0x20 - the device does not forward IGMP reports</li>
+      <li>0x40 - level 1 function</li>
+    </ul>
+  </li>
+  <li>Version - software version running the device</li>
+  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
+  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
+</ul>
+
+<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
+
+<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/06/CDP-Basics/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/06/CDP-Basics/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
+        MultiChassis EtherChannel
+      </a>
+    </h1>
+
+    <span class="post-date">27 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.</p>
+
+<p>With MultiChassis EtherChannel, we trick the server into running LAG between two different access switches. There are multiple ways to do this using different protocols made by different vendors. We generically call it MLAG.</p>
+
+<p>The protocol must take a physical triangle as seen below, and make it into a logical point-to-point. Many problems arise that the protocol must deal with. If NIC A sends traffic to Switch A, Switch A must know not to send that to Switch B, or else a loop might form.
+<img src="http://www.cisco.com/c/dam/en/us/td/i/200001-300000/220001-230000/226001-227000/226936.eps/_jcr_content/renditions/226936.jpg" alt="" />
+The protocols are so customized, that different platforms from the same vendor cannot even run MLAG. The control place has to be identical. Cisco therefore has a couple of implementations.</p>
+
+<p><em>Stackwise Cross-Stack EtherChannel</em> has control plane over dedicated stacking cables. These stack cables create a bidirectional closed loop as seen below. One control plane is shared amongst members as well as one management plane. So if you were to log into one switch, you are actually viewing the configuration for the stack. This is used on the Access Platforms such as Catalyst 3750/3850. StackWise can have more than 2 members, up to the stack limit
+<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRguQ7GRPRoSYAmPfJ4MCMN2r160qFDougT6yyluxFXu6n42Foxgg" alt="" /></p>
+
+<p><em>Virtual Switching System (VSS)</em> is used on the aggregation platforms such as Catalyst 4500/6500/6800. VSS is similar to Stackwise as there is one management plane and one control plane shared between connected switches. Typically with VSL, the links are going to be 2x10G LAG. VSS switches are udeployed in pairs and will usually have 1 active supervisor and 3 standby supervisors.</p>
+
+<p><em>Virtual Port Channel (vPC)</em> is very similar to VSS but it runs on the Data Center platforms such as Nexus 5000/7000/9000. The control plane is synchronized over a vPC Peer Link, which are typically 2x10GigE LAG. The biggest difference between vPC and VSS, is that vPC has <em>2</em> independent control planes and <em>2</em> independent management planes. vPC like VSS is deployed in pairs.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/">
+        EtherChannel PaGP
+      </a>
+    </h1>
+
+    <span class="post-date">26 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.</p>
+
+<p>The two modes of PAgP are:</p>
+<ul>
+  <li>auto: places a port into a passive negotiating state</li>
+  <li>desirable: places a port into active negotiating state</li>
+</ul>
+
+<p>For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.</p>
+
+<p>PAgP supports up to 8 Ethernet ports of the same type.</p>
+
+<p>For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:</p>
+<ul>
+  <li>Allowed-VLAN list</li>
+  <li>Spanning-tree path cost for each VLAN</li>
+  <li>Spanning-tree port priority for each VLAN</li>
+  <li>Spanning-tree Port Fast setting</li>
+</ul>
+
+<p>For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/">
         EtherChannel Load-Balancing
       </a>
@@ -269,123 +428,6 @@ SW2# switchport mode trunk
       <a href="/etherchannel/2017/02/24/EtherChannel-LACP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
       <a href="/etherchannel/2017/02/24/EtherChannel-LACP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/mst/2017/02/23/MST-IST-CIST/">
-        MST IST-CIST
-      </a>
-    </h1>
-
-    <span class="post-date">23 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>IST is the Internal Spanning Tree, also known as instance 0. This instance is designated to carry all STP information, including information from other instances. MSTP does not send BPDUs for ever instance separately - these are all contained within the IST BPDU.</p>
-
-<p>To accommodate, the other instances information is carried within the IST BPDU using special M-Record fields - one for every active MSTI. These fields carry carry MSTP information such as bridge priority, root path cost, and port priority.</p>
-
-<p>IST also plays a huge role in multiple MSTP region configurations. When a switch receives a BPDU from another region, it marks the corresponding port as MSTP <em>boundary</em>. The interconnected, different region switches then form a CIST spanning across the regions.</p>
-
-<p><img src="http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-physical-topology.png" alt="" /></p>
-
-<p>Remember, an IST is internal to a region while a CIST is the IST spanning across multiple regions.</p>
-
-<p>Here is a sample MST BPDU:</p>
-
-<p><img src="http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-cst-mstp-packet-format.png" alt="" /></p>
-
-<p>The CIST Root is elected among all regions while the CIST Regional Root is elected in every region. The IST Root = CIST Regional Root in cases where multiple MST regions interoperate. The CIST Root is the bridge that has the lowest Bridge Id among all regions - the CIST Root could be a bridge inside a region or a boundary switch in a region. The CIST Regional Root is a <em>boundary switch</em> elected for every region based on the shortest external path cost to reach the CIST Root. As mentioned above, it is important to remember that the CIST Regional Root becomes the root of the IST for the given region as well - the region changes its IST election process to make the CIST Regional Root the IST root.</p>
-
-<p>When an MST switch boots up, it declares itself the CIST Root and CIST Regional Root and announce that it its outgoing BPDUs on all internal ports. On boundary ports (those that have received BPDUs from another region), the switch will only advertise its CIST Root Bridge ID and CIST External Root Path Cost, hiding the details of the region’s inner topology.</p>
-
-<p>The region that contains the CIST Root automatically places all of its boundary ports in an unblocked state.</p>
-
-<p>The <em>CIST External Root Path Cost</em> is the cost to reach the CIST Root across the links connecting the boundary ports. When a BPDU is received on an internal link, this cost is not changed.</p>
-
-<p>Only a boundary switch can be elected as the CIST Regional Root, and this is the switch with the lowest cost to reach the CIST Root. If a boundary switch receives a BPDU with a lower CIST External Root Path cost on one of its internal ports, it will stop announcing itself as the CIST Regional Root and start announcing the new metric out of its boundary ports.</p>
-
-<p>If a switch is a CIST Regional Root, it elects one of its boundary ports as the CIST Root port and blocks all other boundary ports. If a boundary switch is not the CIST Regional Root, it will mark its boundary ports as Designated or Alternate, Designate only if it has a better External Root Path cost or in case of a tie, lower CIST Regional Root Bridge ID.</p>
-
-<p>The regional MSTIs are constructed independently at every region, but they have to be mapped to the CIST at the boundary ports. This equates to the inability to load-balance VLAN traffic on the boundary links by mapping VLANs to different instances.</p>
-
-<p>A topology change in the CST could change all paths in the topology thus requiring massive MAC address relearning.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/mst/2017/02/23/MST-IST-CIST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/mst/2017/02/23/MST-IST-CIST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/23/EtherChannel-General/">
-        EtherChannel
-      </a>
-    </h1>
-
-    <span class="post-date">23 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>LAG goal is to trick our Spanning Tree Protocol into forwarding active/active across multiple links. The risk we take is an infinite loop in the data plane, as there is no TTL with Ethernet. The LAG negotiation protocols help to mitigate this risk. Static LAG is supported but not recommended, as a failure to LAG can cause an STP Loop. If you do deploy Static LAG, it is recommended to deploy EtherChannel Guard to help mitigate the chances of a loop.</p>
-
-<p>PAgP and LACP accomplish the exact same thing, just in different ways.</p>
-
-<p>Since both PAgP and LACP both require the member ports to have the same characteristics, a good command to start with is <code class="highlighter-rouge">show interfaces status</code>.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/23/EtherChannel-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/23/EtherChannel-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/vtp/2017/02/22/VTP-Pruning/">
-        VTP Pruning
-      </a>
-    </h1>
-
-    <span class="post-date">22 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>The principal of VTP pruning is if a client sends a broadcast to its connected switch’s access port, that switch will flood the broadcast to all other connected switches in the VTP / Layer 2 domain. Because of VTP, all the other switches would be aware of the client VLAN, and would thus be required to flood the broadcast to all other switches.</p>
-
-<p>But what if the other switches do not have any clients connected to access ports in that VLAN? They are still having to process the request, and the network segment still has to bear the broadcast traffic.</p>
-
-<p>When you enable VTP pruning, you are enabling it for the entire VTP domain.</p>
-
-<p>NEED TO FINISH</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/vtp/2017/02/22/VTP-Pruning/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/vtp/2017/02/22/VTP-Pruning/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

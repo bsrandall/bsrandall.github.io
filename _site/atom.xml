@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-03-06T23:21:54-05:00</updated>
+ <updated>2017-03-20T03:25:04-04:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -13,11 +13,69 @@
 
  
  <entry>
+   <title>Spanning Tree Intro</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/08/Spanning-Tree-Intro/"/>
+   <updated>2017-03-08T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/08/Spanning-Tree-Intro</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;https://networklessons.com/wp-content/uploads/2013/01/switches-redundant-cable-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Imagine in the above diagram that H1 sends out an ARP request, which is a broadcast frame. SW1 will forward this broadcast frame on ports Fa0/0 and Fa1/0 toward SW2.&lt;/p&gt;
+
+&lt;p&gt;SW2 will forward the broadcast frame it received on Fa0/0 out Fa1/0 and the interface connected to H2. This cycle will continue and continue. By introducing redundancy, we have created an environment that is friendly to Layer 2 loops. And since Ethernet frames do not have a TTL, they will loop around forever.&lt;/p&gt;
+
+&lt;p&gt;Spanning Tree is a Layer 2 protocol that was created to deal with the possible loop creation that is introduced with redundant Layer 2 loops. Spanning Tree takes over the Layer 2 forwarding decisions, and places certain ports in a blocking state to prevent the possibility of these loops occurring.&lt;/p&gt;
+
+&lt;p&gt;When Spanning Tree is enabled, switches send out a special frame called a BPDU (Bridge Protocol Data Unit). Included in this BPDU is the Switch’s Priority and MAC Address, which concatenated equals the Bridge Id. Among connected Switch’s, the Switch with the lowest Bridge Id becomes the Root Bridge.&lt;/p&gt;
+
+&lt;p&gt;A Root Bridge marks all of its ports as Designated, which are placed in a forwarding state. Designated ports lead away from the Root bridge.&lt;/p&gt;
+
+&lt;p&gt;For the remaining switches, we have to elect one root port on each switch. The root port will be the port whose path has the lowest cost to the root bridge&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Common Spanning Tree</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/08/CST/"/>
+   <updated>2017-03-08T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/08/CST</id>
+   <content type="html">&lt;p&gt;Common Spanning-Tree (CST) assumes one spanning-tree instance for the entire bridged network, regardless of the number of VLANs. Running only one instance reduces CPU load. All CST BPDUs are sent over trunks using the native VLAN with untagged frames.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>UDLD</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/07/UDLD/"/>
+   <updated>2017-03-07T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/07/UDLD</id>
+   <content type="html">&lt;p&gt;UDLD, or Unidirectional Link Detection, is a Cisco proprietary, Layer 2 protocol that helps detects if either the transmit or the receive fails on a link. It’s purpose is similar to LoopGuard, but it is completely independent of Spanning Tree. The operation of UDLD is fairly simple. A switch sends UDLD Hellos and if it receives echoes of those Hellos back it knows the link is an active two way link. As soon as it quits receiving the UDLD Hellos, it knows there must be a unidirectional link failure. UDLD operates at the physical port level, compared to say STP LoopGuard which works at the logical port level (EtherChannel). Also UDLD functions at linkup, while LoopGuard does not. It is recommended to enable both UDLD and LoopGuard.&lt;/p&gt;
+
+&lt;p&gt;UDLD is mainly used on fiber connections, but it can also be useful on Ethernet connections that have dumb devices in the middle such as media converters.&lt;/p&gt;
+
+&lt;p&gt;The default advertisement timer is 15 seconds and the hold time is 5 seconds. Upon detecting the loss of a UDLD neighbor, UDLD will send seven additional advertisements (one per second). If no reply is received, the link’s bidirectional status transitions to unknown.&lt;/p&gt;
+
+&lt;p&gt;To set up UDLD globally, use &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1(config)# udld enable&lt;/code&gt; and use the &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1(config-if)# udld port enable&lt;/code&gt; command to enable per interface. Use &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1(config)# udld enable aggressive&lt;/code&gt; if you want the ports to be shut down upon UDLD neighbor failure.&lt;/p&gt;
+
+&lt;p&gt;In order to reset an interface that was shut down by UDLD, use &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# udld reset&lt;/code&gt;, or the typical shut / no shut commands.&lt;/p&gt;
+
+&lt;p&gt;You could also enable auto recovery of the interface if desired. It would look like this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1(config)# errdisable recovery cause idled
+SW1(config)# errdisable recovery interval 30
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
    <title>LLDP</title>
    <link href="http://bsrandall.github.io/layer%202/2017/03/06/LLDP/"/>
    <updated>2017-03-06T00:00:00-05:00</updated>
    <id>http://bsrandall.github.io/layer%202/2017/03/06/LLDP</id>
-   <content type="html">&lt;p&gt;LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks.&lt;/p&gt;
+   <content type="html">&lt;p&gt;LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks. LLDP is described under IEEE 802.1AB LLDP.&lt;/p&gt;
+
+&lt;p&gt;LLDP, like CDP, also uses TLVs to describe neighbor devices and capabilities.&lt;/p&gt;
 
 &lt;p&gt;One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1#(config-if) description LINK_SW1_SW2&lt;/code&gt;, that description would show up under Switch 2 LLDP like this:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW2# show lldp neighbors detail
@@ -30,6 +88,10 @@ System Name: SW1.cisco.com
 &lt;/div&gt;
 
 &lt;p&gt;An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).&lt;/p&gt;
+
+&lt;p&gt;One difference between CDP and LLDP is that with LLDP the Hello timer is set to 30 seconds by default and the hold time is set to 4 times the Hello time. CDP is 60 seconds and the hold timer is 3 times the Hello time, as a reminder. Another difference is that LLDP has a reinitialization delay (default 2 seconds).  This is the time that an LLDP port waits before reinitializing LLDP transmission. The command to set the reinitialization period is &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1#(config) lldp reinit&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can also set LLDP up to only transmit and not receive LLDP packets. This is done by using the &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1#(config) no lldp receive&lt;/code&gt; command. You can also do this on a per-interface basis. Likewise, you can also disallow sending LLDP packets with the &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1#(config) no lldp transmit&lt;/code&gt; command, which can also be done at the interface level.&lt;/p&gt;
 </content>
  </entry>
  
