@@ -4,13 +4,415 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-03-20T03:25:04-04:00</updated>
+ <updated>2017-03-28T20:20:10-04:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Spanning Tree Root Guard</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-Root-Guard/"/>
+   <updated>2017-03-28T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-Root-Guard</id>
+   <content type="html">&lt;p&gt;Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.&lt;/p&gt;
+
+&lt;p&gt;Root Guard is enabled on a per port basis. Root Guard ensures that the port on which it is configured remains a designated port. If the bridge receives superior BPDUs on that designated port, Root Guard moves the port to root-inconsistent state, which is effectively equivalent to the STP listening state so no frames are forwarded.&lt;/p&gt;
+
+&lt;p&gt;The difference between BPDU Guard and Root Guard is that Root Guard allows the port to participate in STP, so long as the port does not receive a &lt;em&gt;superior&lt;/em&gt; BPDU. With BPDU Guard, &lt;em&gt;any&lt;/em&gt; BPDU will put the port into an err-disabled state.&lt;/p&gt;
+
+&lt;p&gt;Again, Root Guard is enabled on a per interface basis as below.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface gig0/1
+SW!(config-if)# spanning-tree rootguard
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The Cisco explanation is located &lt;a href=&quot;http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/10588-74.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Spanning Tree BPDU Guard</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Guard/"/>
+   <updated>2017-03-28T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Guard</id>
+   <content type="html">&lt;p&gt;BPDU Guard is a STP PortFast safety enhancement. It works by disabling a port any time the interface hears a BPDU. PortFast by itself will not do that, so if you have PortFast enabled on an interface, and an end user plugs a switch into that link, all kinds of events can happen (including the plugged in switch becoming the Root Bridge!). BPDU Guard ensures that unauthorized switches cannot be plugged into the network. A sample configuration is below.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;interface gig0/1
+  spanning-tree bodyguard enable
+
+errdisable recovery cause bpduguard
+errdisable recovery interval 120
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The errdisable section enables the port after 120 seconds, in case the port is placed into err disabled state to due BPDU Guard.&lt;/p&gt;
+
+&lt;p&gt;Optionally, you can set BPDU Guard as the default configuration on all interfaces with the following global commands:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;spanning-tree portfast bodyguard default
+spanning-tree portfast default
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Spanning Tree BPDU Filter</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Filter/"/>
+   <updated>2017-03-28T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Filter</id>
+   <content type="html">&lt;p&gt;BPDU Filter is another optional feature of STP. It is similar to BPDU Guard, in that it is used to terminate the STP domain. Like BPDU Guard, it can be enabled globally or per interface, but unlike BPDU Guard, BGPU filter behaves differently depending on how it is enabled.&lt;/p&gt;
+
+&lt;p&gt;If BPDU Filter is enabled at the interface level, it silently drops all received inbound BPDUs and does not send outbound BPDUs. Unlike BPDU Guard, there is no err-disabled option for BPDU Filter. Here is an example of BPDU Filter enabled at the interface level:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config-if)# switchport mode access
+SW1(config-if)# switchport access vlan 10
+SW1(config-if)# spanning-tree bpdufilter enable
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;When BPDU Filter is enabled globally, it will only affect PortFast enabled ports. The switch will send out exactly 11 BPDUs, and inbound BPDUs are not filtered. The reason 11 BPDUs are sent is the default Hello timer is 2 seconds and the default Max Age timer is 20 seconds. If the switch receives inbound BPDUs, the port loses its PortFast status and STP is negotiated normally on that port. For this reason, you can say that BPDU Filter enabled globally is a safer option than BPDU enabled at the interface level, as STP loops cannot form.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>STP UplinkFast</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-UplinkFast/"/>
+   <updated>2017-03-27T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-UplinkFast</id>
+   <content type="html">&lt;p&gt;UplinkFast provides fast convergence in case the link on which the root port is connected suffers a failure. It does this with the use of an uplink group. An uplink group is a set of Layer 2 interfaces, of which only one is forwarding at a particular time. If the root port (forwarding port) goes down, then a successor root port is chosen which immediately goes into Forwarding state, bypassing the Listening and Learning phases.&lt;/p&gt;
+
+&lt;p&gt;UplinkFast functionality is built into RSTP, so UplinkFast is only applicable with legacy IEEE 802.1D.&lt;/p&gt;
+
+&lt;p&gt;When UplinkFast is enabled on a switch, that switch’s bridge priority will automatically be increased to 49152 and its port cost will be increased to 3000. This is to ensure that the switch does not become a transit switch.&lt;/p&gt;
+
+&lt;p&gt;To enable UplinkFast, go to the switch on which you want it to run and run &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree uplinkfast&lt;/code&gt; in global configuration mode.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>STP PortFast</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-Portfast/"/>
+   <updated>2017-03-27T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-Portfast</id>
+   <content type="html">&lt;p&gt;PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.&lt;/p&gt;
+
+&lt;p&gt;To enable port fast on an interface, in interface sub configuration mode use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast&lt;/code&gt;. If it is a trunk you must append the &lt;code class=&quot;highlighter-rouge&quot;&gt;trunk&lt;/code&gt; keyword after the command, and if it is an access port you should use the &lt;code class=&quot;highlighter-rouge&quot;&gt;edge&lt;/code&gt; keyword.&lt;/p&gt;
+
+&lt;p&gt;Another way to enable PortFast for access ports is to use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast default&lt;/code&gt; in global configuration mode. Once enabled, all access ports will automatically have PortFast enabled.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Spanning Tree BackboneFast</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-BackboneFast/"/>
+   <updated>2017-03-27T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-BackboneFast</id>
+   <content type="html">&lt;p&gt;BackboneFast enables fast reconvergence due to indirect link failures. The key operation happens when a switch begins receiving inferior BPDUs.  When a switch loses the link off its Root Port, it immediately starts sending BPDUs announcing itself as the new Root. Usually, when a switch receives inferior BPDUs, it will wait for its Max Age timer to expire before beginning STP convergence. Once its Max Age timer expires, the inferior BPDU ages out and the switch will then forward its superior BPDU to the neighbor switch who was sending the inferior BPDU.&lt;/p&gt;
+
+&lt;p&gt;When BackboneFast is enabled, as soon as a switch receives an inferior BPDU, it will send RLQ (Root Link Query) messages out all it’s non-designated ports. The RLQ asks other switches if the current Root Bridge is accessible via that switch. Note it doesn’t wait for its Max Age timer to expire - it begins sending RLQ messages immediately. The RLQ is a new type of PDU defined within the BackboneFast specification. The RLQ is essentially a proactive way to age out ports compared to just waiting on the Max Age timer to expire.&lt;/p&gt;
+
+&lt;p&gt;Based on the received RLQ responses, the switch will update its root ports and designated ports accordingly.. However all ports still transition through the regular IEEE 802.1D STP port states - listening, learning, and forwarding/blocking.&lt;/p&gt;
+
+&lt;p&gt;To enable BackboneFast use the command &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree backbonefast&lt;/code&gt; on all switches in the Layer 2 domain. The easiest way to verify that BackboneFast is enabled is to use the &lt;code class=&quot;highlighter-rouge&quot;&gt;show spanning-tree summary&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;This is a great Cisco article describing the operation: &lt;a href=&quot;http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/12014-18.html&quot;&gt;BackboneFast&lt;/a&gt;.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Debugging Spanning Tree Events</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/Debugging-STP/"/>
+   <updated>2017-03-27T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/Debugging-STP</id>
+   <content type="html">&lt;p&gt;Here is a configuration for debugging Spanning Tree events:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# debug spanning-tree events
+SW1# debug condition vlan 2
+SW1# config t
+SW1(config)# service timestamps debug datetime msec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>STP Convergence Timers</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/26/STP-Timers/"/>
+   <updated>2017-03-26T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/26/STP-Timers</id>
+   <content type="html">&lt;p&gt;There are 3 timers we need to be concerned with in Spanning Tree: the Hello Time, the Forward Delay, and the Max-Age Time.&lt;/p&gt;
+
+&lt;p&gt;The Hello Time is the frequency with which BPDUs are transmitted from the root bridge. It can be adjusted with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree vlan 1-4094 hello-time 3&lt;/code&gt; where 3 is in seconds. The default is 2 seconds, but in can be adjusted between 1 and 10 seconds. Non-root bridges will never generate BPDUs, but only relay BPDUs they receive on their root port.&lt;/p&gt;
+
+&lt;p&gt;The Forward Delay is the time that is spent in the listening and learning states. Its value is 15 seconds by default, but it can be adjusted to anywhere between 4 and 30 seconds.&lt;/p&gt;
+
+&lt;p&gt;The Max Age timer controls the maximum length of time that passes before a bridge port saves its configuration BPDU. This time is 20 seconds by default, but it can be tuned to be anytime between 6 and 40 seconds.&lt;/p&gt;
+
+&lt;p&gt;There is another item that is not a timer but is related. This is the &lt;em&gt;message age&lt;/em&gt;. The root bridge sends all of its BPDUs with a message age of 0. Each downstream switch then adds 1 to this message age value. The actual age out time of the downstream switches is then (max age - message age).&lt;/p&gt;
+
+&lt;p&gt;Here is a good article that describes the Max Age timer as it relates to superior BPDUs:  &lt;a href=&quot;https://packetmagnifier.wordpress.com/2013/09/09/understanding-stp-max-age/&quot;&gt;Max Age&lt;/a&gt;. If a switch’s root port goes down, there is no need for it to go through the Max Age timer process - if there are no better BPDUs received, the switch will immediately start announcing itself as root and begin sending BPDUs. In the scenario in the article, the switch that went down is sending inferior BPDUs, but yet the receiving switch goes through the Max Age process before it transforms its non-designated port to a Designated Port and begins sending the superior BPDUs towards the switch that suffered the down link.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>STP Path Selection with Port Cost</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/21/STP-Port-Cost/"/>
+   <updated>2017-03-21T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/21/STP-Port-Cost</id>
+   <content type="html">&lt;p&gt;There are two ways we can alter STP Path selection. We can alter the cost of a port, or we can change the priority of a port.&lt;/p&gt;
+
+&lt;p&gt;When a switch receives a BPDU, that BPDU contains the root path cost from the previous switch. The receiving switch then adds the cost of the link between it and the sending switch from which it received the BPDU. That is very important - it is the receiving switch that adds the cost associated with its interface to the Root Path Cost it received from the sending switch.&lt;/p&gt;
+
+&lt;p&gt;Cost is used for the selection of the root port to the upstream switch.&lt;/p&gt;
+
+&lt;p&gt;Priority is used for influencing the root port of the downstream switch, and as such, it is set up on a port in Designated state. Cost has a higher precedence than priority. You will see priority on the local switch &lt;code class=&quot;highlighter-rouge&quot;&gt;show spanning-tree vlan 2&lt;/code&gt; but it will actually affect the forwarding decision on the downstream connected switch.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>STP Root Bridge Election</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/"/>
+   <updated>2017-03-20T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Root-Bridge-Election</id>
+   <content type="html">&lt;p&gt;STP Root Bridge Election is based on the Bridge ID of the switches in the active Layer 2 domain. The Bridge ID is made up of the 4-bit bridge priority, a 12-bit Systems ID, and the 48-bit MAC address. The bridge priority is configurable from 0 to 61440. The default is 32768. The System ID is taken from the VLAN number (IEEE 802.1t).&lt;/p&gt;
+
+&lt;p&gt;The election process is very simple. Each bridge starts off assuming it is the Root Bridge and sends BPDUs out advertising itself as such. If it receives a superior BPDU (a BPDU that has a Bridge ID lower than its current root bridge Bridge ID), it ceases advertising that Root Bridge and begins advertising the new Root Bridge with the lower Bridge ID. This process continues until all switches in the domain agree to the same Root Bridge.&lt;/p&gt;
+
+&lt;p&gt;Note that since MAC addresses are guaranteed to be unique, there will always be 1 Root Bridge elected. If all switches are set to the default priority, then the switch with the lowest MAC Address will become the Root Bridge. this is a bad idea for many reasons. One, you typically want your distribution layer switch to be the Root Bridge. Second, older switches will have lower MAC addresses, so your switch with the least resources ends up having a heavier load along with a higher chance for failure&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>STP Root Bridge Election</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Port-Election/"/>
+   <updated>2017-03-20T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Port-Election</id>
+   <content type="html">&lt;p&gt;After the election of the STP Root Bridge, all ports in the Layer 2 Switch topology will need to be assigned a state. The steps can be listed as follows:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;All ports on the Root Bridge become Designated Ports&lt;/li&gt;
+  &lt;li&gt;On each non-root switch, exactly ONE port is elected as the &lt;em&gt;Root Port&lt;/em&gt; which is the port having the lowest path-cost to the Root Bridge.&lt;/li&gt;
+  &lt;li&gt;Each segment between switches will have one Designated Port which is the port on the segment that has the lowest path-cost to reach the root bridge.&lt;/li&gt;
+  &lt;li&gt;The Root and Designated Ports are placed into a Forwarding State.&lt;/li&gt;
+  &lt;li&gt;The ports that are not Root ports or Designated Ports will be placed in the Blocking State. These are displayed in show commands with an A for Alternate.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It is helpful to remember that Designated Ports lead away from the Root Bridge, while Root Ports lead toward the Root Bridge.&lt;/p&gt;
+
+&lt;p&gt;What are the tiebreakers for Root Ports and Designated Ports?&lt;/p&gt;
+
+&lt;p&gt;The tiebreaker for Spanning Tree decisions is as follows:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Lowest root bridge ID (used for root bridge election)&lt;/li&gt;
+  &lt;li&gt;Lowest path cost to root bridge&lt;/li&gt;
+  &lt;li&gt;Lowest sender bridge ID (used when a switch is connected to two switches through which it has equal cost to reach the root bridge)&lt;/li&gt;
+  &lt;li&gt;Lowest sender port ID (when the switch has two interfaces connecting to the same switch and the cost to reach the root bridge is the same through either interface, it will use the interface with the lowest number as the root port (or designated port).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It is helpful to keep in mind for elections that there is only one bridge that originates BPDUs - the root bridge. Other bridges update some fields (such as Sending Bridge ID, Message Age, etc) when retransmitting out their designated ports.&lt;/p&gt;
+
+&lt;p&gt;The access ports will be designated ports typically and will send BPDUs toward the host, unless BPDU Filter is set.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Virtual Switch System</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/17/Spanning-Tree-Types/"/>
+   <updated>2017-03-17T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/17/Spanning-Tree-Types</id>
+   <content type="html">&lt;p&gt;There are several different versions of the Spanning Tree Protocol that we will come across. We will review them in chronological order today.&lt;/p&gt;
+
+&lt;p&gt;The original spanning tree is Common Spanning Tree, or CST. It was defined with IEEE 802.1D. The basic premise is to create a logical loop free topology for Ethernet networks by building a spanning tree of connected layer-2 bridges. The links that are not part of the spanning tree are disabled, leaving a single active path between any two network nodes.&lt;/p&gt;
+
+&lt;p&gt;PVST and PVST+ are both Cisco proprietary protocols. Cisco developed them as they believed we may need different spanning-trees on a per-VLAN basis for  the best path flow. PVST only ran over ISL trunks, but with PVST+ compatibility with 802.1q trunks arrived. The + version also added new features such as UplinkFast, BackboneFast, and PortFast.&lt;/p&gt;
+
+&lt;p&gt;RSTP is the IEEE’s answer to Cisco’s PVST+ implementation. RSTP took many of the added features of PVST+ and standardized them into IEEE 802.1w. RSTP added new bridge port roles and port states.&lt;/p&gt;
+
+&lt;p&gt;Cisco then responded to the IEEE 802.1w Rapid Spanning Tree Protocol with RPVST+, which is just RSTP with per-vlan support. RPVST+ supports both ISL and 802.1Q trunks.&lt;/p&gt;
+
+&lt;p&gt;When the concept of VLANs finally hit home when VoIP hit the LAN, everyone finally agreed that we needed VLAN support for STP. However, it was also determined that there are usually on three paths needed to support redundancy with Spanning Tree designs. But yet with Spanning Trees based on a per-VLAN approach, we may end up with way more than 3 instances of Spanning Tree running on the router.&lt;/p&gt;
+
+&lt;p&gt;This led to the introduction of Multiple Spanning Tree Protocol. It was originally defined with 802.1s and was later merged into IEEE 802.1Q-2005. MSTP creates on common Spanning Tree for the entire Layer 2 network. If a network contains multiple VLANs, we can create multiple Spanning Trees and then assign specific VLANs to specific Spanning Tree instances. Since most networks will need a maximum of two Spanning Tree instances, MSTP greatly reduces the overhead on the router compared to RPVST which needed a separate instance per VLAN.&lt;/p&gt;
+
+&lt;p&gt;Cisco MST supports both 802.1Q and ISL trunks.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Virtual Switch System</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/13/VSS/"/>
+   <updated>2017-03-13T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/13/VSS</id>
+   <content type="html">&lt;p&gt;VSS, or Virtual Switch System, exists in Cisco Catalyst 6500 and 4500 switches running IOS-XE. VSS simplifies the network by reducing the number of network elements. VSS can combine multiple Catalyst Switches into a single logical device. VSS logically combines a pair of switches into a single network element.&lt;/p&gt;
+
+&lt;p&gt;The two switches in the pair negotiate their roles - one will assume the role of the active switch while the other assumes the role of the standby switch. The VSS active switch controls the VSS, running the Layer 2 and Layer 3 protocols for both switches. Both switches perform packet forwarding as needed, but the standby switch sends all control traffic to the VSS active switch for processing.&lt;/p&gt;
+
+&lt;p&gt;The virtual switch link (VSL) is the link which ties the active and standby switches together. It is typically implemented as an EtherChannel, and therefore can support up to 8 links in the bundle. The attached devices (such as access switches) can then connect to the VSS using Multichassis EtherChannel. Unlike normal EtherChannel witch connects multiple links between two switches, MultiChassis EtherChannel can connect one switch over multiple links to two switches. In total, a VSS can support up to 256 EtherChannels in a combination of regular EtherChannels and MultiChassis EtherChannels (MEC).&lt;/p&gt;
+
+&lt;h4 id=&quot;configuration&quot;&gt;Configuration&lt;/h4&gt;
+
+&lt;p&gt;Both switches in a VSS pair need to belong to the same VSS domain. This domain is a number between 1 and 255. After creating the domain, you must configure one switch to be switch number 1 and the other switch to be switch number 2.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# switch virtual domain 10
+SW1(config-vs-domain)# switch 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW2(config)# switch virtual domain 10
+SW2(config-vs-domain)# switch 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next you should create the VSL between the two VSS switches.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface port-channel 5
+SW1(config-if)# switchport
+SW1(config-if)# switch virtual link 1
+SW1(config-if)# no shutdown
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW2(config)# interface port-channel 10
+SW2(config-if)# switchport
+SW2(config-if)# switch virtual link 2
+SW2(config-if)# no shutdown
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next, you have to put the physical interfaces into the appropriate port-channels created for the VSL.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# int range gig1/0-3
+SW1(config-if-range)# switchport mode trunk
+SW1(config-if-range)# channel-group 5 mode on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# int range gig1/0-3
+SW1(config-if-range)# switchport mode trunk
+SW1(config-if-range)# channel-group 10 mode on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next, to complete the switch conversion process you need to run the following command on each switch:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# switch convert mode virtual
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW2# switch convert mode virtual
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The switch will reload and when they come back up they will now be part of the VSS domain.&lt;/p&gt;
+
+&lt;p&gt;Some sample show commands are:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# show switch virtual
+
+SW1# show switch virtual role
+
+SW1# show switch virtual link
+
+SW1# show switch virtual link port-channel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>SPAN Configuration</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/11/SPAN-Configuration/"/>
+   <updated>2017-03-11T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/11/SPAN-Configuration</id>
+   <content type="html">&lt;p&gt;Basic SPAN Configuration:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# monitor session 1 source interface fa0/12
+SW1(config)# monitor session 1 destination interface fa0/24
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Here is an example where we will only monitor respective traffic from fa0/18 and only monitor sent traffic from interface fa0/19. Additionally we will filter (remove) VLANs 1 through 3. Finally, we will preserve the encapsulation from the sources:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# monitor session 1 source interface fa0/18 rx
+SW1(config)# monitor session 1 source interface fa0/19 tx
+SW1(config)# monitor session 1 filter vlan 1-3
+SW1(config)# monitor session 1 destination interface fa0/24 encapsulation replicate
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next we have a RSPAN sample configuration. We will monitor all traffic on VLANs 66-68 on SW1 and send it to VLAN 199, which will then be delivered to port fa0/24 on SW2:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# vlan 199
+SW1(config-vlan)# remote span
+SW1(config-vlan)# exit
+SW1(config)# monitor session 1 source vlan 66-68
+SW1(config)# monitor session 1 destination remote van 199
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW2(config)# vlan 199
+SW2(config-vlan)# remote span
+SW2(config-vlan)# exit
+SW2(config)# monitor session 2 source remote vlan 199
+SW2(config)# monitor session 2 destination interface fa0/24
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Notice above that the monitor session numbers do not have to match on each switch.&lt;/p&gt;
+
+&lt;p&gt;Finally, we have a ERSPAN example. We will configure R1 to capture received traffic and send it to SW1 gig2/1.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# monitor session 1 type erspan-source
+R1(config-mon-erspan-src)# source interface gig1/1 rx
+R1(config-mon-erspan-src)# no shutdown
+R1(config-mon-erspan-src)# destination
+R1(config-mon-erspan-src-dst)# erspan-id 101
+R1(config-mon-erspan-src-dst)# ip address 10.1.1.1
+R1(config-mon-erspan-src-dst)# origin ip address 172.16.1.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# monitor session 2 type erspan-destination
+SW1(config-mon-erspan-dst)# destination interface gig2/1
+SW1(config-mon-erspan-dst)# no shutdown
+SW1(config-mon-erspan-dst)# source
+SW1(config-mon-erspan-dst-src)# erspan-id 101
+SW1(config-mon-erspan-dst)# ip address 10.1.1.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A couple of configuration notes. First, you must make sure the destination port is not in a shutdown state or else the SPAN session will not come up.&lt;/p&gt;
+
+&lt;p&gt;To view the session, simply use &lt;code class=&quot;highlighter-rouge&quot;&gt;show monitor session 1&lt;/code&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>SPAN</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/09/SPAN/"/>
+   <updated>2017-03-09T00:00:00-05:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/09/SPAN</id>
+   <content type="html">&lt;p&gt;SPAN stands for Switch Port Analyzer. It is a way to direct all traffic from a source port or source VLAN to a single port. Some uses include IDS/IPS, VoIP Call recording, or troubleshooting / analysis.&lt;/p&gt;
+
+&lt;p&gt;If the destination port is on the local switch, we say it is in SPAN operation mode. The destination port could also be mapped to a port on a remote switch, in which case we call it Remote SPAN or RSPAN. In RSPAN, a specific VLAN must be configured across the entire switching path from the source port or VLAN to the RSPAN destination port. So the source is still at least one port or at least one VLAN,  but the destination is always the RSPAN VLAN. At the switch where the RSPAN destination port exists, the RSPAN VLAN is delivered to the RSPAN port.&lt;/p&gt;
+
+&lt;p&gt;Encapsulated Remote SPAN (ERSPAN) is a variant of RSPAN in which we are encapsulating the Remote SPAN information. ERSPAN creates a GRE tunnel for all captured traffic and allows it to be extended across Layer 3 domains. This became an option with IOS-XE.&lt;/p&gt;
+
+&lt;p&gt;Regardless of the type of SPAN we are running, the source port can be any type of port including EtherChannel, trunk port, routed port, etc. When using a VLAN as the source, all active ports in that VLAN are monitored, and the monitored ports are updated dynamically as membership to that VLAN changes. A port configured as a SPAN destination cannot be part of a SPAN source VLAN.&lt;/p&gt;
+
+&lt;p&gt;Iy is important to understand that when you configure a SPAN destination port, the existing configuration is removed buy is restored if you later remove the SPAN configuration. The destination port does not support any security, nor does it support any Layer 2 protocols such as CDP, VTP, etc. If the destination port was part of an EtherChannel, it will be removed from the EtherChannel once the SPAN configuration is applied.&lt;/p&gt;
+
+&lt;p&gt;There are a number of restrictions with SPAN including:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;the source can be one or more ports or a VLAN, but not both&lt;/li&gt;
+  &lt;li&gt;up to 64 destination ports can be configured on a switch&lt;/li&gt;
+  &lt;li&gt;you must be careful not to overload the destination port, especially if a VLAN is being monitored.&lt;/li&gt;
+  &lt;li&gt;within a single SPAN session, you cannot deliver traffic to a destination port when it is sourced by a mix of SPAN, RSPAN, or ERSPAN source ports or VLANs. This usually comes into play when you want to mirror source traffic to both a local port on a switch (SPAN mode) and a remote port on another switch (RSPAN mode).&lt;/li&gt;
+  &lt;li&gt;only one SPAN/RSPAN/ERSPAN session can send traffic to a single destination port&lt;/li&gt;
+  &lt;li&gt;if you use a trunk port as a SPAN or RSPAN source, then by default all VLANs on the trunk are monitored by default&lt;/li&gt;
+  &lt;li&gt;traffic that is routed from another VLAN to a source VLAN cannot be monitored with SPAN&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Finally, SPAN, RSPAN, and ERSPAN support three types of traffic: transmitted, received, and both (default). If you set a SPAN to monitor just receive or just transmit, some conditions apply:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;for Receive (RX) the goal is to deliver all traffic that is received by the SPAN source. As a result, each frame that is received by the source port or VLAN is copied to the destination port or VLAN &lt;em&gt;before&lt;/em&gt; any modifications are made to the frame (such as ACL filtering, QoS, etc)&lt;/li&gt;
+  &lt;li&gt;for Transmit (TX), all relevant filtering or modification to the frame is done before the switch forwards the traffic to the SPAN or RSPAN destination.&lt;/li&gt;
+  &lt;li&gt;SPAN usually ignores certain Layer 2 frames like CDP, BPDUs, etc. However, SPAN can be configured to forward that traffic to the destination port/VLAN with the &lt;code class=&quot;highlighter-rouge&quot;&gt;encapsulation replicate&lt;/code&gt; command&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Spanning Tree Intro</title>
@@ -59,11 +461,10 @@
 &lt;p&gt;In order to reset an interface that was shut down by UDLD, use &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# udld reset&lt;/code&gt;, or the typical shut / no shut commands.&lt;/p&gt;
 
 &lt;p&gt;You could also enable auto recovery of the interface if desired. It would look like this:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1(config)# errdisable recovery cause idled
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# errdisable recovery cause idled
 SW1(config)# errdisable recovery interval 30
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;`&lt;/p&gt;
 
 </content>
  </entry>

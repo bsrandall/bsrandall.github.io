@@ -1,7 +1,7 @@
 ---
 layout: post
 title: SPAN Configuration
-category: :Layer 2
+category: Layer 2
 tag: configuration
 ---
 Basic SPAN Configuration:

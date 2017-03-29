@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      SPAN &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">SPAN</h1>
+  <span class="post-date">09 Mar 2017</span>
+   | 
+  
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+  
+  
+  <article>
+    <p>SPAN stands for Switch Port Analyzer. It is a way to direct all traffic from a source port or source VLAN to a single port. Some uses include IDS/IPS, VoIP Call recording, or troubleshooting / analysis.</p>
+
+<p>If the destination port is on the local switch, we say it is in SPAN operation mode. The destination port could also be mapped to a port on a remote switch, in which case we call it Remote SPAN or RSPAN. In RSPAN, a specific VLAN must be configured across the entire switching path from the source port or VLAN to the RSPAN destination port. So the source is still at least one port or at least one VLAN,  but the destination is always the RSPAN VLAN. At the switch where the RSPAN destination port exists, the RSPAN VLAN is delivered to the RSPAN port.</p>
+
+<p>Encapsulated Remote SPAN (ERSPAN) is a variant of RSPAN in which we are encapsulating the Remote SPAN information. ERSPAN creates a GRE tunnel for all captured traffic and allows it to be extended across Layer 3 domains. This became an option with IOS-XE.</p>
+
+<p>Regardless of the type of SPAN we are running, the source port can be any type of port including EtherChannel, trunk port, routed port, etc. When using a VLAN as the source, all active ports in that VLAN are monitored, and the monitored ports are updated dynamically as membership to that VLAN changes. A port configured as a SPAN destination cannot be part of a SPAN source VLAN.</p>
+
+<p>Iy is important to understand that when you configure a SPAN destination port, the existing configuration is removed buy is restored if you later remove the SPAN configuration. The destination port does not support any security, nor does it support any Layer 2 protocols such as CDP, VTP, etc. If the destination port was part of an EtherChannel, it will be removed from the EtherChannel once the SPAN configuration is applied.</p>
+
+<p>There are a number of restrictions with SPAN including:</p>
+<ul>
+  <li>the source can be one or more ports or a VLAN, but not both</li>
+  <li>up to 64 destination ports can be configured on a switch</li>
+  <li>you must be careful not to overload the destination port, especially if a VLAN is being monitored.</li>
+  <li>within a single SPAN session, you cannot deliver traffic to a destination port when it is sourced by a mix of SPAN, RSPAN, or ERSPAN source ports or VLANs. This usually comes into play when you want to mirror source traffic to both a local port on a switch (SPAN mode) and a remote port on another switch (RSPAN mode).</li>
+  <li>only one SPAN/RSPAN/ERSPAN session can send traffic to a single destination port</li>
+  <li>if you use a trunk port as a SPAN or RSPAN source, then by default all VLANs on the trunk are monitored by default</li>
+  <li>traffic that is routed from another VLAN to a source VLAN cannot be monitored with SPAN</li>
+</ul>
+
+<p>Finally, SPAN, RSPAN, and ERSPAN support three types of traffic: transmitted, received, and both (default). If you set a SPAN to monitor just receive or just transmit, some conditions apply:</p>
+<ul>
+  <li>for Receive (RX) the goal is to deliver all traffic that is received by the SPAN source. As a result, each frame that is received by the source port or VLAN is copied to the destination port or VLAN <em>before</em> any modifications are made to the frame (such as ACL filtering, QoS, etc)</li>
+  <li>for Transmit (TX), all relevant filtering or modification to the frame is done before the switch forwards the traffic to the SPAN or RSPAN destination.</li>
+  <li>SPAN usually ignores certain Layer 2 frames like CDP, BPDUs, etc. However, SPAN can be configured to forward that traffic to the destination port/VLAN with the <code class="highlighter-rouge">encapsulation replicate</code> command</li>
+</ul>
+
+  </article>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/">
+            Spanning Tree Root Guard
+            <small>28 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/">
+            Spanning Tree BPDU Guard
+            <small>28 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/">
+            Spanning Tree BPDU Filter
+            <small>28 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+<div class="comments">
+  <h2>Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'http://bsrandall.github.io/layer%202/2017/03/09/SPAN/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/layer%202/2017/03/09/SPAN'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = '//your_short_name.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

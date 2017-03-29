@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/">
-        Spanning Tree Intro
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/">
+        Spanning Tree Root Guard
       </a>
     </h1>
 
-    <span class="post-date">08 Mar 2017</span>
+    <span class="post-date">28 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,182 +177,165 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p><img src="https://networklessons.com/wp-content/uploads/2013/01/switches-redundant-cable-1.png" alt="" /></p>
+      <p>Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.</p>
 
-<p>Imagine in the above diagram that H1 sends out an ARP request, which is a broadcast frame. SW1 will forward this broadcast frame on ports Fa0/0 and Fa1/0 toward SW2.</p>
+<p>Root Guard is enabled on a per port basis. Root Guard ensures that the port on which it is configured remains a designated port. If the bridge receives superior BPDUs on that designated port, Root Guard moves the port to root-inconsistent state, which is effectively equivalent to the STP listening state so no frames are forwarded.</p>
 
-<p>SW2 will forward the broadcast frame it received on Fa0/0 out Fa1/0 and the interface connected to H2. This cycle will continue and continue. By introducing redundancy, we have created an environment that is friendly to Layer 2 loops. And since Ethernet frames do not have a TTL, they will loop around forever.</p>
+<p>The difference between BPDU Guard and Root Guard is that Root Guard allows the port to participate in STP, so long as the port does not receive a <em>superior</em> BPDU. With BPDU Guard, <em>any</em> BPDU will put the port into an err-disabled state.</p>
 
-<p>Spanning Tree is a Layer 2 protocol that was created to deal with the possible loop creation that is introduced with redundant Layer 2 loops. Spanning Tree takes over the Layer 2 forwarding decisions, and places certain ports in a blocking state to prevent the possibility of these loops occurring.</p>
-
-<p>When Spanning Tree is enabled, switches send out a special frame called a BPDU (Bridge Protocol Data Unit). Included in this BPDU is the Switch’s Priority and MAC Address, which concatenated equals the Bridge Id. Among connected Switch’s, the Switch with the lowest Bridge Id becomes the Root Bridge.</p>
-
-<p>A Root Bridge marks all of its ports as Designated, which are placed in a forwarding state. Designated ports lead away from the Root bridge.</p>
-
-<p>For the remaining switches, we have to elect one root port on each switch. The root port will be the port whose path has the lowest cost to the root bridge</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/08/CST/">
-        Common Spanning Tree
-      </a>
-    </h1>
-
-    <span class="post-date">08 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Common Spanning-Tree (CST) assumes one spanning-tree instance for the entire bridged network, regardless of the number of VLANs. Running only one instance reduces CPU load. All CST BPDUs are sent over trunks using the native VLAN with untagged frames.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/spanning%20tree/2017/03/08/CST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/spanning%20tree/2017/03/08/CST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202/2017/03/07/UDLD/">
-        UDLD
-      </a>
-    </h1>
-
-    <span class="post-date">07 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>UDLD, or Unidirectional Link Detection, is a Cisco proprietary, Layer 2 protocol that helps detects if either the transmit or the receive fails on a link. It’s purpose is similar to LoopGuard, but it is completely independent of Spanning Tree. The operation of UDLD is fairly simple. A switch sends UDLD Hellos and if it receives echoes of those Hellos back it knows the link is an active two way link. As soon as it quits receiving the UDLD Hellos, it knows there must be a unidirectional link failure. UDLD operates at the physical port level, compared to say STP LoopGuard which works at the logical port level (EtherChannel). Also UDLD functions at linkup, while LoopGuard does not. It is recommended to enable both UDLD and LoopGuard.</p>
-
-<p>UDLD is mainly used on fiber connections, but it can also be useful on Ethernet connections that have dumb devices in the middle such as media converters.</p>
-
-<p>The default advertisement timer is 15 seconds and the hold time is 5 seconds. Upon detecting the loss of a UDLD neighbor, UDLD will send seven additional advertisements (one per second). If no reply is received, the link’s bidirectional status transitions to unknown.</p>
-
-<p>To set up UDLD globally, use <code class="highlighter-rouge">SW1(config)# udld enable</code> and use the <code class="highlighter-rouge">SW1(config-if)# udld port enable</code> command to enable per interface. Use <code class="highlighter-rouge">SW1(config)# udld enable aggressive</code> if you want the ports to be shut down upon UDLD neighbor failure.</p>
-
-<p>In order to reset an interface that was shut down by UDLD, use <code class="highlighter-rouge">SW1# udld reset</code>, or the typical shut / no shut commands.</p>
-
-<p>You could also enable auto recovery of the interface if desired. It would look like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# errdisable recovery cause idled
-SW1(config)# errdisable recovery interval 30
-</code></pre>
-</div>
-<p>`</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/layer%202/2017/03/07/UDLD/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/layer%202/2017/03/07/UDLD/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202/2017/03/06/LLDP/">
-        LLDP
-      </a>
-    </h1>
-
-    <span class="post-date">06 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks. LLDP is described under IEEE 802.1AB LLDP.</p>
-
-<p>LLDP, like CDP, also uses TLVs to describe neighbor devices and capabilities.</p>
-
-<p>One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with <code class="highlighter-rouge">SW1#(config-if) description LINK_SW1_SW2</code>, that description would show up under Switch 2 LLDP like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2# show lldp neighbors detail
-
-Chasis id: 0019.569d.571a
-Port id: Fa0/24
-Port Description: LINK_SW1_SW2
-System Name: SW1.cisco.com
+<p>Again, Root Guard is enabled on a per interface basis as below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
+SW!(config-if)# spanning-tree rootguard
 </code></pre>
 </div>
 
-<p>An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).</p>
+<p>The Cisco explanation is located <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/10588-74.html">here</a>.</p>
 
-<p>One difference between CDP and LLDP is that with LLDP the Hello timer is set to 30 seconds by default and the hold time is set to 4 times the Hello time. CDP is 60 seconds and the hold timer is 3 times the Hello time, as a reminder. Another difference is that LLDP has a reinitialization delay (default 2 seconds).  This is the time that an LLDP port waits before reinitializing LLDP transmission. The command to set the reinitialization period is <code class="highlighter-rouge">SW1#(config) lldp reinit</code>.</p>
-
-<p>You can also set LLDP up to only transmit and not receive LLDP packets. This is done by using the <code class="highlighter-rouge">SW1#(config) no lldp receive</code> command. You can also do this on a per-interface basis. Likewise, you can also disallow sending LLDP packets with the <code class="highlighter-rouge">SW1#(config) no lldp transmit</code> command, which can also be done at the interface level.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/06/LLDP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/06/LLDP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/06/CDP-Configuration/">
-        CDP Configuration
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/">
+        Spanning Tree BPDU Guard
       </a>
     </h1>
 
-    <span class="post-date">06 Mar 2017</span>
+    <span class="post-date">28 Mar 2017</span>
      | 
     
-    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
     
     
 
     <article>
-      <p>To enable CDP globally we use <code class="highlighter-rouge">cdp run</code>. To enable CDP on a per-interface basis, use <code class="highlighter-rouge">cdp enable</code>.</p>
+      <p>BPDU Guard is a STP PortFast safety enhancement. It works by disabling a port any time the interface hears a BPDU. PortFast by itself will not do that, so if you have PortFast enabled on an interface, and an end user plugs a switch into that link, all kinds of events can happen (including the plugged in switch becoming the Root Bridge!). BPDU Guard ensures that unauthorized switches cannot be plugged into the network. A sample configuration is below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>interface gig0/1
+  spanning-tree bodyguard enable
 
-<p><code class="highlighter-rouge">R1#(config) cdp timer seconds</code>  specifies the frequency of CDP update transmissions.</p>
+errdisable recovery cause bpduguard
+errdisable recovery interval 120
+</code></pre>
+</div>
 
-<p><code class="highlighter-rouge">R1#(config) cdp holdtime seconds</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
+<p>The errdisable section enables the port after 120 seconds, in case the port is placed into err disabled state to due BPDU Guard.</p>
 
-<p><code class="highlighter-rouge">R1#(config) no cdp adertise-v2</code> disables the advertisement of CDPv2 advertisements if for some crazy reason you need to.</p>
-
-<p><code class="highlighter-rouge">R1#(config) clear cdp counters</code> resets the traffic counters to zero.</p>
-
-<p><code class="highlighter-rouge">R1#(config) clear cdp table</code> deletes the CDP table of information about neighbors</p>
-
-<p><code class="highlighter-rouge">R1#(config) show cdp</code> displays the interval between CDP transmissions, the number of seconds a CDP advertisement is valid for a given port, and the version of the advertisement</p>
-
-<p><code class="highlighter-rouge">R1#(config) show cdp interface [type number]</code> displays information about interfaces on which CDP is enabled</p>
-
-<p><code class="highlighter-rouge">R1#(config) show cdp entry device-name</code> displays information about a specific neighbor</p>
-
+<p>Optionally, you can set BPDU Guard as the default configuration on all interfaces with the following global commands:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>spanning-tree portfast bodyguard default
+spanning-tree portfast default
+</code></pre>
+</div>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/06/CDP-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/06/CDP-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/">
+        Spanning Tree BPDU Filter
+      </a>
+    </h1>
+
+    <span class="post-date">28 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>BPDU Filter is another optional feature of STP. It is similar to BPDU Guard, in that it is used to terminate the STP domain. Like BPDU Guard, it can be enabled globally or per interface, but unlike BPDU Guard, BGPU filter behaves differently depending on how it is enabled.</p>
+
+<p>If BPDU Filter is enabled at the interface level, it silently drops all received inbound BPDUs and does not send outbound BPDUs. Unlike BPDU Guard, there is no err-disabled option for BPDU Filter. Here is an example of BPDU Filter enabled at the interface level:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config-if)# switchport mode access
+SW1(config-if)# switchport access vlan 10
+SW1(config-if)# spanning-tree bpdufilter enable
+</code></pre>
+</div>
+
+<p>When BPDU Filter is enabled globally, it will only affect PortFast enabled ports. The switch will send out exactly 11 BPDUs, and inbound BPDUs are not filtered. The reason 11 BPDUs are sent is the default Hello timer is 2 seconds and the default Max Age timer is 20 seconds. If the switch receives inbound BPDUs, the port loses its PortFast status and STP is negotiated normally on that port. For this reason, you can say that BPDU Filter enabled globally is a safer option than BPDU enabled at the interface level, as STP loops cannot form.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/">
+        STP UplinkFast
+      </a>
+    </h1>
+
+    <span class="post-date">27 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>UplinkFast provides fast convergence in case the link on which the root port is connected suffers a failure. It does this with the use of an uplink group. An uplink group is a set of Layer 2 interfaces, of which only one is forwarding at a particular time. If the root port (forwarding port) goes down, then a successor root port is chosen which immediately goes into Forwarding state, bypassing the Listening and Learning phases.</p>
+
+<p>UplinkFast functionality is built into RSTP, so UplinkFast is only applicable with legacy IEEE 802.1D.</p>
+
+<p>When UplinkFast is enabled on a switch, that switch’s bridge priority will automatically be increased to 49152 and its port cost will be increased to 3000. This is to ensure that the switch does not become a transit switch.</p>
+
+<p>To enable UplinkFast, go to the switch on which you want it to run and run <code class="highlighter-rouge">spanning-tree uplinkfast</code> in global configuration mode.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/">
+        STP PortFast
+      </a>
+    </h1>
+
+    <span class="post-date">27 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.</p>
+
+<p>To enable port fast on an interface, in interface sub configuration mode use <code class="highlighter-rouge">spanning-tree portfast</code>. If it is a trunk you must append the <code class="highlighter-rouge">trunk</code> keyword after the command, and if it is an access port you should use the <code class="highlighter-rouge">edge</code> keyword.</p>
+
+<p>Another way to enable PortFast for access ports is to use <code class="highlighter-rouge">spanning-tree portfast default</code> in global configuration mode. Once enabled, all access ports will automatically have PortFast enabled.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

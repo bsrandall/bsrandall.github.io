@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Virtual Switch System
-category: :Layer 2
+category: Layer 2
 tag: knowledge
 ---
 There are several different versions of the Spanning Tree Protocol that we will come across. We will review them in chronological order today.

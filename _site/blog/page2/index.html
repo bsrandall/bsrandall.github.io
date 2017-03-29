@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/06/CDP-Basics/">
-        CDP Basics
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/">
+        Spanning Tree BackboneFast
       </a>
     </h1>
 
-    <span class="post-date">06 Mar 2017</span>
+    <span class="post-date">27 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,71 +177,34 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
+      <p>BackboneFast enables fast reconvergence due to indirect link failures. The key operation happens when a switch begins receiving inferior BPDUs.  When a switch loses the link off its Root Port, it immediately starts sending BPDUs announcing itself as the new Root. Usually, when a switch receives inferior BPDUs, it will wait for its Max Age timer to expire before beginning STP convergence. Once its Max Age timer expires, the inferior BPDU ages out and the switch will then forward its superior BPDU to the neighbor switch who was sending the inferior BPDU.</p>
 
-<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
+<p>When BackboneFast is enabled, as soon as a switch receives an inferior BPDU, it will send RLQ (Root Link Query) messages out all it’s non-designated ports. The RLQ asks other switches if the current Root Bridge is accessible via that switch. Note it doesn’t wait for its Max Age timer to expire - it begins sending RLQ messages immediately. The RLQ is a new type of PDU defined within the BackboneFast specification. The RLQ is essentially a proactive way to age out ports compared to just waiting on the Max Age timer to expire.</p>
 
-<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
+<p>Based on the received RLQ responses, the switch will update its root ports and designated ports accordingly.. However all ports still transition through the regular IEEE 802.1D STP port states - listening, learning, and forwarding/blocking.</p>
 
-<h4 id="type">Type</h4>
-<ul>
-  <li>Device ID - 0x0001</li>
-  <li>Address - 0x0002</li>
-  <li>Port ID - 0x0003</li>
-  <li>Capabilities - 0x0004</li>
-  <li>Version - 0x0005</li>
-  <li>Platform - 0x0006</li>
-  <li>IP Prefix - 0x0007</li>
-  <li>VTP Management Domain - 0x0009 {: .red}</li>
-  <li>Native VLAN - 0x000a {: .red}</li>
-  <li>Duplex Status - 0x000b {: .red}</li>
-  <li>Appliance ID - 0x000c {: .red}</li>
-  <li>Power consumption - 0x0010 {: .red}</li>
-</ul>
+<p>To enable BackboneFast use the command <code class="highlighter-rouge">spanning-tree backbonefast</code> on all switches in the Layer 2 domain. The easiest way to verify that BackboneFast is enabled is to use the <code class="highlighter-rouge">show spanning-tree summary</code> command.</p>
 
-<h4 id="value">Value</h4>
-<ul>
-  <li>Device ID - MAC address in ASCII or the FQDN</li>
-  <li>Address</li>
-  <li>Port ID - ASCII string that names the port from which the message was sent</li>
-  <li>Capabilities - has a value describing the device capabilities:
-    <ul>
-      <li>0x01 - level 3 routing</li>
-      <li>0x02 - level 2 transparent bridging</li>
-      <li>0x04 - level 2 source-route bridging</li>
-      <li>0x08 - level 2 switching not running Spanning Tree</li>
-      <li>0x10 - sends and receives packets for a network layer protocol</li>
-      <li>0x20 - the device does not forward IGMP reports</li>
-      <li>0x40 - level 1 function</li>
-    </ul>
-  </li>
-  <li>Version - software version running the device</li>
-  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
-  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
-</ul>
-
-<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
-
-<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
+<p>This is a great Cisco article describing the operation: <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/12014-18.html">BackboneFast</a>.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/06/CDP-Basics/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/06/CDP-Basics/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
-        MultiChassis EtherChannel
+      <a href="/spanning%20tree/2017/03/27/Debugging-STP/">
+        Debugging Spanning Tree Events
       </a>
     </h1>
 
-    <span class="post-date">27 Feb 2017</span>
+    <span class="post-date">27 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -249,185 +212,120 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.</p>
+      <p>Here is a configuration for debugging Spanning Tree events:</p>
 
-<p>With MultiChassis EtherChannel, we trick the server into running LAG between two different access switches. There are multiple ways to do this using different protocols made by different vendors. We generically call it MLAG.</p>
-
-<p>The protocol must take a physical triangle as seen below, and make it into a logical point-to-point. Many problems arise that the protocol must deal with. If NIC A sends traffic to Switch A, Switch A must know not to send that to Switch B, or else a loop might form.
-<img src="http://www.cisco.com/c/dam/en/us/td/i/200001-300000/220001-230000/226001-227000/226936.eps/_jcr_content/renditions/226936.jpg" alt="" />
-The protocols are so customized, that different platforms from the same vendor cannot even run MLAG. The control place has to be identical. Cisco therefore has a couple of implementations.</p>
-
-<p><em>Stackwise Cross-Stack EtherChannel</em> has control plane over dedicated stacking cables. These stack cables create a bidirectional closed loop as seen below. One control plane is shared amongst members as well as one management plane. So if you were to log into one switch, you are actually viewing the configuration for the stack. This is used on the Access Platforms such as Catalyst 3750/3850. StackWise can have more than 2 members, up to the stack limit
-<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRguQ7GRPRoSYAmPfJ4MCMN2r160qFDougT6yyluxFXu6n42Foxgg" alt="" /></p>
-
-<p><em>Virtual Switching System (VSS)</em> is used on the aggregation platforms such as Catalyst 4500/6500/6800. VSS is similar to Stackwise as there is one management plane and one control plane shared between connected switches. Typically with VSL, the links are going to be 2x10G LAG. VSS switches are udeployed in pairs and will usually have 1 active supervisor and 3 standby supervisors.</p>
-
-<p><em>Virtual Port Channel (vPC)</em> is very similar to VSS but it runs on the Data Center platforms such as Nexus 5000/7000/9000. The control plane is synchronized over a vPC Peer Link, which are typically 2x10GigE LAG. The biggest difference between vPC and VSS, is that vPC has <em>2</em> independent control planes and <em>2</em> independent management planes. vPC like VSS is deployed in pairs.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/">
-        EtherChannel PaGP
-      </a>
-    </h1>
-
-    <span class="post-date">26 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.</p>
-
-<p>The two modes of PAgP are:</p>
-<ul>
-  <li>auto: places a port into a passive negotiating state</li>
-  <li>desirable: places a port into active negotiating state</li>
-</ul>
-
-<p>For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.</p>
-
-<p>PAgP supports up to 8 Ethernet ports of the same type.</p>
-
-<p>For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:</p>
-<ul>
-  <li>Allowed-VLAN list</li>
-  <li>Spanning-tree path cost for each VLAN</li>
-  <li>Spanning-tree port priority for each VLAN</li>
-  <li>Spanning-tree Port Fast setting</li>
-</ul>
-
-<p>For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/">
-        EtherChannel Load-Balancing
-      </a>
-    </h1>
-
-    <span class="post-date">26 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.</p>
-
-<p>To configure the load-balancing method by using the<code class="highlighter-rouge">port-channel load-balance</code> global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.</p>
-
-<p>The selected load balancing mode applies to all ether channels on a switch.</p>
-
-<p>With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the <em>incoming</em> packet. So packets from the same host use the same port in the channel.</p>
-
-<p>With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.</p>
-
-<p>With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.</p>
-
-<p>IP based forwarding has the same principles as the MAC based forwarding outlined above.</p>
-
-<p>To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.</p>
-
-<p>To configure EtherChannel load-balancing, in global config use the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
-</code></pre>
-</div>
-<p>`
-The default is src-mac.</p>
-
-<p>One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/">
-        EtherChannel LACP
-      </a>
-    </h1>
-
-    <span class="post-date">24 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG. The official name is IEEE 802.3ad Link Aggregation (LAG).</p>
-
-<p>LACP supports up to 16 Ethernet ports of the same type. Up to eight ports can be active, and up to eight ports can be in standby mode.</p>
-
-<p>LACP assigns system priority, port priority, and and an administrative key.</p>
-
-<p><em>System priority</em> and the MAC address form the System ID. Between two LACP neighbors, the switch with the lowest System ID will be the decision maker using the LACP Port Priority</p>
-
-<p><em>Port priority</em> and the port number form the port identifier. The switch uses the port identifier to decide which ports to put in standby mode when a hardware limitation prevents all ports from aggregating. Port priority is also used when more than 8 physical ports are put into a channel group. Port priority will decide which 8 ports will be the active ports in the etherchannel.</p>
-
-<p><em>Administrative key</em> defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.</p>
-
-<p>Sample Configuration:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# interface range GigabitEthernet0/1-2
-SW1# channel-group 1 mode active
-SW1# exit
-SW1# interface port-channel 1
-SW1# switchport trunk encapsulation dot1q
-SW1# switchport mode trunk
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1# debug spanning-tree events
+SW1# debug condition vlan 2
+SW1# config t
+SW1(config)# service timestamps debug datetime msec
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2# interface range GigabitEthernet0/1-2
-SW2# channel-group 1 mode active
-SW2# exit
-SW2# interface port-channel 1
-SW2# switchport trunk encapsulation dot1q
-SW2# switchport mode trunk
-</code></pre>
-</div>
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/27/Debugging-STP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/27/Debugging-STP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/26/STP-Timers/">
+        STP Convergence Timers
+      </a>
+    </h1>
 
-<p>You can also start with the <code class="highlighter-rouge">interface port-channel 1</code> command and then define the channel group. For Layer 3 ether channel, you would want to define the port-channel first and then issue the <code class="highlighter-rouge">no switchport</code> interface command.</p>
+    <span class="post-date">26 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
 
-<p>The <code class="highlighter-rouge">interface port-channel 1</code> is the logical interface. The channel-group command binds the logical interface to a physical port. The port-channel interface (numbered 1 - 48) correspond to the one specified with the channel-group interface configuration command.</p>
+    <article>
+      <p>There are 3 timers we need to be concerned with in Spanning Tree: the Hello Time, the Forward Delay, and the Max-Age Time.</p>
 
-<p>A successful Layer 2 EtherChannel will show SU with the command <code class="highlighter-rouge">show etherchannel summary</code>. An unsuccessful layer 2 will show SD.</p>
+<p>The Hello Time is the frequency with which BPDUs are transmitted from the root bridge. It can be adjusted with the command <code class="highlighter-rouge">spanning-tree vlan 1-4094 hello-time 3</code> where 3 is in seconds. The default is 2 seconds, but in can be adjusted between 1 and 10 seconds. Non-root bridges will never generate BPDUs, but only relay BPDUs they receive on their root port.</p>
+
+<p>The Forward Delay is the time that is spent in the listening and learning states. Its value is 15 seconds by default, but it can be adjusted to anywhere between 4 and 30 seconds.</p>
+
+<p>The Max Age timer controls the maximum length of time that passes before a bridge port saves its configuration BPDU. This time is 20 seconds by default, but it can be tuned to be anytime between 6 and 40 seconds.</p>
+
+<p>There is another item that is not a timer but is related. This is the <em>message age</em>. The root bridge sends all of its BPDUs with a message age of 0. Each downstream switch then adds 1 to this message age value. The actual age out time of the downstream switches is then (max age - message age).</p>
+
+<p>Here is a good article that describes the Max Age timer as it relates to superior BPDUs:  <a href="https://packetmagnifier.wordpress.com/2013/09/09/understanding-stp-max-age/">Max Age</a>. If a switch’s root port goes down, there is no need for it to go through the Max Age timer process - if there are no better BPDUs received, the switch will immediately start announcing itself as root and begin sending BPDUs. In the scenario in the article, the switch that went down is sending inferior BPDUs, but yet the receiving switch goes through the Max Age process before it transforms its non-designated port to a Designated Port and begins sending the superior BPDUs towards the switch that suffered the down link.</p>
+
 
     <article>
     <div class="post-more">
       
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/26/STP-Timers/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/26/STP-Timers/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/">
+        STP Path Selection with Port Cost
+      </a>
+    </h1>
+
+    <span class="post-date">21 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>There are two ways we can alter STP Path selection. We can alter the cost of a port, or we can change the priority of a port.</p>
+
+<p>When a switch receives a BPDU, that BPDU contains the root path cost from the previous switch. The receiving switch then adds the cost of the link between it and the sending switch from which it received the BPDU. That is very important - it is the receiving switch that adds the cost associated with its interface to the Root Path Cost it received from the sending switch.</p>
+
+<p>Cost is used for the selection of the root port to the upstream switch.</p>
+
+<p>Priority is used for influencing the root port of the downstream switch, and as such, it is set up on a port in Designated state. Cost has a higher precedence than priority. You will see priority on the local switch <code class="highlighter-rouge">show spanning-tree vlan 2</code> but it will actually affect the forwarding decision on the downstream connected switch.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/">
+        STP Root Bridge Election
+      </a>
+    </h1>
+
+    <span class="post-date">20 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>STP Root Bridge Election is based on the Bridge ID of the switches in the active Layer 2 domain. The Bridge ID is made up of the 4-bit bridge priority, a 12-bit Systems ID, and the 48-bit MAC address. The bridge priority is configurable from 0 to 61440. The default is 32768. The System ID is taken from the VLAN number (IEEE 802.1t).</p>
+
+<p>The election process is very simple. Each bridge starts off assuming it is the Root Bridge and sends BPDUs out advertising itself as such. If it receives a superior BPDU (a BPDU that has a Bridge ID lower than its current root bridge Bridge ID), it ceases advertising that Root Bridge and begins advertising the new Root Bridge with the lower Bridge ID. This process continues until all switches in the domain agree to the same Root Bridge.</p>
+
+<p>Note that since MAC addresses are guaranteed to be unique, there will always be 1 Root Bridge elected. If all switches are set to the default priority, then the switch with the lowest MAC Address will become the Root Bridge. this is a bad idea for many reasons. One, you typically want your distribution layer switch to be the Root Bridge. Second, older switches will have lower MAC addresses, so your switch with the least resources ends up having a heavier load along with a higher chance for failure</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
