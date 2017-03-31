@@ -164,270 +164,242 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/06/CDP-Basics/">
-        CDP Basics
+      <a href="/layer%202/2017/03/11/SPAN-Configuration/">
+        SPAN Configuration
       </a>
     </h1>
 
-    <span class="post-date">06 Mar 2017</span>
+    <span class="post-date">11 Mar 2017</span>
      | 
     
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
     
     
 
     <article>
-      <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
+      <p>Basic SPAN Configuration:</p>
 
-<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
-
-<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
-
-<h4 id="type">Type</h4>
-<ul>
-  <li>Device ID - 0x0001</li>
-  <li>Address - 0x0002</li>
-  <li>Port ID - 0x0003</li>
-  <li>Capabilities - 0x0004</li>
-  <li>Version - 0x0005</li>
-  <li>Platform - 0x0006</li>
-  <li>IP Prefix - 0x0007</li>
-  <li>VTP Management Domain - 0x0009 {: .red}</li>
-  <li>Native VLAN - 0x000a {: .red}</li>
-  <li>Duplex Status - 0x000b {: .red}</li>
-  <li>Appliance ID - 0x000c {: .red}</li>
-  <li>Power consumption - 0x0010 {: .red}</li>
-</ul>
-
-<h4 id="value">Value</h4>
-<ul>
-  <li>Device ID - MAC address in ASCII or the FQDN</li>
-  <li>Address</li>
-  <li>Port ID - ASCII string that names the port from which the message was sent</li>
-  <li>Capabilities - has a value describing the device capabilities:
-    <ul>
-      <li>0x01 - level 3 routing</li>
-      <li>0x02 - level 2 transparent bridging</li>
-      <li>0x04 - level 2 source-route bridging</li>
-      <li>0x08 - level 2 switching not running Spanning Tree</li>
-      <li>0x10 - sends and receives packets for a network layer protocol</li>
-      <li>0x20 - the device does not forward IGMP reports</li>
-      <li>0x40 - level 1 function</li>
-    </ul>
-  </li>
-  <li>Version - software version running the device</li>
-  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
-  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
-</ul>
-
-<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
-
-<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/layer%202/2017/03/06/CDP-Basics/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/layer%202/2017/03/06/CDP-Basics/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
-        MultiChassis EtherChannel
-      </a>
-    </h1>
-
-    <span class="post-date">27 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.</p>
-
-<p>With MultiChassis EtherChannel, we trick the server into running LAG between two different access switches. There are multiple ways to do this using different protocols made by different vendors. We generically call it MLAG.</p>
-
-<p>The protocol must take a physical triangle as seen below, and make it into a logical point-to-point. Many problems arise that the protocol must deal with. If NIC A sends traffic to Switch A, Switch A must know not to send that to Switch B, or else a loop might form.
-<img src="http://www.cisco.com/c/dam/en/us/td/i/200001-300000/220001-230000/226001-227000/226936.eps/_jcr_content/renditions/226936.jpg" alt="" />
-The protocols are so customized, that different platforms from the same vendor cannot even run MLAG. The control place has to be identical. Cisco therefore has a couple of implementations.</p>
-
-<p><em>Stackwise Cross-Stack EtherChannel</em> has control plane over dedicated stacking cables. These stack cables create a bidirectional closed loop as seen below. One control plane is shared amongst members as well as one management plane. So if you were to log into one switch, you are actually viewing the configuration for the stack. This is used on the Access Platforms such as Catalyst 3750/3850. StackWise can have more than 2 members, up to the stack limit
-<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRguQ7GRPRoSYAmPfJ4MCMN2r160qFDougT6yyluxFXu6n42Foxgg" alt="" /></p>
-
-<p><em>Virtual Switching System (VSS)</em> is used on the aggregation platforms such as Catalyst 4500/6500/6800. VSS is similar to Stackwise as there is one management plane and one control plane shared between connected switches. Typically with VSL, the links are going to be 2x10G LAG. VSS switches are udeployed in pairs and will usually have 1 active supervisor and 3 standby supervisors.</p>
-
-<p><em>Virtual Port Channel (vPC)</em> is very similar to VSS but it runs on the Data Center platforms such as Nexus 5000/7000/9000. The control plane is synchronized over a vPC Peer Link, which are typically 2x10GigE LAG. The biggest difference between vPC and VSS, is that vPC has <em>2</em> independent control planes and <em>2</em> independent management planes. vPC like VSS is deployed in pairs.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/">
-        EtherChannel PaGP
-      </a>
-    </h1>
-
-    <span class="post-date">26 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.</p>
-
-<p>The two modes of PAgP are:</p>
-<ul>
-  <li>auto: places a port into a passive negotiating state</li>
-  <li>desirable: places a port into active negotiating state</li>
-</ul>
-
-<p>For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.</p>
-
-<p>PAgP supports up to 8 Ethernet ports of the same type.</p>
-
-<p>For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:</p>
-<ul>
-  <li>Allowed-VLAN list</li>
-  <li>Spanning-tree path cost for each VLAN</li>
-  <li>Spanning-tree port priority for each VLAN</li>
-  <li>Spanning-tree Port Fast setting</li>
-</ul>
-
-<p>For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/">
-        EtherChannel Load-Balancing
-      </a>
-    </h1>
-
-    <span class="post-date">26 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.</p>
-
-<p>To configure the load-balancing method by using the<code class="highlighter-rouge">port-channel load-balance</code> global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.</p>
-
-<p>The selected load balancing mode applies to all ether channels on a switch.</p>
-
-<p>With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the <em>incoming</em> packet. So packets from the same host use the same port in the channel.</p>
-
-<p>With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.</p>
-
-<p>With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.</p>
-
-<p>IP based forwarding has the same principles as the MAC based forwarding outlined above.</p>
-
-<p>To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.</p>
-
-<p>To configure EtherChannel load-balancing, in global config use the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
-</code></pre>
-</div>
-<p>`
-The default is src-mac.</p>
-
-<p>One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/">
-        EtherChannel LACP
-      </a>
-    </h1>
-
-    <span class="post-date">24 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG. The official name is IEEE 802.3ad Link Aggregation (LAG).</p>
-
-<p>LACP supports up to 16 Ethernet ports of the same type. Up to eight ports can be active, and up to eight ports can be in standby mode.</p>
-
-<p>LACP assigns system priority, port priority, and and an administrative key.</p>
-
-<p><em>System priority</em> and the MAC address form the System ID. Between two LACP neighbors, the switch with the lowest System ID will be the decision maker using the LACP Port Priority</p>
-
-<p><em>Port priority</em> and the port number form the port identifier. The switch uses the port identifier to decide which ports to put in standby mode when a hardware limitation prevents all ports from aggregating. Port priority is also used when more than 8 physical ports are put into a channel group. Port priority will decide which 8 ports will be the active ports in the etherchannel.</p>
-
-<p><em>Administrative key</em> defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.</p>
-
-<p>Sample Configuration:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# interface range GigabitEthernet0/1-2
-SW1# channel-group 1 mode active
-SW1# exit
-SW1# interface port-channel 1
-SW1# switchport trunk encapsulation dot1q
-SW1# switchport mode trunk
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 1 source interface fa0/12
+SW1(config)# monitor session 1 destination interface fa0/24
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2# interface range GigabitEthernet0/1-2
-SW2# channel-group 1 mode active
-SW2# exit
-SW2# interface port-channel 1
-SW2# switchport trunk encapsulation dot1q
-SW2# switchport mode trunk
+<p>Here is an example where we will only monitor respective traffic from fa0/18 and only monitor sent traffic from interface fa0/19. Additionally we will filter (remove) VLANs 1 through 3. Finally, we will preserve the encapsulation from the sources:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 1 source interface fa0/18 rx
+SW1(config)# monitor session 1 source interface fa0/19 tx
+SW1(config)# monitor session 1 filter vlan 1-3
+SW1(config)# monitor session 1 destination interface fa0/24 encapsulation replicate
 </code></pre>
 </div>
 
-<p>You can also start with the <code class="highlighter-rouge">interface port-channel 1</code> command and then define the channel group. For Layer 3 ether channel, you would want to define the port-channel first and then issue the <code class="highlighter-rouge">no switchport</code> interface command.</p>
+<p>Next we have a RSPAN sample configuration. We will monitor all traffic on VLANs 66-68 on SW1 and send it to VLAN 199, which will then be delivered to port fa0/24 on SW2:</p>
 
-<p>The <code class="highlighter-rouge">interface port-channel 1</code> is the logical interface. The channel-group command binds the logical interface to a physical port. The port-channel interface (numbered 1 - 48) correspond to the one specified with the channel-group interface configuration command.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vlan 199
+SW1(config-vlan)# remote span
+SW1(config-vlan)# exit
+SW1(config)# monitor session 1 source vlan 66-68
+SW1(config)# monitor session 1 destination remote van 199
+</code></pre>
+</div>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW2(config)# vlan 199
+SW2(config-vlan)# remote span
+SW2(config-vlan)# exit
+SW2(config)# monitor session 2 source remote vlan 199
+SW2(config)# monitor session 2 destination interface fa0/24
+</code></pre>
+</div>
 
-<p>A successful Layer 2 EtherChannel will show SU with the command <code class="highlighter-rouge">show etherchannel summary</code>. An unsuccessful layer 2 will show SD.</p>
+<p>Notice above that the monitor session numbers do not have to match on each switch.</p>
+
+<p>Finally, we have a ERSPAN example. We will configure R1 to capture received traffic and send it to SW1 gig2/1.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# monitor session 1 type erspan-source
+R1(config-mon-erspan-src)# source interface gig1/1 rx
+R1(config-mon-erspan-src)# no shutdown
+R1(config-mon-erspan-src)# destination
+R1(config-mon-erspan-src-dst)# erspan-id 101
+R1(config-mon-erspan-src-dst)# ip address 10.1.1.1
+R1(config-mon-erspan-src-dst)# origin ip address 172.16.1.1
+</code></pre>
+</div>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 2 type erspan-destination
+SW1(config-mon-erspan-dst)# destination interface gig2/1
+SW1(config-mon-erspan-dst)# no shutdown
+SW1(config-mon-erspan-dst)# source
+SW1(config-mon-erspan-dst-src)# erspan-id 101
+SW1(config-mon-erspan-dst)# ip address 10.1.1.1
+</code></pre>
+</div>
+
+<p>A couple of configuration notes. First, you must make sure the destination port is not in a shutdown state or else the SPAN session will not come up.</p>
+
+<p>To view the session, simply use <code class="highlighter-rouge">show monitor session 1</code>.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/11/SPAN-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/11/SPAN-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/09/SPAN/">
+        SPAN
+      </a>
+    </h1>
+
+    <span class="post-date">09 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>SPAN stands for Switch Port Analyzer. It is a way to direct all traffic from a source port or source VLAN to a single port. Some uses include IDS/IPS, VoIP Call recording, or troubleshooting / analysis.</p>
+
+<p>If the destination port is on the local switch, we say it is in SPAN operation mode. The destination port could also be mapped to a port on a remote switch, in which case we call it Remote SPAN or RSPAN. In RSPAN, a specific VLAN must be configured across the entire switching path from the source port or VLAN to the RSPAN destination port. So the source is still at least one port or at least one VLAN,  but the destination is always the RSPAN VLAN. At the switch where the RSPAN destination port exists, the RSPAN VLAN is delivered to the RSPAN port.</p>
+
+<p>Encapsulated Remote SPAN (ERSPAN) is a variant of RSPAN in which we are encapsulating the Remote SPAN information. ERSPAN creates a GRE tunnel for all captured traffic and allows it to be extended across Layer 3 domains. This became an option with IOS-XE.</p>
+
+<p>Regardless of the type of SPAN we are running, the source port can be any type of port including EtherChannel, trunk port, routed port, etc. When using a VLAN as the source, all active ports in that VLAN are monitored, and the monitored ports are updated dynamically as membership to that VLAN changes. A port configured as a SPAN destination cannot be part of a SPAN source VLAN.</p>
+
+<p>It is important to understand that when you configure a SPAN destination port, the existing configuration is removed but is restored if you later remove the SPAN configuration. The destination port does not support any security, nor does it support any Layer 2 protocols such as CDP, VTP, etc. If the destination port was part of an EtherChannel, it will be removed from the EtherChannel once the SPAN configuration is applied.</p>
+
+<p>There are a number of restrictions with SPAN including:</p>
+<ul>
+  <li>the source can be one or more ports or a VLAN, but not both</li>
+  <li>up to 64 destination ports can be configured on a switch</li>
+  <li>you must be careful not to overload the destination port, especially if a VLAN is being monitored.</li>
+  <li>within a single SPAN session, you cannot deliver traffic to a destination port when it is sourced by a mix of SPAN, RSPAN, or ERSPAN source ports or VLANs. This usually comes into play when you want to mirror source traffic to both a local port on a switch (SPAN mode) and a remote port on another switch (RSPAN mode).</li>
+  <li>only one SPAN/RSPAN/ERSPAN session can send traffic to a single destination port</li>
+  <li>if you use a trunk port as a SPAN or RSPAN source, then by default all VLANs on the trunk are monitored by default</li>
+  <li>traffic that is routed from another VLAN to a source VLAN cannot be monitored with SPAN</li>
+</ul>
+
+<p>Finally, SPAN, RSPAN, and ERSPAN support three types of traffic: transmitted, received, and both (default). If you set a SPAN to monitor just receive or just transmit, some conditions apply:</p>
+<ul>
+  <li>for Receive (RX) the goal is to deliver all traffic that is received by the SPAN source. As a result, each frame that is received by the source port or VLAN is copied to the destination port or VLAN <em>before</em> any modifications are made to the frame (such as ACL filtering, QoS, etc)</li>
+  <li>for Transmit (TX), all relevant filtering or modification to the frame is done before the switch forwards the traffic to the SPAN or RSPAN destination.</li>
+  <li>SPAN usually ignores certain Layer 2 frames like CDP, BPDUs, etc. However, SPAN can be configured to forward that traffic to the destination port/VLAN with the <code class="highlighter-rouge">encapsulation replicate</code> command</li>
+</ul>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/09/SPAN/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/09/SPAN/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/">
+        Spanning Tree Intro
+      </a>
+    </h1>
+
+    <span class="post-date">08 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p><img src="https://networklessons.com/wp-content/uploads/2013/01/switches-redundant-cable-1.png" alt="" /></p>
+
+<p>Imagine in the above diagram that H1 sends out an ARP request, which is a broadcast frame. SW1 will forward this broadcast frame on ports Fa0/0 and Fa1/0 toward SW2.</p>
+
+<p>SW2 will forward the broadcast frame it received on Fa0/0 out Fa1/0 and the interface connected to H2. This cycle will continue and continue. By introducing redundancy, we have created an environment that is friendly to Layer 2 loops. And since Ethernet frames do not have a TTL, they will loop around forever.</p>
+
+<p>Spanning Tree is a Layer 2 protocol that was created to deal with the possible loop creation that is introduced with redundant Layer 2 loops. Spanning Tree takes over the Layer 2 forwarding decisions, and places certain ports in a blocking state to prevent the possibility of these loops occurring.</p>
+
+<p>When Spanning Tree is enabled, switches send out a special frame called a BPDU (Bridge Protocol Data Unit). Included in this BPDU is the Switch’s Priority and MAC Address, which concatenated equals the Bridge Id. Among connected Switch’s, the Switch with the lowest Bridge Id becomes the Root Bridge.</p>
+
+<p>A Root Bridge marks all of its ports as Designated, which are placed in a forwarding state. Designated ports lead away from the Root bridge.</p>
+
+<p>For the remaining switches, we have to elect one root port on each switch. The root port will be the port whose path has the lowest cost to the root bridge</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/08/CST/">
+        Common Spanning Tree
+      </a>
+    </h1>
+
+    <span class="post-date">08 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Common Spanning-Tree (CST) assumes one spanning-tree instance for the entire bridged network, regardless of the number of VLANs. Running only one instance reduces CPU load. All CST BPDUs are sent over trunks using the native VLAN with untagged frames.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/08/CST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/08/CST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/07/UDLD/">
+        UDLD
+      </a>
+    </h1>
+
+    <span class="post-date">07 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>UDLD, or Unidirectional Link Detection, is a Cisco proprietary, Layer 2 protocol that helps detects if either the transmit or the receive fails on a link. It’s purpose is similar to LoopGuard, but it is completely independent of Spanning Tree. The operation of UDLD is fairly simple. A switch sends UDLD Hellos and if it receives echoes of those Hellos back it knows the link is an active two way link. As soon as it quits receiving the UDLD Hellos, it knows there must be a unidirectional link failure. UDLD operates at the physical port level, compared to say STP LoopGuard which works at the logical port level (EtherChannel). Also UDLD functions at linkup, while LoopGuard does not. It is recommended to enable both UDLD and LoopGuard.</p>
+
+<p>UDLD is mainly used on fiber connections, but it can also be useful on Ethernet connections that have dumb devices in the middle such as media converters.</p>
+
+<p>The default advertisement timer is 15 seconds and the hold time is 5 seconds. Upon detecting the loss of a UDLD neighbor, UDLD will send seven additional advertisements (one per second). If no reply is received, the link’s bidirectional status transitions to unknown.</p>
+
+<p>To set up UDLD globally, use <code class="highlighter-rouge">SW1(config)# udld enable</code> and use the <code class="highlighter-rouge">SW1(config-if)# udld port enable</code> command to enable per interface. Use <code class="highlighter-rouge">SW1(config)# udld enable aggressive</code> if you want the ports to be shut down upon UDLD neighbor failure.</p>
+
+<p>In order to reset an interface that was shut down by UDLD, use <code class="highlighter-rouge">SW1# udld reset</code>, or the typical shut / no shut commands.</p>
+
+<p>You could also enable auto recovery of the interface if desired. It would look like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# errdisable recovery cause idled
+SW1(config)# errdisable recovery interval 30
+</code></pre>
+</div>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/07/UDLD/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/07/UDLD/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

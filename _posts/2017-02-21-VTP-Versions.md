@@ -14,3 +14,10 @@ Version 3 introduced the following enhancements:
 - Extended VLAN support. Versions 1 and 2 only support VLANs 1 - 1000 only.
 - Support for private VLANs
 - Support for MST
+- primary and secondary servers
+
+With version 3, there are two types of VTP servers - primary and secondary. There is only one primary server, and the rest of the secondary servers act as backups to the primary. To declare a server as primary, use the following:
+```
+`SW1(config)# vtp primary vlan
+```
+`

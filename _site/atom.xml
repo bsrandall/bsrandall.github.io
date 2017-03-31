@@ -4,13 +4,223 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-03-28T20:20:10-04:00</updated>
+ <updated>2017-03-30T23:52:05-04:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Voice VLAN</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/30/Voice-VLAN/"/>
+   <updated>2017-03-30T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/30/Voice-VLAN</id>
+   <content type="html">&lt;p&gt;On Cisco switch’s, you can configure a particular VLAN known as the voice VLAN. It is a special VLAN that Cisco developed that is meant to lead from the switch the the 3 port switch on the back of an IP Phone. The traffic from the computer will be sent untagged, regardless of whether the access VLAN for that port is the default VLAN. All traffic from the phone gets tagged to its assigned voice VLAN. It behaves in many way like a trunk, but from an operational perspective it is still a port in access mode. The configuration looks like this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# switchport mode access
+SW1(config-if)# switchport access vlan 100
+SW1(config-if)# switchport voice vlan 101
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;If you you show commands, you will not find the interface to be in trunk operational mode, but remember it works like a rudimentary trunk.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Storm Control</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/30/Storm-Control/"/>
+   <updated>2017-03-30T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/30/Storm-Control</id>
+   <content type="html">&lt;p&gt;Broadcast storms can create havoc on a Layer 2 network, quickly bringing the network to an unusable state. Software solutions to storm control are inefficient, because by the time the software has identified the storm, the hardware resources are at max utilization and there is no resources available to abate the storm.&lt;/p&gt;
+
+&lt;p&gt;Cisco has a storm control feature built into its switches. It is a hardware based solution that allows us to set a threshold on interfaces to limit the amount of broadcast, multicast, or unknown unicast traffic an interface receives. It also allows us to select a couple of actions to take when that threshold is met.&lt;/p&gt;
+
+&lt;p&gt;Let’s jump right into a configuration example.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level 30
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The ’30’ in the example above designates the rising threshold. When broadcast traffic exceeds 30% of the interface bandwidth, storm control will kick in and take action. The default action is to drop exceeding traffic.&lt;/p&gt;
+
+&lt;p&gt;You can also specify bps as below. Adding k, m, or g identifies the value as Kbps, Mbps, or Gbps respectively. The example below would limit broadcast traffic to 30 Mbps on the Gigabit interface.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level bps 30m
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can also designate a falling threshold. The falling threshold sets a value to which the traffic has to fall before that type of traffic is allowed again.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level bps 30m 20m
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;In the example above the broadcast traffic would have to drop below 20 Mbps before any broadcast traffic would be allowed into the port.&lt;/p&gt;
+
+&lt;p&gt;We can also control the action. &lt;code class=&quot;highlighter-rouge&quot;&gt;storm-control action shutdown&lt;/code&gt; shuts the interface down in case the level is exceeded. &lt;code class=&quot;highlighter-rouge&quot;&gt;storm-control action trap&lt;/code&gt; sends an SNMP trap if the level is exceeded.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;show storm-control [unicast | multicast | broadcast]&lt;/code&gt; is used to see the configuration as well as the current amount of traffic passing through the port.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Static MAC Address Entries</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/30/Static-MAC-Address/"/>
+   <updated>2017-03-30T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/30/Static-MAC-Address</id>
+   <content type="html">&lt;p&gt;Sometimes you may need to add static MAC address entries to the CAM table. This is easily achieved with the following global configuration command:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(cone)# mac address-table static 0022.5627.1fc1 vlan 10 interface GigabitEthernet0/1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;You can also force traffic to a particular MAC address to be dropped, by either specifying an unused interface or with the following:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(conf)# mac address-table static 0022.5627.1fc1 vlan 10 drop
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Smartport Macros</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/30/Smartport-Macros/"/>
+   <updated>2017-03-30T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/30/Smartport-Macros</id>
+   <content type="html">&lt;p&gt;Smartport Macros are used to define a well-known template of configuration onto multiple interfaces. Several Smartport Macros come predefined in the switch. To see them, use &lt;code class=&quot;highlighter-rouge&quot;&gt;show parser macro&lt;/code&gt;. To expand one of the macros use &lt;code class=&quot;highlighter-rouge&quot;&gt;show parser macro name ___________&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This is the old style of configuring switchport macros:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(conf)# macro name VLAN146
+Enter macro commands one per line. End with the character '@'.
+switchport mode access
+switchport access vlan 146
+spanning-tree bpdufilter enable
+@
+SW1(conf)\#
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;The # symbol can be used at the beginning of a line to designate comments. Then to apply the macro to an interface or interface range:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(conf)# interface range gig0/1-2
+SW1(conf-if-range)# macro apply VLAN146
+SW1(conf-if-range)# exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The modern style to define a switchport macro is here:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(conf)# define interface-range VLAN146 gig0/1-2
+SW1(conf)# interface range macro VLAN146
+SW1(conf-if-range)# switchport mode access
+SW1(conf-if-range)# switchport access vlan 146
+SW1(conf-if-range)# spanning-tree bpdufilter enable
+SW1(conf-if-range)# exit
+SW1(conf)# 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Private VLANs</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/30/Private-VLANs/"/>
+   <updated>2017-03-30T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/30/Private-VLANs</id>
+   <content type="html">&lt;p&gt;Protect Ports (discussed earlier) are a nice security feature of Cisco switches. When two ports are protected, they are not allowed to have direct communication with each other. But one limitation of protected ports is that they are only locally significant, so there is no way for protected ports to exist on different switches and follow the protection rules.&lt;/p&gt;
+
+&lt;p&gt;The Private VLAN feature was created to solve this limitation. Private VLANs are more complex and can span multiple physical switches. Private VLANs split what would normally be a single broadcast domain defined by a single VLAN into multiple isolated broadcast subdomains, that are defined by a primary VLAN and its secondary VLANs. In essence it allows us to create VLANs inside VLANs, and is not un-similar to the concept of Confederations in BGP.&lt;/p&gt;
+
+&lt;p&gt;Private VLANs are used to increase security. We most often see them in a shared color facility. This allows the color provider to have the customers exist on the same VLAN (and thus the same subnet), without allowing the different customers to communicate directly with each other.&lt;/p&gt;
+
+&lt;p&gt;One pitfall you have to remember with Private VLANs is that it requires VTP to either be in Transparent mode or to be off.&lt;/p&gt;
+
+&lt;p&gt;There is some terminology to remember when dealing with Private VLANs:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;Promiscuous ports&lt;/em&gt; are allowed to talk to all other ports within the primary VLAN&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Isolated ports&lt;/em&gt; are only allowed to talk with promiscuous ports&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Community ports&lt;/em&gt; are allowed to talk with other ports in their own community as well as any promiscuous ports,  but they are not allowed to talk to ports in other communities&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The configuration steps are a little unnatural as well. The port roles are defined by the interface’s association to a primary VLAN and one or more secondary VLANs. First the secondary VLANs are created and defined as either community or isolated. Then the primary VLAN is defined, and the secondary VLANs are associated with the primary VLAN.&lt;/p&gt;
+
+&lt;p&gt;Here is an example configuration with VLAN 500 as the primary VLAN, 501 a secondary community VLAN, and VLAN 502 a secondary isolated VLAN. Ports FastEthernet0/1 and FastEthernet0/2 are associated to VLAN 501, while FastEthernet03 and FastEthernet0/4 are associated with the secondary isolated VLAN 502.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# vtp mode transparent
+SW1(config)# vlan 501
+SW1(config-vlan)# private-vlan community
+SW1(config-vlan)# vlan 500
+SW1(config-vlan)# private-vlan primary
+SW1(config-vlan)# private-vlan association add 501
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Next, let’s go ahead and associate FastEthernet0/1 and FastEthernet0/2 to the 501 Secondary Community we just created:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface range fa0/1-2
+SW1(config-if-range)# switchport mode private-vlan host
+SW1(config-if-range)# switchport private-vlan host-association 500 501
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, we can go ahead and configure FastEthernet0/24 as a promiscuous port.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface fa0/24
+SW1(config-if)# switchport mode private-vlan promiscuous
+SW1(config-if)# switchport private-vlan mapping 500 501
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we turn our attention to the creation of the isolated VLAN, VLAN 502.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# vlan 502
+SW1(config-vlan)# private-vlan isolated
+SW1(config-vlan)# vlan 500
+SW1(config-vlan)# private-vlan primary
+SW1(config-vlan)# private-vlan association add 502
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we must associate our interfaces:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface range fa0/3-4
+SW1(config-if-range)# switchport mode private-vlan host
+SW1(config-if-range)# switchport private-vlan host-association 500 502
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And finally, we must add another association for our promiscuous port:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface fa0/24
+SW1(config-if)# switchport mode private-vlan promiscuous
+SW1(config-if)# switchport private-vlan mapping 500 502
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;One great way to test your Private VLAN setup is to send a single ping to the broadcast address with &lt;code class=&quot;highlighter-rouge&quot;&gt;ping 255.255.255.255 repeat 1&lt;/code&gt;.  The replies will only be from the hosts in your broadcast domain.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Spanning Tree Loop Guard</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/29/STP-Loop-Guard/"/>
+   <updated>2017-03-29T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/29/STP-Loop-Guard</id>
+   <content type="html">&lt;p&gt;Loop Guard is a Spanning Tree feature that was added to prevent loops from forming due to hardware issues or STP software problems. A Spanning Tree loop occurs when a port that was previously in the blocking state is erroneously  transitioned to the Forwarding state.&lt;/p&gt;
+
+&lt;p&gt;When a non-designated port stops receiving BPDUs, it will eventually transition itself to a designated port and begin forwarding BPDUs. Loop Guard works by preventing that non-designated port from transitioning to a forwarding state. Instead, it transitions the port to STP loop-inconsistent blocking state. So Loop Guard prevents a non-designated port from becoming a designated port, while Root Guard prevents a designated port from transitioning to a Root Port.&lt;/p&gt;
+
+&lt;p&gt;Loop Guard is very similar to UDLD, but Loop Guard uses STP BPDUs to determine if there is a loop.&lt;/p&gt;
+
+&lt;p&gt;Loop Guard is enabled on a per-port basis with the interface subcommand &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree guard loop&lt;/code&gt;. To be completely effective, Loop Guard should be enabled on &lt;em&gt;all&lt;/em&gt; non-designated ports, including root ports and alternate ports. Loop Guard can also be enabled globally with the &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree loopguard default&lt;/code&gt; global configuration command. You can then disable Loop Guard on a per-port basis with &lt;code class=&quot;highlighter-rouge&quot;&gt;no spanning-tree guard loop&lt;/code&gt;.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Protected Port (PVLAN)</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/29/Protected-Port/"/>
+   <updated>2017-03-29T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/29/Protected-Port</id>
+   <content type="html">&lt;p&gt;The protected port, also known as PVLAN edge, is a security feature used to prevent traffic from being directly exchanged at Layer 2 between two or more hosts that are within the same VLAN. Protected ports only have local switch significance. A protected port does not forward any traffic (unicast, multicast, or broadcast) to any other protected port in the same switch. If you need to pass traffic between protected ports, the only possible way is through a L3 device.&lt;/p&gt;
+
+&lt;p&gt;By default, all switch ports are unprotected. The configuration is as simple as below:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface gig0/1
+SW1(config-if)# switchport protected
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Spanning Tree Root Guard</title>
@@ -41,7 +251,7 @@ SW!(config-if)# spanning-tree rootguard
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Guard</id>
    <content type="html">&lt;p&gt;BPDU Guard is a STP PortFast safety enhancement. It works by disabling a port any time the interface hears a BPDU. PortFast by itself will not do that, so if you have PortFast enabled on an interface, and an end user plugs a switch into that link, all kinds of events can happen (including the plugged in switch becoming the Root Bridge!). BPDU Guard ensures that unauthorized switches cannot be plugged into the network. A sample configuration is below.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;interface gig0/1
-  spanning-tree bodyguard enable
+  spanning-tree bpduguard enable
 
 errdisable recovery cause bpduguard
 errdisable recovery interval 120
@@ -51,7 +261,7 @@ errdisable recovery interval 120
 &lt;p&gt;The errdisable section enables the port after 120 seconds, in case the port is placed into err disabled state to due BPDU Guard.&lt;/p&gt;
 
 &lt;p&gt;Optionally, you can set BPDU Guard as the default configuration on all interfaces with the following global commands:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;spanning-tree portfast bodyguard default
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;spanning-tree portfast bpduguard default
 spanning-tree portfast default
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
@@ -98,7 +308,7 @@ SW1(config-if)# spanning-tree bpdufilter enable
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-Portfast</id>
    <content type="html">&lt;p&gt;PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.&lt;/p&gt;
 
-&lt;p&gt;To enable port fast on an interface, in interface sub configuration mode use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast&lt;/code&gt;. If it is a trunk you must append the &lt;code class=&quot;highlighter-rouge&quot;&gt;trunk&lt;/code&gt; keyword after the command, and if it is an access port you should use the &lt;code class=&quot;highlighter-rouge&quot;&gt;edge&lt;/code&gt; keyword.&lt;/p&gt;
+&lt;p&gt;To enable PortFast on an interface, in interface sub configuration mode use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast&lt;/code&gt;. If it is a trunk you must append the &lt;code class=&quot;highlighter-rouge&quot;&gt;trunk&lt;/code&gt; keyword after the command, and if it is an access port you should use the &lt;code class=&quot;highlighter-rouge&quot;&gt;edge&lt;/code&gt; keyword.&lt;/p&gt;
 
 &lt;p&gt;Another way to enable PortFast for access ports is to use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast default&lt;/code&gt; in global configuration mode. Once enabled, all access ports will automatically have PortFast enabled.&lt;/p&gt;
 </content>
@@ -219,7 +429,7 @@ SW1(config)# service timestamps debug datetime msec
  </entry>
  
  <entry>
-   <title>Virtual Switch System</title>
+   <title>Spanning Tree Types</title>
    <link href="http://bsrandall.github.io/layer%202/2017/03/17/Spanning-Tree-Types/"/>
    <updated>2017-03-17T00:00:00-04:00</updated>
    <id>http://bsrandall.github.io/layer%202/2017/03/17/Spanning-Tree-Types</id>
@@ -392,7 +602,7 @@ SW1(config-mon-erspan-dst)# ip address 10.1.1.1
 
 &lt;p&gt;Regardless of the type of SPAN we are running, the source port can be any type of port including EtherChannel, trunk port, routed port, etc. When using a VLAN as the source, all active ports in that VLAN are monitored, and the monitored ports are updated dynamically as membership to that VLAN changes. A port configured as a SPAN destination cannot be part of a SPAN source VLAN.&lt;/p&gt;
 
-&lt;p&gt;Iy is important to understand that when you configure a SPAN destination port, the existing configuration is removed buy is restored if you later remove the SPAN configuration. The destination port does not support any security, nor does it support any Layer 2 protocols such as CDP, VTP, etc. If the destination port was part of an EtherChannel, it will be removed from the EtherChannel once the SPAN configuration is applied.&lt;/p&gt;
+&lt;p&gt;It is important to understand that when you configure a SPAN destination port, the existing configuration is removed but is restored if you later remove the SPAN configuration. The destination port does not support any security, nor does it support any Layer 2 protocols such as CDP, VTP, etc. If the destination port was part of an EtherChannel, it will be removed from the EtherChannel once the SPAN configuration is applied.&lt;/p&gt;
 
 &lt;p&gt;There are a number of restrictions with SPAN including:&lt;/p&gt;
 &lt;ul&gt;
@@ -803,7 +1013,14 @@ SW2# switchport mode trunk
   &lt;li&gt;Extended VLAN support. Versions 1 and 2 only support VLANs 1 - 1000 only.&lt;/li&gt;
   &lt;li&gt;Support for private VLANs&lt;/li&gt;
   &lt;li&gt;Support for MST&lt;/li&gt;
+  &lt;li&gt;primary and secondary servers&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;With version 3, there are two types of VTP servers - primary and secondary. There is only one primary server, and the rest of the secondary servers act as backups to the primary. To declare a server as primary, use the following:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1(config)# vtp primary vlan
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
 </content>
  </entry>
  

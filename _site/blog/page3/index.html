@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/20/STP-Port-Election/">
-        STP Root Bridge Election
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/">
+        STP UplinkFast
       </a>
     </h1>
 
-    <span class="post-date">20 Mar 2017</span>
+    <span class="post-date">27 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,48 +177,31 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>After the election of the STP Root Bridge, all ports in the Layer 2 Switch topology will need to be assigned a state. The steps can be listed as follows:</p>
-<ul>
-  <li>All ports on the Root Bridge become Designated Ports</li>
-  <li>On each non-root switch, exactly ONE port is elected as the <em>Root Port</em> which is the port having the lowest path-cost to the Root Bridge.</li>
-  <li>Each segment between switches will have one Designated Port which is the port on the segment that has the lowest path-cost to reach the root bridge.</li>
-  <li>The Root and Designated Ports are placed into a Forwarding State.</li>
-  <li>The ports that are not Root ports or Designated Ports will be placed in the Blocking State. These are displayed in show commands with an A for Alternate.</li>
-</ul>
+      <p>UplinkFast provides fast convergence in case the link on which the root port is connected suffers a failure. It does this with the use of an uplink group. An uplink group is a set of Layer 2 interfaces, of which only one is forwarding at a particular time. If the root port (forwarding port) goes down, then a successor root port is chosen which immediately goes into Forwarding state, bypassing the Listening and Learning phases.</p>
 
-<p>It is helpful to remember that Designated Ports lead away from the Root Bridge, while Root Ports lead toward the Root Bridge.</p>
+<p>UplinkFast functionality is built into RSTP, so UplinkFast is only applicable with legacy IEEE 802.1D.</p>
 
-<p>What are the tiebreakers for Root Ports and Designated Ports?</p>
+<p>When UplinkFast is enabled on a switch, that switch’s bridge priority will automatically be increased to 49152 and its port cost will be increased to 3000. This is to ensure that the switch does not become a transit switch.</p>
 
-<p>The tiebreaker for Spanning Tree decisions is as follows:</p>
-<ul>
-  <li>Lowest root bridge ID (used for root bridge election)</li>
-  <li>Lowest path cost to root bridge</li>
-  <li>Lowest sender bridge ID (used when a switch is connected to two switches through which it has equal cost to reach the root bridge)</li>
-  <li>Lowest sender port ID (when the switch has two interfaces connecting to the same switch and the cost to reach the root bridge is the same through either interface, it will use the interface with the lowest number as the root port (or designated port).</li>
-</ul>
-
-<p>It is helpful to keep in mind for elections that there is only one bridge that originates BPDUs - the root bridge. Other bridges update some fields (such as Sending Bridge ID, Message Age, etc) when retransmitting out their designated ports.</p>
-
-<p>The access ports will be designated ports typically and will send BPDUs toward the host, unless BPDU Filter is set.</p>
+<p>To enable UplinkFast, go to the switch on which you want it to run and run <code class="highlighter-rouge">spanning-tree uplinkfast</code> in global configuration mode.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/20/STP-Port-Election/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/20/STP-Port-Election/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/17/Spanning-Tree-Types/">
-        Virtual Switch System
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/">
+        STP PortFast
       </a>
     </h1>
 
-    <span class="post-date">17 Mar 2017</span>
+    <span class="post-date">27 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -226,39 +209,29 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>There are several different versions of the Spanning Tree Protocol that we will come across. We will review them in chronological order today.</p>
+      <p>PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.</p>
 
-<p>The original spanning tree is Common Spanning Tree, or CST. It was defined with IEEE 802.1D. The basic premise is to create a logical loop free topology for Ethernet networks by building a spanning tree of connected layer-2 bridges. The links that are not part of the spanning tree are disabled, leaving a single active path between any two network nodes.</p>
+<p>To enable PortFast on an interface, in interface sub configuration mode use <code class="highlighter-rouge">spanning-tree portfast</code>. If it is a trunk you must append the <code class="highlighter-rouge">trunk</code> keyword after the command, and if it is an access port you should use the <code class="highlighter-rouge">edge</code> keyword.</p>
 
-<p>PVST and PVST+ are both Cisco proprietary protocols. Cisco developed them as they believed we may need different spanning-trees on a per-VLAN basis for  the best path flow. PVST only ran over ISL trunks, but with PVST+ compatibility with 802.1q trunks arrived. The + version also added new features such as UplinkFast, BackboneFast, and PortFast.</p>
-
-<p>RSTP is the IEEE’s answer to Cisco’s PVST+ implementation. RSTP took many of the added features of PVST+ and standardized them into IEEE 802.1w. RSTP added new bridge port roles and port states.</p>
-
-<p>Cisco then responded to the IEEE 802.1w Rapid Spanning Tree Protocol with RPVST+, which is just RSTP with per-vlan support. RPVST+ supports both ISL and 802.1Q trunks.</p>
-
-<p>When the concept of VLANs finally hit home when VoIP hit the LAN, everyone finally agreed that we needed VLAN support for STP. However, it was also determined that there are usually on three paths needed to support redundancy with Spanning Tree designs. But yet with Spanning Trees based on a per-VLAN approach, we may end up with way more than 3 instances of Spanning Tree running on the router.</p>
-
-<p>This led to the introduction of Multiple Spanning Tree Protocol. It was originally defined with 802.1s and was later merged into IEEE 802.1Q-2005. MSTP creates on common Spanning Tree for the entire Layer 2 network. If a network contains multiple VLANs, we can create multiple Spanning Trees and then assign specific VLANs to specific Spanning Tree instances. Since most networks will need a maximum of two Spanning Tree instances, MSTP greatly reduces the overhead on the router compared to RPVST which needed a separate instance per VLAN.</p>
-
-<p>Cisco MST supports both 802.1Q and ISL trunks.</p>
+<p>Another way to enable PortFast for access ports is to use <code class="highlighter-rouge">spanning-tree portfast default</code> in global configuration mode. Once enabled, all access ports will automatically have PortFast enabled.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/17/Spanning-Tree-Types/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/17/Spanning-Tree-Types/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/13/VSS/">
-        Virtual Switch System
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/">
+        Spanning Tree BackboneFast
       </a>
     </h1>
 
-    <span class="post-date">13 Mar 2017</span>
+    <span class="post-date">27 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -266,171 +239,34 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>VSS, or Virtual Switch System, exists in Cisco Catalyst 6500 and 4500 switches running IOS-XE. VSS simplifies the network by reducing the number of network elements. VSS can combine multiple Catalyst Switches into a single logical device. VSS logically combines a pair of switches into a single network element.</p>
+      <p>BackboneFast enables fast reconvergence due to indirect link failures. The key operation happens when a switch begins receiving inferior BPDUs.  When a switch loses the link off its Root Port, it immediately starts sending BPDUs announcing itself as the new Root. Usually, when a switch receives inferior BPDUs, it will wait for its Max Age timer to expire before beginning STP convergence. Once its Max Age timer expires, the inferior BPDU ages out and the switch will then forward its superior BPDU to the neighbor switch who was sending the inferior BPDU.</p>
 
-<p>The two switches in the pair negotiate their roles - one will assume the role of the active switch while the other assumes the role of the standby switch. The VSS active switch controls the VSS, running the Layer 2 and Layer 3 protocols for both switches. Both switches perform packet forwarding as needed, but the standby switch sends all control traffic to the VSS active switch for processing.</p>
+<p>When BackboneFast is enabled, as soon as a switch receives an inferior BPDU, it will send RLQ (Root Link Query) messages out all it’s non-designated ports. The RLQ asks other switches if the current Root Bridge is accessible via that switch. Note it doesn’t wait for its Max Age timer to expire - it begins sending RLQ messages immediately. The RLQ is a new type of PDU defined within the BackboneFast specification. The RLQ is essentially a proactive way to age out ports compared to just waiting on the Max Age timer to expire.</p>
 
-<p>The virtual switch link (VSL) is the link which ties the active and standby switches together. It is typically implemented as an EtherChannel, and therefore can support up to 8 links in the bundle. The attached devices (such as access switches) can then connect to the VSS using Multichassis EtherChannel. Unlike normal EtherChannel witch connects multiple links between two switches, MultiChassis EtherChannel can connect one switch over multiple links to two switches. In total, a VSS can support up to 256 EtherChannels in a combination of regular EtherChannels and MultiChassis EtherChannels (MEC).</p>
+<p>Based on the received RLQ responses, the switch will update its root ports and designated ports accordingly.. However all ports still transition through the regular IEEE 802.1D STP port states - listening, learning, and forwarding/blocking.</p>
 
-<h4 id="configuration">Configuration</h4>
+<p>To enable BackboneFast use the command <code class="highlighter-rouge">spanning-tree backbonefast</code> on all switches in the Layer 2 domain. The easiest way to verify that BackboneFast is enabled is to use the <code class="highlighter-rouge">show spanning-tree summary</code> command.</p>
 
-<p>Both switches in a VSS pair need to belong to the same VSS domain. This domain is a number between 1 and 255. After creating the domain, you must configure one switch to be switch number 1 and the other switch to be switch number 2.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# switch virtual domain 10
-SW1(config-vs-domain)# switch 1
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2(config)# switch virtual domain 10
-SW2(config-vs-domain)# switch 2
-</code></pre>
-</div>
+<p>This is a great Cisco article describing the operation: <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/12014-18.html">BackboneFast</a>.</p>
 
-<p>Next you should create the VSL between the two VSS switches.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface port-channel 5
-SW1(config-if)# switchport
-SW1(config-if)# switch virtual link 1
-SW1(config-if)# no shutdown
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2(config)# interface port-channel 10
-SW2(config-if)# switchport
-SW2(config-if)# switch virtual link 2
-SW2(config-if)# no shutdown
-</code></pre>
-</div>
-
-<p>Next, you have to put the physical interfaces into the appropriate port-channels created for the VSL.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# int range gig1/0-3
-SW1(config-if-range)# switchport mode trunk
-SW1(config-if-range)# channel-group 5 mode on
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# int range gig1/0-3
-SW1(config-if-range)# switchport mode trunk
-SW1(config-if-range)# channel-group 10 mode on
-</code></pre>
-</div>
-
-<p>Next, to complete the switch conversion process you need to run the following command on each switch:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# switch convert mode virtual
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2# switch convert mode virtual
-</code></pre>
-</div>
-
-<p>The switch will reload and when they come back up they will now be part of the VSS domain.</p>
-
-<p>Some sample show commands are:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# show switch virtual
-
-SW1# show switch virtual role
-
-SW1# show switch virtual link
-
-SW1# show switch virtual link port-channel
-</code></pre>
-</div>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/13/VSS/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/13/VSS/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/11/SPAN-Configuration/">
-        SPAN Configuration
+      <a href="/spanning%20tree/2017/03/27/Debugging-STP/">
+        Debugging Spanning Tree Events
       </a>
     </h1>
 
-    <span class="post-date">11 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
-    
-    
-
-    <article>
-      <p>Basic SPAN Configuration:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 1 source interface fa0/12
-SW1(config)# monitor session 1 destination interface fa0/24
-</code></pre>
-</div>
-
-<p>Here is an example where we will only monitor respective traffic from fa0/18 and only monitor sent traffic from interface fa0/19. Additionally we will filter (remove) VLANs 1 through 3. Finally, we will preserve the encapsulation from the sources:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 1 source interface fa0/18 rx
-SW1(config)# monitor session 1 source interface fa0/19 tx
-SW1(config)# monitor session 1 filter vlan 1-3
-SW1(config)# monitor session 1 destination interface fa0/24 encapsulation replicate
-</code></pre>
-</div>
-
-<p>Next we have a RSPAN sample configuration. We will monitor all traffic on VLANs 66-68 on SW1 and send it to VLAN 199, which will then be delivered to port fa0/24 on SW2:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vlan 199
-SW1(config-vlan)# remote span
-SW1(config-vlan)# exit
-SW1(config)# monitor session 1 source vlan 66-68
-SW1(config)# monitor session 1 destination remote van 199
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2(config)# vlan 199
-SW2(config-vlan)# remote span
-SW2(config-vlan)# exit
-SW2(config)# monitor session 2 source remote vlan 199
-SW2(config)# monitor session 2 destination interface fa0/24
-</code></pre>
-</div>
-
-<p>Notice above that the monitor session numbers do not have to match on each switch.</p>
-
-<p>Finally, we have a ERSPAN example. We will configure R1 to capture received traffic and send it to SW1 gig2/1.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# monitor session 1 type erspan-source
-R1(config-mon-erspan-src)# source interface gig1/1 rx
-R1(config-mon-erspan-src)# no shutdown
-R1(config-mon-erspan-src)# destination
-R1(config-mon-erspan-src-dst)# erspan-id 101
-R1(config-mon-erspan-src-dst)# ip address 10.1.1.1
-R1(config-mon-erspan-src-dst)# origin ip address 172.16.1.1
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 2 type erspan-destination
-SW1(config-mon-erspan-dst)# destination interface gig2/1
-SW1(config-mon-erspan-dst)# no shutdown
-SW1(config-mon-erspan-dst)# source
-SW1(config-mon-erspan-dst-src)# erspan-id 101
-SW1(config-mon-erspan-dst)# ip address 10.1.1.1
-</code></pre>
-</div>
-
-<p>A couple of configuration notes. First, you must make sure the destination port is not in a shutdown state or else the SPAN session will not come up.</p>
-
-<p>To view the session, simply use <code class="highlighter-rouge">show monitor session 1</code>.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/layer%202/2017/03/11/SPAN-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/layer%202/2017/03/11/SPAN-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202/2017/03/09/SPAN/">
-        SPAN
-      </a>
-    </h1>
-
-    <span class="post-date">09 Mar 2017</span>
+    <span class="post-date">27 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -438,40 +274,58 @@ SW1(config-mon-erspan-dst)# ip address 10.1.1.1
     
 
     <article>
-      <p>SPAN stands for Switch Port Analyzer. It is a way to direct all traffic from a source port or source VLAN to a single port. Some uses include IDS/IPS, VoIP Call recording, or troubleshooting / analysis.</p>
+      <p>Here is a configuration for debugging Spanning Tree events:</p>
 
-<p>If the destination port is on the local switch, we say it is in SPAN operation mode. The destination port could also be mapped to a port on a remote switch, in which case we call it Remote SPAN or RSPAN. In RSPAN, a specific VLAN must be configured across the entire switching path from the source port or VLAN to the RSPAN destination port. So the source is still at least one port or at least one VLAN,  but the destination is always the RSPAN VLAN. At the switch where the RSPAN destination port exists, the RSPAN VLAN is delivered to the RSPAN port.</p>
-
-<p>Encapsulated Remote SPAN (ERSPAN) is a variant of RSPAN in which we are encapsulating the Remote SPAN information. ERSPAN creates a GRE tunnel for all captured traffic and allows it to be extended across Layer 3 domains. This became an option with IOS-XE.</p>
-
-<p>Regardless of the type of SPAN we are running, the source port can be any type of port including EtherChannel, trunk port, routed port, etc. When using a VLAN as the source, all active ports in that VLAN are monitored, and the monitored ports are updated dynamically as membership to that VLAN changes. A port configured as a SPAN destination cannot be part of a SPAN source VLAN.</p>
-
-<p>Iy is important to understand that when you configure a SPAN destination port, the existing configuration is removed buy is restored if you later remove the SPAN configuration. The destination port does not support any security, nor does it support any Layer 2 protocols such as CDP, VTP, etc. If the destination port was part of an EtherChannel, it will be removed from the EtherChannel once the SPAN configuration is applied.</p>
-
-<p>There are a number of restrictions with SPAN including:</p>
-<ul>
-  <li>the source can be one or more ports or a VLAN, but not both</li>
-  <li>up to 64 destination ports can be configured on a switch</li>
-  <li>you must be careful not to overload the destination port, especially if a VLAN is being monitored.</li>
-  <li>within a single SPAN session, you cannot deliver traffic to a destination port when it is sourced by a mix of SPAN, RSPAN, or ERSPAN source ports or VLANs. This usually comes into play when you want to mirror source traffic to both a local port on a switch (SPAN mode) and a remote port on another switch (RSPAN mode).</li>
-  <li>only one SPAN/RSPAN/ERSPAN session can send traffic to a single destination port</li>
-  <li>if you use a trunk port as a SPAN or RSPAN source, then by default all VLANs on the trunk are monitored by default</li>
-  <li>traffic that is routed from another VLAN to a source VLAN cannot be monitored with SPAN</li>
-</ul>
-
-<p>Finally, SPAN, RSPAN, and ERSPAN support three types of traffic: transmitted, received, and both (default). If you set a SPAN to monitor just receive or just transmit, some conditions apply:</p>
-<ul>
-  <li>for Receive (RX) the goal is to deliver all traffic that is received by the SPAN source. As a result, each frame that is received by the source port or VLAN is copied to the destination port or VLAN <em>before</em> any modifications are made to the frame (such as ACL filtering, QoS, etc)</li>
-  <li>for Transmit (TX), all relevant filtering or modification to the frame is done before the switch forwards the traffic to the SPAN or RSPAN destination.</li>
-  <li>SPAN usually ignores certain Layer 2 frames like CDP, BPDUs, etc. However, SPAN can be configured to forward that traffic to the destination port/VLAN with the <code class="highlighter-rouge">encapsulation replicate</code> command</li>
-</ul>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1# debug spanning-tree events
+SW1# debug condition vlan 2
+SW1# config t
+SW1(config)# service timestamps debug datetime msec
+</code></pre>
+</div>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/09/SPAN/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/27/Debugging-STP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/09/SPAN/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/27/Debugging-STP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/26/STP-Timers/">
+        STP Convergence Timers
+      </a>
+    </h1>
+
+    <span class="post-date">26 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>There are 3 timers we need to be concerned with in Spanning Tree: the Hello Time, the Forward Delay, and the Max-Age Time.</p>
+
+<p>The Hello Time is the frequency with which BPDUs are transmitted from the root bridge. It can be adjusted with the command <code class="highlighter-rouge">spanning-tree vlan 1-4094 hello-time 3</code> where 3 is in seconds. The default is 2 seconds, but in can be adjusted between 1 and 10 seconds. Non-root bridges will never generate BPDUs, but only relay BPDUs they receive on their root port.</p>
+
+<p>The Forward Delay is the time that is spent in the listening and learning states. Its value is 15 seconds by default, but it can be adjusted to anywhere between 4 and 30 seconds.</p>
+
+<p>The Max Age timer controls the maximum length of time that passes before a bridge port saves its configuration BPDU. This time is 20 seconds by default, but it can be tuned to be anytime between 6 and 40 seconds.</p>
+
+<p>There is another item that is not a timer but is related. This is the <em>message age</em>. The root bridge sends all of its BPDUs with a message age of 0. Each downstream switch then adds 1 to this message age value. The actual age out time of the downstream switches is then (max age - message age).</p>
+
+<p>Here is a good article that describes the Max Age timer as it relates to superior BPDUs:  <a href="https://packetmagnifier.wordpress.com/2013/09/09/understanding-stp-max-age/">Max Age</a>. If a switch’s root port goes down, there is no need for it to go through the Max Age timer process - if there are no better BPDUs received, the switch will immediately start announcing itself as root and begin sending BPDUs. In the scenario in the article, the switch that went down is sending inferior BPDUs, but yet the receiving switch goes through the Max Age process before it transforms its non-designated port to a Designated Port and begins sending the superior BPDUs towards the switch that suffered the down link.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/26/STP-Timers/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/26/STP-Timers/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Virtual Switch System
+title: Spanning Tree Types
 category: Layer 2
 tag: knowledge
 ---
