@@ -8,8 +8,7 @@ Administrative Distance is used to determine which route should be installed int
 
 The `distance` command is used with the different routing protocols to change its Administrative Distance. Here is a list 
 
-| Routing Protocol      | AD |
-+————————|——+
+| **Routing Protocol**      | **AD** |
 | Directly connected  | 0    |
 | Static route| 1 |
 | EIGRP Summary | 5 |

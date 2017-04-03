@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-04-02T23:54:16-04:00</updated>
+ <updated>2017-04-03T00:00:45-04:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -46,12 +46,8 @@
 &lt;table&gt;
   &lt;tbody&gt;
     &lt;tr&gt;
-      &lt;td&gt;Routing Protocol&lt;/td&gt;
-      &lt;td&gt;AD&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;+————————&lt;/td&gt;
-      &lt;td&gt;——+&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;Routing Protocol&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;AD&lt;/strong&gt;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Directly connected&lt;/td&gt;
