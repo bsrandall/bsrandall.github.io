@@ -61,4 +61,17 @@ SW1(config-mon-erspan-dst)# ip address 10.1.1.1
 
 A couple of configuration notes. First, you must make sure the destination port is not in a shutdown state or else the SPAN session will not come up.
 
+If you want to leave the original encapsulation of the frames intact, use the `encapsulation replicate` option on the monitor session destination command. 
+
+One confusing option is the `ingress dot1q vlan 10` option on the destination interface. This is actually telling the switch to accept incoming frames on the *destination* monitor switch and place the frames in VLAN 10. This would let you use the destination port like a normal access port. Seems kind of silly to me as to why you would want to do that, but I am sure there is a reason.
+
+```
+`monitor session 1 destination interface gig0/24 ingress dot1q vlan 146
+```
+`The above accepts inbound packets with 802.1Q encapsulation with the given VLAN as the default VLAN. Compare that to the example below, which accepts incoming packets with untagged encapsulation type with the specified VLAN as the default VLAN.
+```
+`monitor session 1 destination interface gig0/24 ingress vlan 146
+```
+`
 To view the session, simply use `show monitor session 1`.
+

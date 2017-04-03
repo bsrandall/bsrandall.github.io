@@ -68,3 +68,10 @@ SW1(config-if)# switchport private-vlan mapping 500 502
 ```
 
 One great way to test your Private VLAN setup is to send a single ping to the broadcast address with `ping 255.255.255.255 repeat 1`.  The replies will only be from the hosts in your broadcast domain.
+
+One other thing to note. If you are configuring a Primary VLAN SVI to operate with secondary private VLANs, you need to map the secondary VLANs onto the SVI as in the following:
+```
+`SW1(config)# interface Vlan 100
+SW1(config-if)# private-vlan mapping 1000,2000
+```
+`

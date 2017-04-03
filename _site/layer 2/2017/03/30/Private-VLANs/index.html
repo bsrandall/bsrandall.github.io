@@ -236,6 +236,13 @@ SW1(config-if)# switchport private-vlan mapping 500 502
 
 <p>One great way to test your Private VLAN setup is to send a single ping to the broadcast address with <code class="highlighter-rouge">ping 255.255.255.255 repeat 1</code>.  The replies will only be from the hosts in your broadcast domain.</p>
 
+<p>One other thing to note. If you are configuring a Primary VLAN SVI to operate with secondary private VLANs, you need to map the secondary VLANs onto the SVI as in the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# interface Vlan 100
+SW1(config-if)# private-vlan mapping 1000,2000
+</code></pre>
+</div>
+<p>`</p>
+
   </article>
 </div>
 
@@ -245,27 +252,27 @@ SW1(config-if)# switchport private-vlan mapping 500 502
     
       <li>
         <h3>
-          <a href="/layer%202/2017/03/30/Voice-VLAN/">
-            Voice VLAN
-            <small>30 Mar 2017</small>
+          <a href="/general%20routing/2017/04/02/Longest-Match-Routing/">
+            Longest Match Routing
+            <small>02 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/layer%202/2017/03/30/Storm-Control/">
-            Storm Control
-            <small>30 Mar 2017</small>
+          <a href="/general%20routing/2017/04/02/IPv4-Addressing/">
+            IPv4 Addressing
+            <small>02 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/layer%202/2017/03/30/Static-MAC-Address/">
-            Static MAC Address Entries
-            <small>30 Mar 2017</small>
+          <a href="/general%20routing/2017/04/02/Administrative-Distance/">
+            Administrative Distance
+            <small>02 Apr 2017</small>
           </a>
         </h3>
       </li>

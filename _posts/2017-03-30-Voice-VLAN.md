@@ -12,3 +12,6 @@ SW1(config-if)# switchport access vlan 100
 SW1(config-if)# switchport voice vlan 101
 ```
 If you you show commands, you will not find the interface to be in trunk operational mode, but remember it works like a rudimentary trunk.
+
+As soon as you apply the `switchport voice vlan` command, Portfast is enabled on the interface, though you will not see it in the running-config.
+

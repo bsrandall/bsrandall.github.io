@@ -164,45 +164,55 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/mst/2017/02/22/MST/">
-        Multiple Spanning Tree
+      <a href="/layer%202/2017/03/06/CDP-Configuration/">
+        CDP Configuration
       </a>
     </h1>
 
-    <span class="post-date">22 Feb 2017</span>
+    <span class="post-date">06 Mar 2017</span>
      | 
     
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
     
     
 
     <article>
-      <p>Multiple Spanning Tree (MST) was developed to overcome the high resource requirements of PVST. In reality, there are only a few logical redundant design on a network, regardless of the number of VLANs or the number of physical links. With MST you can run several different logical topologies (instances), and map VLANs to those instances. You get the benefit of running a redundant, fully utilized network without the resource overhead on the switches.</p>
+      <p>To enable CDP globally we use <code class="highlighter-rouge">cdp run</code>. To enable CDP on a per-interface basis, use <code class="highlighter-rouge">cdp enable</code>.</p>
 
-<p>So the end result is that with PVST, a port is either forwarding or discarding for a VLAN, while with MST, a port is either forwarding or discarding for an instance which contains multiple VLANs.</p>
+<p><code class="highlighter-rouge">R1#(config) cdp timer seconds</code>  specifies the frequency of CDP update transmissions.</p>
 
-<p>MST is defined by IEEE 802.1s. A special instance, instance 0 or the Internal Spanning Tree (IST), is designated to carry all STP information. The BPDUs for IST carry all the standard RSTP information, as well as the configuration name, revision number, and a <em>hash value</em> calculated over the VLAN to instance mapping.</p>
+<p><code class="highlighter-rouge">R1#(config) cdp holdtime seconds</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
 
-<p>You should not run MSTP on access ports.</p>
+<p><code class="highlighter-rouge">R1#(config) no cdp adertise-v2</code> disables the advertisement of CDPv2 advertisements if for some crazy reason you need to.</p>
+
+<p><code class="highlighter-rouge">R1#(config) clear cdp counters</code> resets the traffic counters to zero.</p>
+
+<p><code class="highlighter-rouge">R1#(config) clear cdp table</code> deletes the CDP table of information about neighbors</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp</code> displays the interval between CDP transmissions, the number of seconds a CDP advertisement is valid for a given port, and the version of the advertisement</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp interface [type number]</code> displays information about interfaces on which CDP is enabled</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp entry device-name</code> displays information about a specific neighbor</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/mst/2017/02/22/MST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/06/CDP-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/mst/2017/02/22/MST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/06/CDP-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/vtp/2017/02/21/VTP-Versions/">
-        VTP Versions
+      <a href="/layer%202/2017/03/06/CDP-Basics/">
+        CDP Basics
       </a>
     </h1>
 
-    <span class="post-date">21 Feb 2017</span>
+    <span class="post-date">06 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -210,98 +220,71 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>VTP is a Cisco proprietary protocol that allows VLAN administration to be shared across switches. It gives an administrator the capability to centrally administer VLAN creation across one or two switches, and have those VLANs propagate across a VTP domain made up of any number of switches.</p>
+      <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
 
-<p>There are 3 versions of VTP, versions 1, 2, and 3.  There are not many significant changes between versions 1 and 2, except version 2 introduced support for Token Ring VLANs.</p>
+<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
 
-<p>Version 3 introduced the following enhancements:</p>
+<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
+
+<h4 id="type">Type</h4>
 <ul>
-  <li>hidden authentication (does not appear in plain text in the configuration file)</li>
-  <li>Extended VLAN support. Versions 1 and 2 only support VLANs 1 - 1000 only.</li>
-  <li>Support for private VLANs</li>
-  <li>Support for MST</li>
-  <li>primary and secondary servers</li>
+  <li>Device ID - 0x0001</li>
+  <li>Address - 0x0002</li>
+  <li>Port ID - 0x0003</li>
+  <li>Capabilities - 0x0004</li>
+  <li>Version - 0x0005</li>
+  <li>Platform - 0x0006</li>
+  <li>IP Prefix - 0x0007</li>
+  <li>VTP Management Domain - 0x0009 {: .red}</li>
+  <li>Native VLAN - 0x000a {: .red}</li>
+  <li>Duplex Status - 0x000b {: .red}</li>
+  <li>Appliance ID - 0x000c {: .red}</li>
+  <li>Power consumption - 0x0010 {: .red}</li>
 </ul>
 
-<p>With version 3, there are two types of VTP servers - primary and secondary. There is only one primary server, and the rest of the secondary servers act as backups to the primary. To declare a server as primary, use the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# vtp primary vlan
-</code></pre>
-</div>
-<p>`</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/vtp/2017/02/21/VTP-Versions/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/vtp/2017/02/21/VTP-Versions/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/vtp/2017/02/21/VTP-Header/">
-        VTP Messages
-      </a>
-    </h1>
-
-    <span class="post-date">21 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>All VTP packets contain these fields in the header:</p>
+<h4 id="value">Value</h4>
 <ul>
-  <li>VTP version (1, 2, or 3)</li>
-  <li>VTP Message Type
+  <li>Device ID - MAC address in ASCII or the FQDN</li>
+  <li>Address</li>
+  <li>Port ID - ASCII string that names the port from which the message was sent</li>
+  <li>Capabilities - has a value describing the device capabilities:
     <ul>
-      <li>Summary advertisements</li>
-      <li>Subset advertisement</li>
-      <li>Advertisement requests</li>
-      <li>VTP Join Messages</li>
+      <li>0x01 - level 3 routing</li>
+      <li>0x02 - level 2 transparent bridging</li>
+      <li>0x04 - level 2 source-route bridging</li>
+      <li>0x08 - level 2 switching not running Spanning Tree</li>
+      <li>0x10 - sends and receives packets for a network layer protocol</li>
+      <li>0x20 - the device does not forward IGMP reports</li>
+      <li>0x40 - level 1 function</li>
     </ul>
   </li>
-  <li>Management domain length</li>
-  <li>Management domain name</li>
+  <li>Version - software version running the device</li>
+  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
+  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
 </ul>
 
-<p>Most VTP packets contain the <em>configuration revision number</em> of the sender. This is used to determine if the received information is more recent than the current version.</p>
+<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
 
-<p>By default, <em>summary advertisements</em> are sent every 5 minutes. The summary advertisement contains the VTP domain name and the current configuration revision number. If the VTP domain matches the switch’s configured VTP domain, and the configuration revision number is higher than its own revision, the switch will send an <em>advertisement request</em>. Otherwise, it ignores the packet.</p>
-
-<h4 id="summary-advertisement-packet-format">Summary Advertisement Packet Format</h4>
-<p><img src="http://www.cisco.com/c/dam/en/us/support/docs/lan-switching/vtp/10558-21c.gif" alt="" /></p>
-
-<p>A <em>subset advertisement</em> will follow a summary advertisement - it is the message that actually contains a list (or a subset of a list) of the VLANs being advertised.</p>
-
-<p>A switch will send an <em>advertisement request</em> in these situations:</p>
-<ul>
-  <li>the switch has been reset</li>
-  <li>the VTP domain name has been changed on the switch</li>
-  <li>the switch has received a VTP summary advertisement with a higher configuration than its own</li>
-</ul>
+<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/vtp/2017/02/21/VTP-Header/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/06/CDP-Basics/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/vtp/2017/02/21/VTP-Header/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/06/CDP-Basics/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/vlan/2017/02/21/Dot1q/">
-        Dot1q
+      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
+        MultiChassis EtherChannel
       </a>
     </h1>
 
-    <span class="post-date">21 Feb 2017</span>
+    <span class="post-date">27 Feb 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -309,49 +292,39 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <h4 id="trunks">Trunks</h4>
-<p>Dot1q is the standard trunking protocol used for transporting multiple VLANs across a trunk port. A trunk is a point-to-point link that carries the traffic for multiple VLANs across a single trunk. Dot1q is a standard that tags VLANs for identification. The receiving switch will then strip the VLAN tag from the frame before passing it to the appropriate access port.</p>
+      <p>A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.</p>
 
-<p>The full name for Dot1q is IEEE 802.1Q.</p>
+<p>With MultiChassis EtherChannel, we trick the server into running LAG between two different access switches. There are multiple ways to do this using different protocols made by different vendors. We generically call it MLAG.</p>
 
-<p>The 802.1Q Tagged frame looks like this:
-<img src="http://bsrandall.github.io/public/img/802.1q.png" alt="" /></p>
+<p>The protocol must take a physical triangle as seen below, and make it into a logical point-to-point. Many problems arise that the protocol must deal with. If NIC A sends traffic to Switch A, Switch A must know not to send that to Switch B, or else a loop might form.
+<img src="http://www.cisco.com/c/dam/en/us/td/i/200001-300000/220001-230000/226001-227000/226936.eps/_jcr_content/renditions/226936.jpg" alt="" />
+The protocols are so customized, that different platforms from the same vendor cannot even run MLAG. The control place has to be identical. Cisco therefore has a couple of implementations.</p>
 
-<ul>
-  <li>The PRI field is the 3-bit 802.1p priority field.</li>
-  <li>The CFI field is always set to 0 for Ethernet switches</li>
-  <li>VLAN ID is a 12-bit field</li>
-</ul>
+<p><em>Stackwise Cross-Stack EtherChannel</em> has control plane over dedicated stacking cables. These stack cables create a bidirectional closed loop as seen below. One control plane is shared amongst members as well as one management plane. So if you were to log into one switch, you are actually viewing the configuration for the stack. This is used on the Access Platforms such as Catalyst 3750/3850. StackWise can have more than 2 members, up to the stack limit
+<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRguQ7GRPRoSYAmPfJ4MCMN2r160qFDougT6yyluxFXu6n42Foxgg" alt="" /></p>
 
-<p>Because of the extra fields, an 802.1Q frame has an MTU of 1522 bytes.</p>
+<p><em>Virtual Switching System (VSS)</em> is used on the aggregation platforms such as Catalyst 4500/6500/6800. VSS is similar to Stackwise as there is one management plane and one control plane shared between connected switches. Typically with VSL, the links are going to be 2x10G LAG. VSS switches are udeployed in pairs and will usually have 1 active supervisor and 3 standby supervisors.</p>
 
-<p>If a non-802.1Q enabled device or an access port receives a tagged frame, it simply ignores the frame and forwards it as usual.</p>
-
-<h4 id="native-vlan">Native VLAN</h4>
-<p>A Native VLAN on a trunk is the VLAN to which untagged traffic belongs. Across a trunk, the Native VLANs should match on each end.</p>
-
-<p><code class="highlighter-rouge">SW1# show interface trunk</code></p>
-
-<p>will show the Native VLAN for each interface that has active trunking.</p>
+<p><em>Virtual Port Channel (vPC)</em> is very similar to VSS but it runs on the Data Center platforms such as Nexus 5000/7000/9000. The control plane is synchronized over a vPC Peer Link, which are typically 2x10GigE LAG. The biggest difference between vPC and VSS, is that vPC has <em>2</em> independent control planes and <em>2</em> independent management planes. vPC like VSS is deployed in pairs.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/vlan/2017/02/21/Dot1q/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/vlan/2017/02/21/Dot1q/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/vlan/2017/02/21/DTP/">
-        Dynamic Trunking Protocol (DTP)
+      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/">
+        EtherChannel PaGP
       </a>
     </h1>
 
-    <span class="post-date">21 Feb 2017</span>
+    <span class="post-date">26 Feb 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -359,36 +332,84 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Dynamic Trunking Protocol is a Cisco proprietary protocol that, when configured, attempts to negotiate trunking between two connected ports. It will try to negotiate trunking as well as the encapsulation type.</p>
+      <p>Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.</p>
 
-<p><code class="highlighter-rouge">SW1# switchport mode dynamic auto</code></p>
-
+<p>The two modes of PAgP are:</p>
 <ul>
-  <li>allows the interfaces to become a trunk if the neighboring trunk is set to trunk or desirable mode</li>
-  <li>this is the default setting for newer Cisco switches</li>
-  <li>if both ends of a trunk are set to dynamic auto, they will not form a trunk</li>
+  <li>auto: places a port into a passive negotiating state</li>
+  <li>desirable: places a port into active negotiating state</li>
 </ul>
 
-<p><code class="highlighter-rouge">SW1# switchport mode dynamic desireable</code></p>
+<p>For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.</p>
+
+<p>PAgP supports up to 8 Ethernet ports of the same type.</p>
+
+<p>For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:</p>
 <ul>
-  <li>makes the interface actively attempt to negotiate trunking</li>
-  <li>the link will become a trunk if the neighbor interface is set to trunk, auto, or desirable</li>
+  <li>Allowed-VLAN list</li>
+  <li>Spanning-tree path cost for each VLAN</li>
+  <li>Spanning-tree port priority for each VLAN</li>
+  <li>Spanning-tree Port Fast setting</li>
 </ul>
 
-<p><code class="highlighter-rouge">SW1# switchport nonegotiate</code></p>
-<ul>
-  <li>prevents the interface from sending DTP frames</li>
-  <li>can use this when the interface switch port mode is <em>access</em> or <em>trunk</em> only</li>
-  <li>if enabled, to establish a trunk the neighbor interface must be manually set to <em>trunk</em></li>
-</ul>
+<p>For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/vlan/2017/02/21/DTP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/vlan/2017/02/21/DTP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/">
+        EtherChannel Load-Balancing
+      </a>
+    </h1>
+
+    <span class="post-date">26 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.</p>
+
+<p>To configure the load-balancing method by using the<code class="highlighter-rouge">port-channel load-balance</code> global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.</p>
+
+<p>The selected load balancing mode applies to all ether channels on a switch.</p>
+
+<p>With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the <em>incoming</em> packet. So packets from the same host use the same port in the channel.</p>
+
+<p>With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.</p>
+
+<p>With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.</p>
+
+<p>IP based forwarding has the same principles as the MAC based forwarding outlined above.</p>
+
+<p>To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.</p>
+
+<p>To configure EtherChannel load-balancing, in global config use the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
+</code></pre>
+</div>
+<p>`
+The default is src-mac.</p>
+
+<p>One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

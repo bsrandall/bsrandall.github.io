@@ -1,0 +1,11 @@
+---
+layout: post
+title: IPv4 Addressing
+category: General Routing
+tag: knowledge
+---
+IP is a logical addressing method as compared to MAC layer physical addresses. It operates at the Network Layer (Layer 3) of the OSI model.
+
+An address mask is used to identify the network and host portions of the address.  It is 32-bits long, the same length as an IPv4 address. In general, an address mask is assigned to a network or an organization. The organization then subnets that address mask into per data-link subnet masks for assignment.
+
+The number of available subnets under a major address mask and the number of hosts on each subnet are both calculated with the same formula 2^n-2.

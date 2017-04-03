@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/">
-        Spanning Tree Loop Guard
+      <a href="/layer%202%20wan/2017/04/01/PPP/">
+        PPP
       </a>
     </h1>
 
-    <span class="post-date">29 Mar 2017</span>
+    <span class="post-date">01 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,32 +177,29 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Loop Guard is a Spanning Tree feature that was added to prevent loops from forming due to hardware issues or STP software problems. A Spanning Tree loop occurs when a port that was previously in the blocking state is erroneously  transitioned to the Forwarding state.</p>
-
-<p>When a non-designated port stops receiving BPDUs, it will eventually transition itself to a designated port and begin forwarding BPDUs. Loop Guard works by preventing that non-designated port from transitioning to a forwarding state. Instead, it transitions the port to STP loop-inconsistent blocking state. So Loop Guard prevents a non-designated port from becoming a designated port, while Root Guard prevents a designated port from transitioning to a Root Port.</p>
-
-<p>Loop Guard is very similar to UDLD, but Loop Guard uses STP BPDUs to determine if there is a loop.</p>
-
-<p>Loop Guard is enabled on a per-port basis with the interface subcommand <code class="highlighter-rouge">spanning-tree guard loop</code>. To be completely effective, Loop Guard should be enabled on <em>all</em> non-designated ports, including root ports and alternate ports. Loop Guard can also be enabled globally with the <code class="highlighter-rouge">spanning-tree loopguard default</code> global configuration command. You can then disable Loop Guard on a per-port basis with <code class="highlighter-rouge">no spanning-tree guard loop</code>.</p>
-
+      <p>PPP stands for point-to-point protocol - it is  a very popular method for establishing a serial connection over which to pass IP traffic. PPP is composed of Link Control Protocol (LCP) as well as a family of NCPs used to establish network-layer links for various protocols (such as IPv4) after LCP has established the basic link. The steps to enable PPP on a Cisco router are shown below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+</code></pre>
+</div>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202%20wan/2017/04/01/PPP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202%20wan/2017/04/01/PPP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/29/Protected-Port/">
-        Protected Port (PVLAN)
+      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/">
+        PPP Authentication
       </a>
     </h1>
 
-    <span class="post-date">29 Mar 2017</span>
+    <span class="post-date">01 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -210,31 +207,67 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>The protected port, also known as PVLAN edge, is a security feature used to prevent traffic from being directly exchanged at Layer 2 between two or more hosts that are within the same VLAN. Protected ports only have local switch significance. A protected port does not forward any traffic (unicast, multicast, or broadcast) to any other protected port in the same switch. If you need to pass traffic between protected ports, the only possible way is through a L3 device.</p>
+      <p>There are two forms of authentication available for PPP, PAP and CHAP. It is important to remember that these technologies are one way in nature, and therefore do not need to be configured bidirectionally. You really should think of this as a Client / Server model.</p>
 
-<p>By default, all switch ports are unprotected. The configuration is as simple as below:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
-SW1(config-if)# switchport protected
+<p>With PAP authentication, a two-way handshake is used to establish identity. After the PPP link establishment is complete, a username and password pair is repeatedly sent by the remote node (in clear text) until authentication is acknowledged, or the connection is terminated. PPP is not secure as passwords are sent across the link in clear text.</p>
+
+<p>PAP supports either unidirectional or bidirectional authentication. This is the configuration for unidirectional, where R1 is the called device and R2 is the calling device:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# username ROUTER2 password cisco
+R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+R1(config-if)# ppp authentication pap
+R1(config-if)# end
 </code></pre>
 </div>
+<p>`And here is the configuration for R2, the client:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R2(config)# interface serial0/0
+R2(config-if)# encapsulation ppp
+R2(config-if)# ppp pap sent-username ROUTER2 password cisco
+R2(config-if)# end
+</code></pre>
+</div>
+<p>`
+CHAP identifies peers by use of a three-way handshake. The general steps are:</p>
+<ul>
+  <li>After the LCP phase is complete, and CHAP is established as the authentication protocol between devices, the authenticator sends a challenge message to the peer</li>
+  <li>The peer responds with a value calculated through a one-way hash function (MD5)</li>
+  <li>The authenticator checks the response against its own calculation of the expected hash value. If the values match, the authentication is successful, otherwise the connection is terminated.</li>
+</ul>
+
+<p>Like PAP, authentication is one-way but can be configured bidirectionally. In this example, R1 is the CHAP server and R2 is the CHAP client.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# username ROUTER2 password cisco
+R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+R1(config-if)# ppp authenticate chap
+R1(config-if)# end
+</code></pre>
+</div>
+<p>`And now,  R2 (the client) configuration:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R2(config)# username ROUTER1 password cisco
+R2(config)# interface serial0/0
+R2(config-if)# encapsulation ppp
+R2(config-if)# end
+</code></pre>
+</div>
+<p>`</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/29/Protected-Port/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/29/Protected-Port/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/">
-        Spanning Tree Root Guard
+      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/">
+        PPP Multilink
       </a>
     </h1>
 
-    <span class="post-date">28 Mar 2017</span>
+    <span class="post-date">01 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -242,38 +275,54 @@ SW1(config-if)# switchport protected
     
 
     <article>
-      <p>Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.</p>
+      <p>Multilink PPP is a method used to aggregate multiple single PPP links and utilize them as one. It is not that dissimilar from EtherChannel used with Ethernet. PPP frames can be fragmented, sent down different links, and then reassembled in order on the far side of the link. Multilink PPP uses a 2 or 4 byte sequencing header in each packet, and the remote MLPPP recover is tasked with reconstructing the frames in the correct order. The configuration is pretty straightforward.</p>
 
-<p>Root Guard is enabled on a per port basis. Root Guard ensures that the port on which it is configured remains a designated port. If the bridge receives superior BPDUs on that designated port, Root Guard moves the port to root-inconsistent state, which is effectively equivalent to the STP listening state so no frames are forwarded.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`interface Serial0/1
+  description Link to R1
+  no ip address
+  encapsulation ppp
+  ppp multilink
+  ppp multilink group 1
+  serial restart-delay 0
+end
 
-<p>The difference between BPDU Guard and Root Guard is that Root Guard allows the port to participate in STP, so long as the port does not receive a <em>superior</em> BPDU. With BPDU Guard, <em>any</em> BPDU will put the port into an err-disabled state.</p>
+interface Serial1/1
+  description Link to R1
+  no ip address
+  encapsulation ppp
+  ppp multilink
+  ppp multilink group 1
+  serial restart-delay 0
+end
 
-<p>Again, Root Guard is enabled on a per interface basis as below.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
-SW!(config-if)# spanning-tree rootguard
+interface Multilink 1
+  ip address 192.168.12.2 255.255.255.0
+  ppp multilink
+  ppp multilink group 1
+end
 </code></pre>
 </div>
-
-<p>The Cisco explanation is located <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/10588-74.html">here</a>.</p>
+<p><code class="highlighter-rouge">
+Some optional parameters include </code>ppp multilink interleave<code class="highlighter-rouge">. Interleaving allows large packets to be multilink encapsulated and fragmented into a small enough size to satisfy the delay requirements of real-time traffic. The interleaving feature also provides a special transmit queue for the smaller, delay-sensitive packets, enabling them to be sent earlier than other flows. </code>ppp multilink fragement delay 10` is the command that determines the maximum delay - MLPPP will then chose a fragment size based on the configured delay.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/">
-        Spanning Tree BPDU Guard
+      <a href="/layer%202%20wan/2017/04/01/HDLC/">
+        HDLC
       </a>
     </h1>
 
-    <span class="post-date">28 Mar 2017</span>
+    <span class="post-date">01 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -281,40 +330,34 @@ SW!(config-if)# spanning-tree rootguard
     
 
     <article>
-      <p>BPDU Guard is a STP PortFast safety enhancement. It works by disabling a port any time the interface hears a BPDU. PortFast by itself will not do that, so if you have PortFast enabled on an interface, and an end user plugs a switch into that link, all kinds of events can happen (including the plugged in switch becoming the Root Bridge!). BPDU Guard ensures that unauthorized switches cannot be plugged into the network. A sample configuration is below.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>interface gig0/1
-  spanning-tree bpduguard enable
+      <p>HDLC is a Layer 2 protocol - the Cisco version is a slight tweak from the original ISO version, so Cisco HDLC will not operate with HDLC implementations from other vendors. It is used on serial interfaces to make direct connections between routers. It is actually the default point-to-point serial protocol for Cisco routers, but PPP is more commonly used.</p>
 
-errdisable recovery cause bpduguard
-errdisable recovery interval 120
+<p>You must always remember when connecting two serial interfaces, the DCE side must set a clock rate.</p>
+
+<p>If you are changing back from PPP to HDLC, the following shows how you would accomplish it.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface serial0/0
+R1(config-if)# encapsulation hdlc
 </code></pre>
 </div>
-
-<p>The errdisable section enables the port after 120 seconds, in case the port is placed into err disabled state to due BPDU Guard.</p>
-
-<p>Optionally, you can set BPDU Guard as the default configuration on all interfaces with the following global commands:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>spanning-tree portfast bpduguard default
-spanning-tree portfast default
-</code></pre>
-</div>
+<p>`</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202%20wan/2017/04/01/HDLC/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202%20wan/2017/04/01/HDLC/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/">
-        Spanning Tree BPDU Filter
+      <a href="/layer%202/2017/03/30/Voice-VLAN/">
+        Voice VLAN
       </a>
     </h1>
 
-    <span class="post-date">28 Mar 2017</span>
+    <span class="post-date">30 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -322,23 +365,24 @@ spanning-tree portfast default
     
 
     <article>
-      <p>BPDU Filter is another optional feature of STP. It is similar to BPDU Guard, in that it is used to terminate the STP domain. Like BPDU Guard, it can be enabled globally or per interface, but unlike BPDU Guard, BGPU filter behaves differently depending on how it is enabled.</p>
-
-<p>If BPDU Filter is enabled at the interface level, it silently drops all received inbound BPDUs and does not send outbound BPDUs. Unlike BPDU Guard, there is no err-disabled option for BPDU Filter. Here is an example of BPDU Filter enabled at the interface level:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config-if)# switchport mode access
-SW1(config-if)# switchport access vlan 10
-SW1(config-if)# spanning-tree bpdufilter enable
+      <p>On Cisco switch’s, you can configure a particular VLAN known as the voice VLAN. It is a special VLAN that Cisco developed that is meant to lead from the switch the the 3 port switch on the back of an IP Phone. The traffic from the computer will be sent untagged, regardless of whether the access VLAN for that port is the default VLAN. All traffic from the phone gets tagged to its assigned voice VLAN. It behaves in many way like a trunk, but from an operational perspective it is still a port in access mode. The configuration looks like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# switchport mode access
+SW1(config-if)# switchport access vlan 100
+SW1(config-if)# switchport voice vlan 101
 </code></pre>
 </div>
+<p>If you you show commands, you will not find the interface to be in trunk operational mode, but remember it works like a rudimentary trunk.</p>
 
-<p>When BPDU Filter is enabled globally, it will only affect PortFast enabled ports. The switch will send out exactly 11 BPDUs, and inbound BPDUs are not filtered. The reason 11 BPDUs are sent is the default Hello timer is 2 seconds and the default Max Age timer is 20 seconds. If the switch receives inbound BPDUs, the port loses its PortFast status and STP is negotiated normally on that port. For this reason, you can say that BPDU Filter enabled globally is a safer option than BPDU enabled at the interface level, as STP loops cannot form.</p>
+<p>As soon as you apply the <code class="highlighter-rouge">switchport voice vlan</code> command, Portfast is enabled on the interface, though you will not see it in the running-config.</p>
+
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/30/Voice-VLAN/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/30/Voice-VLAN/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

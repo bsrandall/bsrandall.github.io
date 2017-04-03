@@ -18,6 +18,6 @@ Version 3 introduced the following enhancements:
 
 With version 3, there are two types of VTP servers - primary and secondary. There is only one primary server, and the rest of the secondary servers act as backups to the primary. To declare a server as primary, use the following:
 ```
-`SW1(config)# vtp primary vlan
+`SW1# vtp primary vlan
 ```
-`
+Notice the command is done in privileged mode, not configure mode!

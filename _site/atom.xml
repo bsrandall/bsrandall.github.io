@@ -4,13 +4,299 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-03-30T23:52:05-04:00</updated>
+ <updated>2017-04-02T23:48:54-04:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Longest Match Routing</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/02/Longest-Match-Routing/"/>
+   <updated>2017-04-02T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/02/Longest-Match-Routing</id>
+   <content type="html">&lt;p&gt;Longest Match Routing is the idea that a packet will follow the most specific route entry that it matches. So if there was a host route (/32) that existed for the destination, the host route would have precedence over any shorter prefix such as a /24.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>IPv4 Addressing</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/02/IPv4-Addressing/"/>
+   <updated>2017-04-02T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/02/IPv4-Addressing</id>
+   <content type="html">&lt;p&gt;IP is a logical addressing method as compared to MAC layer physical addresses. It operates at the Network Layer (Layer 3) of the OSI model.&lt;/p&gt;
+
+&lt;p&gt;An address mask is used to identify the network and host portions of the address.  It is 32-bits long, the same length as an IPv4 address. In general, an address mask is assigned to a network or an organization. The organization then subnets that address mask into per data-link subnet masks for assignment.&lt;/p&gt;
+
+&lt;p&gt;The number of available subnets under a major address mask and the number of hosts on each subnet are both calculated with the same formula 2^n-2.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Administrative Distance</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/02/Administrative-Distance/"/>
+   <updated>2017-04-02T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/02/Administrative-Distance</id>
+   <content type="html">&lt;p&gt;Administrative Distance is used to determine which route should be installed into the IP routing table when there is a tie between different sources for the route (static vs EIGRP vs OSPF, etc). Administrative Distance is sometimes called the trustworthiness of the source. When a decision has to be made, the table containing Administrative Distance is consulted to choose the best route, with lower being better. Administrative Distance is only local and can be different for each router.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;distance&lt;/code&gt; command is used with the different routing protocols to change its Administrative Distance. Here is a list&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Routing Protocol&lt;/td&gt;
+      &lt;td&gt;AD&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;————————-&lt;/td&gt;
+      &lt;td&gt;——&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Directly connected&lt;/td&gt;
+      &lt;td&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Static route&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;EIGRP Summary&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;External BGP&lt;/td&gt;
+      &lt;td&gt;20&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;EIGRP&lt;/td&gt;
+      &lt;td&gt;90&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;IGRP&lt;/td&gt;
+      &lt;td&gt;100&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;OSPF&lt;/td&gt;
+      &lt;td&gt;110&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;IS-IS&lt;/td&gt;
+      &lt;td&gt;115&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RIP&lt;/td&gt;
+      &lt;td&gt;120&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;ODR&lt;/td&gt;
+      &lt;td&gt;160&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;External EIGRP&lt;/td&gt;
+      &lt;td&gt;170&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Internal BGP&lt;/td&gt;
+      &lt;td&gt;200&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Unknown&lt;/td&gt;
+      &lt;td&gt;255&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>IPv4 ARP</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/02/ARP/"/>
+   <updated>2017-04-02T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/02/ARP</id>
+   <content type="html">&lt;p&gt;Address Resolution Protocol (ARP) is used to determine the data-link identifier (MAC address) of a host with a known IPv4 address. The ARP request packet contains the IPV4 address of the device in question (the target), as well as the IPv4 and MAC address of the device making the request (the sender). The ARP packet is then encapsulated in a frame with the sender’s MAC address as the source and a broadcast address for the destination. The target will send an ARP Reply to the source address, supplying its MAC address. The ARP reply will lest the target as the original sender.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1# show arp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`The command above will display the ARP table on a Cisco router.&lt;/p&gt;
+
+&lt;p&gt;Cisco routers hold ARP entries for 4 hours by default. It can be changed on a per-interface basis with the &lt;code class=&quot;highlighter-rouge&quot;&gt;arp timeout seconds&lt;/code&gt; interface subcommand.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;clear arp-cache&lt;/code&gt; can be used to delete all dynamic entries from the ARP table. It will also clear the fast-switching cache as well as the IP route cache.&lt;/p&gt;
+
+&lt;p&gt;Proxy ARP is a variation of ARP that is sometimes called promiscuous ARP. This is the method of how router’s will replay to an ARP request if they have a route to a host on another subnet. The router will send it’s own MAC address as a reply to the ARP request to trick the host into thinking it is the actual host in question. Proxy ARP is enabled by default in Cisco IOS and can be disabled on a per-interface basis with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;no ip proxy-arp&lt;/code&gt;.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>PPPoE</title>
+   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPPoE/"/>
+   <updated>2017-04-01T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPPoE</id>
+   <content type="html">&lt;p&gt;PPPoE allows us to establish a PPP link over an Ethernet connection. ISPs were the main ones to use this as it gave them authentication capabilities over Ethernet, in a manner that was familiar to them from their dial-up days. There are two sides to the configuration, both a client and a server. We will start with the server side first.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`Server(config)# bba-group pope global
+Server(config-bba-group)# virtual-template 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`The BBA group (Broadband Access) above is only needed if you want to run more than one PPPoE session.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`Server(config)# interface virtual-template 1
+Server(config-if)# ip address 192.168.12.2 255.255.255.0
+Server(config-if)# mtu 1492
+Server(config-if)# peer default address pool CLIENT
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`Notice we have to reduce the MTU by 8 bytes due to the PPPoe overhead. Next we create the CLIENT IP address pool:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`Server(config)# ip local pool CLIENT 192.168.12.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`Finally, we just need to activate the BBA group on the interface.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`Server(config)# interface FastEthernet0/0
+Server(config-if)# pppoe enable group global
+Server(config-if)# exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+Now we move on to the Client:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`Client(config)# interface dialer 1
+Client(config-if)# mtu 1492
+Client(config-if)# encapsulation ppp
+Client(config-if)# ip address negotiated
+Client(config-if)# dialer persistent
+Client(config-if)# dialer pool 1
+
+Client(config)# interface FastEthernet0/0
+Client(config-if)# pppoe-client dial-pool-number 1
+Client(config-if)# exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`The dialer persistent command nails the connection up.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>PPP</title>
+   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP/"/>
+   <updated>2017-04-01T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP</id>
+   <content type="html">&lt;p&gt;PPP stands for point-to-point protocol - it is  a very popular method for establishing a serial connection over which to pass IP traffic. PPP is composed of Link Control Protocol (LCP) as well as a family of NCPs used to establish network-layer links for various protocols (such as IPv4) after LCP has established the basic link. The steps to enable PPP on a Cisco router are shown below.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>PPP Authentication</title>
+   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP-Authentication/"/>
+   <updated>2017-04-01T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP-Authentication</id>
+   <content type="html">&lt;p&gt;There are two forms of authentication available for PPP, PAP and CHAP. It is important to remember that these technologies are one way in nature, and therefore do not need to be configured bidirectionally. You really should think of this as a Client / Server model.&lt;/p&gt;
+
+&lt;p&gt;With PAP authentication, a two-way handshake is used to establish identity. After the PPP link establishment is complete, a username and password pair is repeatedly sent by the remote node (in clear text) until authentication is acknowledged, or the connection is terminated. PPP is not secure as passwords are sent across the link in clear text.&lt;/p&gt;
+
+&lt;p&gt;PAP supports either unidirectional or bidirectional authentication. This is the configuration for unidirectional, where R1 is the called device and R2 is the calling device:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# username ROUTER2 password cisco
+R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+R1(config-if)# ppp authentication pap
+R1(config-if)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`And here is the configuration for R2, the client:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R2(config)# interface serial0/0
+R2(config-if)# encapsulation ppp
+R2(config-if)# ppp pap sent-username ROUTER2 password cisco
+R2(config-if)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+CHAP identifies peers by use of a three-way handshake. The general steps are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;After the LCP phase is complete, and CHAP is established as the authentication protocol between devices, the authenticator sends a challenge message to the peer&lt;/li&gt;
+  &lt;li&gt;The peer responds with a value calculated through a one-way hash function (MD5)&lt;/li&gt;
+  &lt;li&gt;The authenticator checks the response against its own calculation of the expected hash value. If the values match, the authentication is successful, otherwise the connection is terminated.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Like PAP, authentication is one-way but can be configured bidirectionally. In this example, R1 is the CHAP server and R2 is the CHAP client.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# username ROUTER2 password cisco
+R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+R1(config-if)# ppp authenticate chap
+R1(config-if)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`And now,  R2 (the client) configuration:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R2(config)# username ROUTER1 password cisco
+R2(config)# interface serial0/0
+R2(config-if)# encapsulation ppp
+R2(config-if)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>PPP Multilink</title>
+   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/Multilink-PPP/"/>
+   <updated>2017-04-01T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/Multilink-PPP</id>
+   <content type="html">&lt;p&gt;Multilink PPP is a method used to aggregate multiple single PPP links and utilize them as one. It is not that dissimilar from EtherChannel used with Ethernet. PPP frames can be fragmented, sent down different links, and then reassembled in order on the far side of the link. Multilink PPP uses a 2 or 4 byte sequencing header in each packet, and the remote MLPPP recover is tasked with reconstructing the frames in the correct order. The configuration is pretty straightforward.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`interface Serial0/1
+  description Link to R1
+  no ip address
+  encapsulation ppp
+  ppp multilink
+  ppp multilink group 1
+  serial restart-delay 0
+end
+
+interface Serial1/1
+  description Link to R1
+  no ip address
+  encapsulation ppp
+  ppp multilink
+  ppp multilink group 1
+  serial restart-delay 0
+end
+
+interface Multilink 1
+  ip address 192.168.12.2 255.255.255.0
+  ppp multilink
+  ppp multilink group 1
+end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;
+Some optional parameters include &lt;/code&gt;ppp multilink interleave&lt;code class=&quot;highlighter-rouge&quot;&gt;. Interleaving allows large packets to be multilink encapsulated and fragmented into a small enough size to satisfy the delay requirements of real-time traffic. The interleaving feature also provides a special transmit queue for the smaller, delay-sensitive packets, enabling them to be sent earlier than other flows. &lt;/code&gt;ppp multilink fragement delay 10` is the command that determines the maximum delay - MLPPP will then chose a fragment size based on the configured delay.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>HDLC</title>
+   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/HDLC/"/>
+   <updated>2017-04-01T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/HDLC</id>
+   <content type="html">&lt;p&gt;HDLC is a Layer 2 protocol - the Cisco version is a slight tweak from the original ISO version, so Cisco HDLC will not operate with HDLC implementations from other vendors. It is used on serial interfaces to make direct connections between routers. It is actually the default point-to-point serial protocol for Cisco routers, but PPP is more commonly used.&lt;/p&gt;
+
+&lt;p&gt;You must always remember when connecting two serial interfaces, the DCE side must set a clock rate.&lt;/p&gt;
+
+&lt;p&gt;If you are changing back from PPP to HDLC, the following shows how you would accomplish it.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# interface serial0/0
+R1(config-if)# encapsulation hdlc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Voice VLAN</title>
@@ -25,6 +311,9 @@ SW1(config-if)# switchport voice vlan 101
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;p&gt;If you you show commands, you will not find the interface to be in trunk operational mode, but remember it works like a rudimentary trunk.&lt;/p&gt;
+
+&lt;p&gt;As soon as you apply the &lt;code class=&quot;highlighter-rouge&quot;&gt;switchport voice vlan&lt;/code&gt; command, Portfast is enabled on the interface, though you will not see it in the running-config.&lt;/p&gt;
+
 </content>
  </entry>
  
@@ -188,6 +477,13 @@ SW1(config-if)# switchport private-vlan mapping 500 502
 &lt;/div&gt;
 
 &lt;p&gt;One great way to test your Private VLAN setup is to send a single ping to the broadcast address with &lt;code class=&quot;highlighter-rouge&quot;&gt;ping 255.255.255.255 repeat 1&lt;/code&gt;.  The replies will only be from the hosts in your broadcast domain.&lt;/p&gt;
+
+&lt;p&gt;One other thing to note. If you are configuring a Primary VLAN SVI to operate with secondary private VLANs, you need to map the secondary VLANs onto the SVI as in the following:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1(config)# interface Vlan 100
+SW1(config-if)# private-vlan mapping 1000,2000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
 </content>
  </entry>
  
@@ -585,7 +881,20 @@ SW1(config-mon-erspan-dst)# ip address 10.1.1.1
 
 &lt;p&gt;A couple of configuration notes. First, you must make sure the destination port is not in a shutdown state or else the SPAN session will not come up.&lt;/p&gt;
 
-&lt;p&gt;To view the session, simply use &lt;code class=&quot;highlighter-rouge&quot;&gt;show monitor session 1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you want to leave the original encapsulation of the frames intact, use the &lt;code class=&quot;highlighter-rouge&quot;&gt;encapsulation replicate&lt;/code&gt; option on the monitor session destination command.&lt;/p&gt;
+
+&lt;p&gt;One confusing option is the &lt;code class=&quot;highlighter-rouge&quot;&gt;ingress dot1q vlan 10&lt;/code&gt; option on the destination interface. This is actually telling the switch to accept incoming frames on the &lt;em&gt;destination&lt;/em&gt; monitor switch and place the frames in VLAN 10. This would let you use the destination port like a normal access port. Seems kind of silly to me as to why you would want to do that, but I am sure there is a reason.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`monitor session 1 destination interface gig0/24 ingress dot1q vlan 146
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`The above accepts inbound packets with 802.1Q encapsulation with the given VLAN as the default VLAN. Compare that to the example below, which accepts incoming packets with untagged encapsulation type with the specified VLAN as the default VLAN.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`monitor session 1 destination interface gig0/24 ingress vlan 146
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;
+To view the session, simply use &lt;/code&gt;show monitor session 1`.&lt;/p&gt;
+
 </content>
  </entry>
  
@@ -1017,10 +1326,10 @@ SW2# switchport mode trunk
 &lt;/ul&gt;
 
 &lt;p&gt;With version 3, there are two types of VTP servers - primary and secondary. There is only one primary server, and the rest of the secondary servers act as backups to the primary. To declare a server as primary, use the following:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1(config)# vtp primary vlan
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1# vtp primary vlan
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;`&lt;/p&gt;
+&lt;p&gt;Notice the command is done in privileged mode, not configure mode!&lt;/p&gt;
 </content>
  </entry>
  
