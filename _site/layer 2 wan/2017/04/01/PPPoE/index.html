@@ -170,31 +170,31 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <article>
     <p>PPPoE allows us to establish a PPP link over an Ethernet connection. ISPs were the main ones to use this as it gave them authentication capabilities over Ethernet, in a manner that was familiar to them from their dial-up days. There are two sides to the configuration, both a client and a server. We will start with the server side first.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`Server(config)# bba-group pope global
+<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# bba-group pope global
 Server(config-bba-group)# virtual-template 1
 </code></pre>
 </div>
-<p>`The BBA group (Broadband Access) above is only needed if you want to run more than one PPPoE session.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`Server(config)# interface virtual-template 1
+<p>The BBA group (Broadband Access) above is only needed if you want to run more than one PPPoE session.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# interface virtual-template 1
 Server(config-if)# ip address 192.168.12.2 255.255.255.0
 Server(config-if)# mtu 1492
 Server(config-if)# peer default address pool CLIENT
 </code></pre>
 </div>
-<p>`Notice we have to reduce the MTU by 8 bytes due to the PPPoe overhead. Next we create the CLIENT IP address pool:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`Server(config)# ip local pool CLIENT 192.168.12.1
+<p>Notice we have to reduce the MTU by 8 bytes due to the PPPoe overhead. Next we create the CLIENT IP address pool:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# ip local pool CLIENT 192.168.12.1
 </code></pre>
 </div>
-<p>`Finally, we just need to activate the BBA group on the interface.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`Server(config)# interface FastEthernet0/0
+<p>Finally, we just need to activate the BBA group on the interface.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# interface FastEthernet0/0
 Server(config-if)# pppoe enable group global
 Server(config-if)# exit
 </code></pre>
 </div>
-<p>`
-Now we move on to the Client:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>`Client(config)# interface dialer 1
+<p>Now we move on to the Client:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Client(config)# interface dialer 1
 Client(config-if)# mtu 1492
 Client(config-if)# encapsulation ppp
 Client(config-if)# ip address negotiated
@@ -206,7 +206,7 @@ Client(config-if)# pppoe-client dial-pool-number 1
 Client(config-if)# exit
 </code></pre>
 </div>
-<p>`The dialer persistent command nails the connection up.</p>
+<p>The dialer persistent command nails the connection up.</p>
 
   </article>
 </div>
@@ -217,27 +217,27 @@ Client(config-if)# exit
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/Longest-Match-Routing/">
-            Longest Match Routing
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/IP-SLA-Overview/">
+            IP SLA Overview
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/IPv4-Addressing/">
-            IPv4 Addressing
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/Floating-Static-Routes/">
+            Floating Static Routes
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/Administrative-Distance/">
-            Administrative Distance
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/CEF/">
+            CEF
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>

@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/">
-        EtherChannel LACP
+      <a href="/spanning%20tree/2017/03/08/CST/">
+        Common Spanning Tree
       </a>
     </h1>
 
-    <span class="post-date">24 Feb 2017</span>
+    <span class="post-date">08 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,60 +177,153 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG. The official name is IEEE 802.3ad Link Aggregation (LAG).</p>
+      <p>Common Spanning-Tree (CST) assumes one spanning-tree instance for the entire bridged network, regardless of the number of VLANs. Running only one instance reduces CPU load. All CST BPDUs are sent over trunks using the native VLAN with untagged frames.</p>
 
-<p>LACP supports up to 16 Ethernet ports of the same type. Up to eight ports can be active, and up to eight ports can be in standby mode.</p>
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/08/CST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/08/CST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/07/UDLD/">
+        UDLD
+      </a>
+    </h1>
 
-<p>LACP assigns system priority, port priority, and and an administrative key.</p>
+    <span class="post-date">07 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
 
-<p><em>System priority</em> and the MAC address form the System ID. Between two LACP neighbors, the switch with the lowest System ID will be the decision maker using the LACP Port Priority</p>
+    <article>
+      <p>UDLD, or Unidirectional Link Detection, is a Cisco proprietary, Layer 2 protocol that helps detects if either the transmit or the receive fails on a link. It’s purpose is similar to LoopGuard, but it is completely independent of Spanning Tree. The operation of UDLD is fairly simple. A switch sends UDLD Hellos and if it receives echoes of those Hellos back it knows the link is an active two way link. As soon as it quits receiving the UDLD Hellos, it knows there must be a unidirectional link failure. UDLD operates at the physical port level, compared to say STP LoopGuard which works at the logical port level (EtherChannel). Also UDLD functions at linkup, while LoopGuard does not. It is recommended to enable both UDLD and LoopGuard.</p>
 
-<p><em>Port priority</em> and the port number form the port identifier. The switch uses the port identifier to decide which ports to put in standby mode when a hardware limitation prevents all ports from aggregating. Port priority is also used when more than 8 physical ports are put into a channel group. Port priority will decide which 8 ports will be the active ports in the etherchannel.</p>
+<p>UDLD is mainly used on fiber connections, but it can also be useful on Ethernet connections that have dumb devices in the middle such as media converters.</p>
 
-<p><em>Administrative key</em> defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.</p>
+<p>The default advertisement timer is 15 seconds and the hold time is 5 seconds. Upon detecting the loss of a UDLD neighbor, UDLD will send seven additional advertisements (one per second). If no reply is received, the link’s bidirectional status transitions to unknown.</p>
 
-<p>Sample Configuration:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# interface range GigabitEthernet0/1-2
-SW1# channel-group 1 mode active
-SW1# exit
-SW1# interface port-channel 1
-SW1# switchport trunk encapsulation dot1q
-SW1# switchport mode trunk
+<p>To set up UDLD globally, use <code class="highlighter-rouge">SW1(config)# udld enable</code> and use the <code class="highlighter-rouge">SW1(config-if)# udld port enable</code> command to enable per interface. Use <code class="highlighter-rouge">SW1(config)# udld enable aggressive</code> if you want the ports to be shut down upon UDLD neighbor failure.</p>
+
+<p>In order to reset an interface that was shut down by UDLD, use <code class="highlighter-rouge">SW1# udld reset</code>, or the typical shut / no shut commands.</p>
+
+<p>You could also enable auto recovery of the interface if desired. It would look like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# errdisable recovery cause idled
+SW1(config)# errdisable recovery interval 30
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2# interface range GigabitEthernet0/1-2
-SW2# channel-group 1 mode active
-SW2# exit
-SW2# interface port-channel 1
-SW2# switchport trunk encapsulation dot1q
-SW2# switchport mode trunk
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/07/UDLD/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/07/UDLD/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/06/LLDP/">
+        LLDP
+      </a>
+    </h1>
+
+    <span class="post-date">06 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks. LLDP is described under IEEE 802.1AB LLDP.</p>
+
+<p>LLDP, like CDP, also uses TLVs to describe neighbor devices and capabilities.</p>
+
+<p>One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with <code class="highlighter-rouge">SW1#(config-if) description LINK_SW1_SW2</code>, that description would show up under Switch 2 LLDP like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW2# show lldp neighbors detail
+
+Chasis id: 0019.569d.571a
+Port id: Fa0/24
+Port Description: LINK_SW1_SW2
+System Name: SW1.cisco.com
 </code></pre>
 </div>
 
-<p>You can also start with the <code class="highlighter-rouge">interface port-channel 1</code> command and then define the channel group. For Layer 3 ether channel, you would want to define the port-channel first and then issue the <code class="highlighter-rouge">no switchport</code> interface command.</p>
+<p>An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).</p>
 
-<p>The <code class="highlighter-rouge">interface port-channel 1</code> is the logical interface. The channel-group command binds the logical interface to a physical port. The port-channel interface (numbered 1 - 48) correspond to the one specified with the channel-group interface configuration command.</p>
+<p>One difference between CDP and LLDP is that with LLDP the Hello timer is set to 30 seconds by default and the hold time is set to 4 times the Hello time. CDP is 60 seconds and the hold timer is 3 times the Hello time, as a reminder. Another difference is that LLDP has a reinitialization delay (default 2 seconds).  This is the time that an LLDP port waits before reinitializing LLDP transmission. The command to set the reinitialization period is <code class="highlighter-rouge">SW1#(config) lldp reinit</code>.</p>
 
-<p>A successful Layer 2 EtherChannel will show SU with the command <code class="highlighter-rouge">show etherchannel summary</code>. An unsuccessful layer 2 will show SD.</p>
+<p>You can also set LLDP up to only transmit and not receive LLDP packets. This is done by using the <code class="highlighter-rouge">SW1#(config) no lldp receive</code> command. You can also do this on a per-interface basis. Likewise, you can also disallow sending LLDP packets with the <code class="highlighter-rouge">SW1#(config) no lldp transmit</code> command, which can also be done at the interface level.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/06/LLDP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/06/LLDP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/mst/2017/02/23/MST-IST-CIST/">
-        MST IST-CIST
+      <a href="/layer%202/2017/03/06/CDP-Configuration/">
+        CDP Configuration
       </a>
     </h1>
 
-    <span class="post-date">23 Feb 2017</span>
+    <span class="post-date">06 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
+    
+    
+
+    <article>
+      <p>To enable CDP globally we use <code class="highlighter-rouge">cdp run</code>. To enable CDP on a per-interface basis, use <code class="highlighter-rouge">cdp enable</code>.</p>
+
+<p><code class="highlighter-rouge">R1#(config) cdp timer seconds</code>  specifies the frequency of CDP update transmissions.</p>
+
+<p><code class="highlighter-rouge">R1#(config) cdp holdtime seconds</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
+
+<p><code class="highlighter-rouge">R1#(config) no cdp adertise-v2</code> disables the advertisement of CDPv2 advertisements if for some crazy reason you need to.</p>
+
+<p><code class="highlighter-rouge">R1#(config) clear cdp counters</code> resets the traffic counters to zero.</p>
+
+<p><code class="highlighter-rouge">R1#(config) clear cdp table</code> deletes the CDP table of information about neighbors</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp</code> displays the interval between CDP transmissions, the number of seconds a CDP advertisement is valid for a given port, and the version of the advertisement</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp interface [type number]</code> displays information about interfaces on which CDP is enabled</p>
+
+<p><code class="highlighter-rouge">R1#(config) show cdp entry device-name</code> displays information about a specific neighbor</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/06/CDP-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/06/CDP-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/06/CDP-Basics/">
+        CDP Basics
+      </a>
+    </h1>
+
+    <span class="post-date">06 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -238,138 +331,60 @@ SW2# switchport mode trunk
     
 
     <article>
-      <p>IST is the Internal Spanning Tree, also known as instance 0. This instance is designated to carry all STP information, including information from other instances. MSTP does not send BPDUs for ever instance separately - these are all contained within the IST BPDU.</p>
+      <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
 
-<p>To accommodate, the other instances information is carried within the IST BPDU using special M-Record fields - one for every active MSTI. These fields carry carry MSTP information such as bridge priority, root path cost, and port priority.</p>
+<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
 
-<p>IST also plays a huge role in multiple MSTP region configurations. When a switch receives a BPDU from another region, it marks the corresponding port as MSTP <em>boundary</em>. The interconnected, different region switches then form a CIST spanning across the regions.</p>
+<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
 
-<p><img src="http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-physical-topology.png" alt="" /></p>
+<h4 id="type">Type</h4>
+<ul>
+  <li>Device ID - 0x0001</li>
+  <li>Address - 0x0002</li>
+  <li>Port ID - 0x0003</li>
+  <li>Capabilities - 0x0004</li>
+  <li>Version - 0x0005</li>
+  <li>Platform - 0x0006</li>
+  <li>IP Prefix - 0x0007</li>
+  <li>VTP Management Domain - 0x0009 {: .red}</li>
+  <li>Native VLAN - 0x000a {: .red}</li>
+  <li>Duplex Status - 0x000b {: .red}</li>
+  <li>Appliance ID - 0x000c {: .red}</li>
+  <li>Power consumption - 0x0010 {: .red}</li>
+</ul>
 
-<p>Remember, an IST is internal to a region while a CIST is the IST spanning across multiple regions.</p>
+<h4 id="value">Value</h4>
+<ul>
+  <li>Device ID - MAC address in ASCII or the FQDN</li>
+  <li>Address</li>
+  <li>Port ID - ASCII string that names the port from which the message was sent</li>
+  <li>Capabilities - has a value describing the device capabilities:
+    <ul>
+      <li>0x01 - level 3 routing</li>
+      <li>0x02 - level 2 transparent bridging</li>
+      <li>0x04 - level 2 source-route bridging</li>
+      <li>0x08 - level 2 switching not running Spanning Tree</li>
+      <li>0x10 - sends and receives packets for a network layer protocol</li>
+      <li>0x20 - the device does not forward IGMP reports</li>
+      <li>0x40 - level 1 function</li>
+    </ul>
+  </li>
+  <li>Version - software version running the device</li>
+  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
+  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
+</ul>
 
-<p>Here is a sample MST BPDU:</p>
+<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
 
-<p><img src="http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-cst-mstp-packet-format.png" alt="" /></p>
-
-<p>The CIST Root is elected among all regions while the CIST Regional Root is elected in every region. The IST Root = CIST Regional Root in cases where multiple MST regions interoperate. The CIST Root is the bridge that has the lowest Bridge Id among all regions - the CIST Root could be a bridge inside a region or a boundary switch in a region. The CIST Regional Root is a <em>boundary switch</em> elected for every region based on the shortest external path cost to reach the CIST Root. As mentioned above, it is important to remember that the CIST Regional Root becomes the root of the IST for the given region as well - the region changes its IST election process to make the CIST Regional Root the IST root.</p>
-
-<p>When an MST switch boots up, it declares itself the CIST Root and CIST Regional Root and announce that it its outgoing BPDUs on all internal ports. On boundary ports (those that have received BPDUs from another region), the switch will only advertise its CIST Root Bridge ID and CIST External Root Path Cost, hiding the details of the region’s inner topology.</p>
-
-<p>The region that contains the CIST Root automatically places all of its boundary ports in an unblocked state.</p>
-
-<p>The <em>CIST External Root Path Cost</em> is the cost to reach the CIST Root across the links connecting the boundary ports. When a BPDU is received on an internal link, this cost is not changed.</p>
-
-<p>Only a boundary switch can be elected as the CIST Regional Root, and this is the switch with the lowest cost to reach the CIST Root. If a boundary switch receives a BPDU with a lower CIST External Root Path cost on one of its internal ports, it will stop announcing itself as the CIST Regional Root and start announcing the new metric out of its boundary ports.</p>
-
-<p>If a switch is a CIST Regional Root, it elects one of its boundary ports as the CIST Root port and blocks all other boundary ports. If a boundary switch is not the CIST Regional Root, it will mark its boundary ports as Designated or Alternate, Designate only if it has a better External Root Path cost or in case of a tie, lower CIST Regional Root Bridge ID.</p>
-
-<p>The regional MSTIs are constructed independently at every region, but they have to be mapped to the CIST at the boundary ports. This equates to the inability to load-balance VLAN traffic on the boundary links by mapping VLANs to different instances.</p>
-
-<p>A topology change in the CST could change all paths in the topology thus requiring massive MAC address relearning.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/mst/2017/02/23/MST-IST-CIST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/mst/2017/02/23/MST-IST-CIST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/23/EtherChannel-General/">
-        EtherChannel
-      </a>
-    </h1>
-
-    <span class="post-date">23 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>LAG goal is to trick our Spanning Tree Protocol into forwarding active/active across multiple links. The risk we take is an infinite loop in the data plane, as there is no TTL with Ethernet. The LAG negotiation protocols help to mitigate this risk. Static LAG is supported but not recommended, as a failure to LAG can cause an STP Loop. If you do deploy Static LAG, it is recommended to deploy EtherChannel Guard to help mitigate the chances of a loop.</p>
-
-<p>PAgP and LACP accomplish the exact same thing, just in different ways.</p>
-
-<p>Since both PAgP and LACP both require the member ports to have the same characteristics, a good command to start with is <code class="highlighter-rouge">show interfaces status</code>.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/23/EtherChannel-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/23/EtherChannel-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/vtp/2017/02/22/VTP-Pruning/">
-        VTP Pruning
-      </a>
-    </h1>
-
-    <span class="post-date">22 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>The principal of VTP pruning is if a client sends a broadcast to its connected switch’s access port, that switch will flood the broadcast to all other connected switches in the VTP / Layer 2 domain. Because of VTP, all the other switches would be aware of the client VLAN, and would thus be required to flood the broadcast to all other switches.</p>
-
-<p>But what if the other switches do not have any clients connected to access ports in that VLAN? They are still having to process the request, and the network segment still has to bear the broadcast traffic.</p>
-
-<p>When you enable VTP pruning, you are enabling it for the entire VTP domain.</p>
-
-<p>NEED TO FINISH</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/vtp/2017/02/22/VTP-Pruning/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/vtp/2017/02/22/VTP-Pruning/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/mst/2017/02/22/MST/">
-        Multiple Spanning Tree
-      </a>
-    </h1>
-
-    <span class="post-date">22 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Multiple Spanning Tree (MST) was developed to overcome the high resource requirements of PVST. In reality, there are only a few logical redundant design on a network, regardless of the number of VLANs or the number of physical links. With MST you can run several different logical topologies (instances), and map VLANs to those instances. You get the benefit of running a redundant, fully utilized network without the resource overhead on the switches.</p>
-
-<p>So the end result is that with PVST, a port is either forwarding or discarding for a VLAN, while with MST, a port is either forwarding or discarding for an instance which contains multiple VLANs.</p>
-
-<p>MST is defined by IEEE 802.1s. A special instance, instance 0 or the Internal Spanning Tree (IST), is designated to carry all STP information. The BPDUs for IST carry all the standard RSTP information, as well as the configuration name, revision number, and a <em>hash value</em> calculated over the VLAN to instance mapping.</p>
-
-<p>You should not run MSTP on access ports.</p>
+<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/mst/2017/02/22/MST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/06/CDP-Basics/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/mst/2017/02/22/MST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/06/CDP-Basics/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

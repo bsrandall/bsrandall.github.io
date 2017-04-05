@@ -164,8 +164,103 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/vlan/2017/02/21/Access-Ports/">
-        Access Ports
+      <a href="/etherchannel/2017/02/23/EtherChannel-General/">
+        EtherChannel
+      </a>
+    </h1>
+
+    <span class="post-date">23 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>LAG goal is to trick our Spanning Tree Protocol into forwarding active/active across multiple links. The risk we take is an infinite loop in the data plane, as there is no TTL with Ethernet. The LAG negotiation protocols help to mitigate this risk. Static LAG is supported but not recommended, as a failure to LAG can cause an STP Loop. If you do deploy Static LAG, it is recommended to deploy EtherChannel Guard to help mitigate the chances of a loop.</p>
+
+<p>PAgP and LACP accomplish the exact same thing, just in different ways.</p>
+
+<p>Since both PAgP and LACP both require the member ports to have the same characteristics, a good command to start with is <code class="highlighter-rouge">show interfaces status</code>.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/etherchannel/2017/02/23/EtherChannel-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/etherchannel/2017/02/23/EtherChannel-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/vtp/2017/02/22/VTP-Pruning/">
+        VTP Pruning
+      </a>
+    </h1>
+
+    <span class="post-date">22 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>The principal of VTP pruning is if a client sends a broadcast to its connected switch’s access port, that switch will flood the broadcast to all other connected switches in the VTP / Layer 2 domain. Because of VTP, all the other switches would be aware of the client VLAN, and would thus be required to flood the broadcast to all other switches.</p>
+
+<p>But what if the other switches do not have any clients connected to access ports in that VLAN? They are still having to process the request, and the network segment still has to bear the broadcast traffic.</p>
+
+<p>When you enable VTP pruning, you are enabling it for the entire VTP domain.</p>
+
+<p>NEED TO FINISH</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/vtp/2017/02/22/VTP-Pruning/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/vtp/2017/02/22/VTP-Pruning/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/mst/2017/02/22/MST/">
+        Multiple Spanning Tree
+      </a>
+    </h1>
+
+    <span class="post-date">22 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Multiple Spanning Tree (MST) was developed to overcome the high resource requirements of PVST. In reality, there are only a few logical redundant design on a network, regardless of the number of VLANs or the number of physical links. With MST you can run several different logical topologies (instances), and map VLANs to those instances. You get the benefit of running a redundant, fully utilized network without the resource overhead on the switches.</p>
+
+<p>So the end result is that with PVST, a port is either forwarding or discarding for a VLAN, while with MST, a port is either forwarding or discarding for an instance which contains multiple VLANs.</p>
+
+<p>MST is defined by IEEE 802.1s. A special instance, instance 0 or the Internal Spanning Tree (IST), is designated to carry all STP information. The BPDUs for IST carry all the standard RSTP information, as well as the configuration name, revision number, and a <em>hash value</em> calculated over the VLAN to instance mapping.</p>
+
+<p>You should not run MSTP on access ports.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/mst/2017/02/22/MST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/mst/2017/02/22/MST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/vtp/2017/02/21/VTP-Versions/">
+        VTP Versions
       </a>
     </h1>
 
@@ -177,30 +272,42 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Access ports are those ports that are connected to end devices, not other switches. We define an access port on the command line with 
-SW1# switchport mode access</p>
+      <p>VTP is a Cisco proprietary protocol that allows VLAN administration to be shared across switches. It gives an administrator the capability to centrally administer VLAN creation across one or two switches, and have those VLANs propagate across a VTP domain made up of any number of switches.</p>
 
-<p>We will see later with Spanning Tree, that PortFast can and should be used on access ports. This does two things. First, it allows the port to skip the listening phase for faster availability. Second, it prevents the access port from sending TCNs (Topology Change Notifications) every time a user plugs or unplugs a device into the port.</p>
+<p>There are 3 versions of VTP, versions 1, 2, and 3.  There are not many significant changes between versions 1 and 2, except version 2 introduced support for Token Ring VLANs.</p>
 
-<p>Another Spanning Tree feature which will relate to Access ports is BPDU Guard. With BPDU Guard, if the switch receives a BPDU on a port where BPDU Guard was enabled, the port will transition to the errdisabled state.</p>
+<p>Version 3 introduced the following enhancements:</p>
+<ul>
+  <li>hidden authentication (does not appear in plain text in the configuration file)</li>
+  <li>Extended VLAN support. Versions 1 and 2 only support VLANs 1 - 1000 only.</li>
+  <li>Support for private VLANs</li>
+  <li>Support for MST</li>
+  <li>primary and secondary servers</li>
+</ul>
+
+<p>With version 3, there are two types of VTP servers - primary and secondary. There is only one primary server, and the rest of the secondary servers act as backups to the primary. To declare a server as primary, use the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW1# vtp primary vlan
+</code></pre>
+</div>
+<p>Notice the command is done in privileged mode, not configure mode!</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/vlan/2017/02/21/Access-Ports/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/vtp/2017/02/21/VTP-Versions/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/vlan/2017/02/21/Access-Ports/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/vtp/2017/02/21/VTP-Versions/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/vlan/2017/02/20/VLANs/">
-        VLANs
+      <a href="/vtp/2017/02/21/VTP-Header/">
+        VTP Messages
       </a>
     </h1>
 
-    <span class="post-date">20 Feb 2017</span>
+    <span class="post-date">21 Feb 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -208,98 +315,44 @@ SW1# switchport mode access</p>
     
 
     <article>
-      <h4 id="standard-vlans">Standard VLANs</h4>
-<p>Cisco calls VLANS 1 - 1005 Normal VLANs. Of those, VLAN 1 is the Cisco default. You can use this VLAN, but your are not allowed to delete it. VLANs 1002 - 1005 are the Cisco defaults for FDDI and Token Ring. These also cannot be deleted.</p>
+      <p>All VTP packets contain these fields in the header:</p>
+<ul>
+  <li>VTP version (1, 2, or 3)</li>
+  <li>VTP Message Type
+    <ul>
+      <li>Summary advertisements</li>
+      <li>Subset advertisement</li>
+      <li>Advertisement requests</li>
+      <li>VTP Join Messages</li>
+    </ul>
+  </li>
+  <li>Management domain length</li>
+  <li>Management domain name</li>
+</ul>
 
-<p>That leaves us VLANs 2 - 1001 as Normal VLANs that we can add or delete as we wish.</p>
+<p>Most VTP packets contain the <em>configuration revision number</em> of the sender. This is used to determine if the received information is more recent than the current version.</p>
 
-<p>VLANs 2 - 1001 are pruning eligible, while VLANs 1006 - 4094 are not.</p>
+<p>By default, <em>summary advertisements</em> are sent every 5 minutes. The summary advertisement contains the VTP domain name and the current configuration revision number. If the VTP domain matches the switch’s configured VTP domain, and the configuration revision number is higher than its own revision, the switch will send an <em>advertisement request</em>. Otherwise, it ignores the packet.</p>
 
-<p>When you delete a VLAN, any LAN ports configured as access ports for that VLAN become inactive until you assign them to a new VLAN.</p>
+<h4 id="summary-advertisement-packet-format">Summary Advertisement Packet Format</h4>
+<p><img src="http://www.cisco.com/c/dam/en/us/support/docs/lan-switching/vtp/10558-21c.gif" alt="" /></p>
 
-<h4 id="extended-vlans">Extended VLANs</h4>
-<p>Extended VLANs are in the range of 1006 - 4094. Extended range VLANs are not controlled by VTP and cannot be pruned. The router must be in VTP transparent mode in order to create extended VLANs.</p>
+<p>A <em>subset advertisement</em> will follow a summary advertisement - it is the message that actually contains a list (or a subset of a list) of the VLANs being advertised.</p>
 
-<p>Extended range VLANs are not stored in van.dat</p>
-
-<h4 id="vlan-database">VLAN Database</h4>
-<p>Only applies to standard VLANs.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/vlan/2017/02/20/VLANs/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/vlan/2017/02/20/VLANs/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general/2017/02/20/Hello-World/">
-        Hello World
-      </a>
-    </h1>
-
-    <span class="post-date">20 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#inspiration" class="post-tag">inspiration</a>
-    
-    
-
-    <article>
-      <p>This is my first post in my newly launched blog. I decided to go with Jekyll and a GitHub page for my blog backend. I wanted my content to be in Markdown, as that seems to be the authoring flavor of the day. Jekyll and GitHub just made sense due to their support of Markdown.</p>
-
-<p>Our knowledge is at its pinnacle when we can fluidly explain topics to others. That is my main motivation for this blog. There most likely will not be any ground breaking content, but I hope to explain some of the topics in a way that makes sense.</p>
-
-<p>The other two benefits to my blog is hopefully improving on my Markdown and typing skills. It is sad that I still type as badly as I do, considering how much I type. I will use Markdown highlighting for code samples. TextExpander should make all of this a little easier.</p>
-
-<p>This is some sample IOS commands using Markdown:</p>
-
-<p><code class="highlighter-rouge">SW1# switchport trunk encapsulation dot1q</code>
-<code class="highlighter-rouge">SW1# switchport mode trunk</code></p>
-
-<p>Well I am off to the races. Or as most of those who have gone before me stress, off to start the marathon!</p>
+<p>A switch will send an <em>advertisement request</em> in these situations:</p>
+<ul>
+  <li>the switch has been reset</li>
+  <li>the VTP domain name has been changed on the switch</li>
+  <li>the switch has received a VTP summary advertisement with a higher configuration than its own</li>
+</ul>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/general/2017/02/20/Hello-World/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/vtp/2017/02/21/VTP-Header/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general/2017/02/20/Hello-World/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general/2017/02/20/Git/">
-        Git
-      </a>
-    </h1>
-
-    <span class="post-date">20 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#tools" class="post-tag">tools</a>
-    
-    
-
-    <article>
-      <p>I am not a git master, nor do I strive to become one. But I do need to know some basic details to manage this blog as well as my INE VIRL configurations. There are probably better ways to do this, but for my purposes, these are the commands I am running to push my updates from my MacBook to by GitHub page:</p>
-
-<p><code class="highlighter-rouge">~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git add --all</code>
-<code class="highlighter-rouge"> ~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git commit -m "update notes"</code>
-<code class="highlighter-rouge">~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git push -u origin master</code></p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general/2017/02/20/Git/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general/2017/02/20/Git/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/vtp/2017/02/21/VTP-Header/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
@@ -307,7 +360,7 @@ SW1# switchport mode access</p>
 
 <div class="pagination">
   
-    <span class="pagination-item older">Older</span>
+    <a class="pagination-item older" href="/blog/page12">Older</a>
   
   
     

@@ -171,17 +171,16 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <article>
     <p>Address Resolution Protocol (ARP) is used to determine the data-link identifier (MAC address) of a host with a known IPv4 address. The ARP request packet contains the IPV4 address of the device in question (the target), as well as the IPv4 and MAC address of the device making the request (the sender). The ARP packet is then encapsulated in a frame with the sender’s MAC address as the source and a broadcast address for the destination. The target will send an ARP Reply to the source address, supplying its MAC address. The ARP reply will lest the target as the original sender.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1# show arp
+<div class="highlighter-rouge"><pre class="highlight"><code>R1# show arp
 </code></pre>
 </div>
-<p>`The command above will display the ARP table on a Cisco router.</p>
+<p>The command above will display the ARP table on a Cisco router.</p>
 
 <p>Cisco routers hold ARP entries for 4 hours by default. It can be changed on a per-interface basis with the <code class="highlighter-rouge">arp timeout seconds</code> interface subcommand.</p>
 
 <p><code class="highlighter-rouge">clear arp-cache</code> can be used to delete all dynamic entries from the ARP table. It will also clear the fast-switching cache as well as the IP route cache.</p>
 
 <p>Proxy ARP is a variation of ARP that is sometimes called promiscuous ARP. This is the method of how router’s will replay to an ARP request if they have a route to a host on another subnet. The router will send it’s own MAC address as a reply to the ARP request to trick the host into thinking it is the actual host in question. Proxy ARP is enabled by default in Cisco IOS and can be disabled on a per-interface basis with the command <code class="highlighter-rouge">no ip proxy-arp</code>.</p>
-
 
   </article>
 </div>
@@ -192,27 +191,27 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/Longest-Match-Routing/">
-            Longest Match Routing
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/IP-SLA-Overview/">
+            IP SLA Overview
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/IPv4-Addressing/">
-            IPv4 Addressing
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/Floating-Static-Routes/">
+            Floating Static Routes
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/Administrative-Distance/">
-            Administrative Distance
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/CEF/">
+            CEF
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>

@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Storm-Control/">
-        Storm Control
+      <a href="/general%20routing/2017/04/02/Administrative-Distance/">
+        Administrative Distance
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">02 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,52 +177,89 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Broadcast storms can create havoc on a Layer 2 network, quickly bringing the network to an unusable state. Software solutions to storm control are inefficient, because by the time the software has identified the storm, the hardware resources are at max utilization and there is no resources available to abate the storm.</p>
+      <p>Administrative Distance is used to determine which route should be installed into the IP routing table when there is a tie between different sources for the route (static vs EIGRP vs OSPF, etc). Administrative Distance is sometimes called the trustworthiness of the source. When a decision has to be made, the table containing Administrative Distance is consulted to choose the best route, with lower being better. Administrative Distance is only local and can be different for each router.</p>
 
-<p>Cisco has a storm control feature built into its switches. It is a hardware based solution that allows us to set a threshold on interfaces to limit the amount of broadcast, multicast, or unknown unicast traffic an interface receives. It also allows us to select a couple of actions to take when that threshold is met.</p>
+<p>The <code class="highlighter-rouge">distance</code> command is used with the different routing protocols to change its Administrative Distance. Here is a list</p>
 
-<p>Let’s jump right into a configuration example.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level 30
-</code></pre>
-</div>
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Routing Protocol</strong></td>
+      <td><strong>AD</strong></td>
+    </tr>
+    <tr>
+      <td>Directly connected</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Static route</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>EIGRP Summary</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>External BGP</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>EIGRP</td>
+      <td>90</td>
+    </tr>
+    <tr>
+      <td>IGRP</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td>OSPF</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <td>IS-IS</td>
+      <td>115</td>
+    </tr>
+    <tr>
+      <td>RIP</td>
+      <td>120</td>
+    </tr>
+    <tr>
+      <td>ODR</td>
+      <td>160</td>
+    </tr>
+    <tr>
+      <td>External EIGRP</td>
+      <td>170</td>
+    </tr>
+    <tr>
+      <td>Internal BGP</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <td>Unknown</td>
+      <td>255</td>
+    </tr>
+  </tbody>
+</table>
 
-<p>The ’30’ in the example above designates the rising threshold. When broadcast traffic exceeds 30% of the interface bandwidth, storm control will kick in and take action. The default action is to drop exceeding traffic.</p>
-
-<p>You can also specify bps as below. Adding k, m, or g identifies the value as Kbps, Mbps, or Gbps respectively. The example below would limit broadcast traffic to 30 Mbps on the Gigabit interface.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level bps 30m
-</code></pre>
-</div>
-
-<p>You can also designate a falling threshold. The falling threshold sets a value to which the traffic has to fall before that type of traffic is allowed again.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level bps 30m 20m
-</code></pre>
-</div>
-<p>In the example above the broadcast traffic would have to drop below 20 Mbps before any broadcast traffic would be allowed into the port.</p>
-
-<p>We can also control the action. <code class="highlighter-rouge">storm-control action shutdown</code> shuts the interface down in case the level is exceeded. <code class="highlighter-rouge">storm-control action trap</code> sends an SNMP trap if the level is exceeded.</p>
-
-<p><code class="highlighter-rouge">show storm-control [unicast | multicast | broadcast]</code> is used to see the configuration as well as the current amount of traffic passing through the port.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Storm-Control/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/02/Administrative-Distance/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Storm-Control/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/02/Administrative-Distance/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/">
-        Static MAC Address Entries
+      <a href="/general%20routing/2017/04/02/ARP/">
+        IPv4 ARP
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">02 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -230,32 +267,129 @@ SW1(config-if)# storm-control broadcast level bps 30m 20m
     
 
     <article>
-      <p>Sometimes you may need to add static MAC address entries to the CAM table. This is easily achieved with the following global configuration command:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(cone)# mac address-table static 0022.5627.1fc1 vlan 10 interface GigabitEthernet0/1
+      <p>Address Resolution Protocol (ARP) is used to determine the data-link identifier (MAC address) of a host with a known IPv4 address. The ARP request packet contains the IPV4 address of the device in question (the target), as well as the IPv4 and MAC address of the device making the request (the sender). The ARP packet is then encapsulated in a frame with the sender’s MAC address as the source and a broadcast address for the destination. The target will send an ARP Reply to the source address, supplying its MAC address. The ARP reply will lest the target as the original sender.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>R1# show arp
 </code></pre>
 </div>
-<p>You can also force traffic to a particular MAC address to be dropped, by either specifying an unused interface or with the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# mac address-table static 0022.5627.1fc1 vlan 10 drop
+<p>The command above will display the ARP table on a Cisco router.</p>
+
+<p>Cisco routers hold ARP entries for 4 hours by default. It can be changed on a per-interface basis with the <code class="highlighter-rouge">arp timeout seconds</code> interface subcommand.</p>
+
+<p><code class="highlighter-rouge">clear arp-cache</code> can be used to delete all dynamic entries from the ARP table. It will also clear the fast-switching cache as well as the IP route cache.</p>
+
+<p>Proxy ARP is a variation of ARP that is sometimes called promiscuous ARP. This is the method of how router’s will replay to an ARP request if they have a route to a host on another subnet. The router will send it’s own MAC address as a reply to the ARP request to trick the host into thinking it is the actual host in question. Proxy ARP is enabled by default in Cisco IOS and can be disabled on a per-interface basis with the command <code class="highlighter-rouge">no ip proxy-arp</code>.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general%20routing/2017/04/02/ARP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general%20routing/2017/04/02/ARP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202%20wan/2017/04/01/PPPoE/">
+        PPPoE
+      </a>
+    </h1>
+
+    <span class="post-date">01 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>PPPoE allows us to establish a PPP link over an Ethernet connection. ISPs were the main ones to use this as it gave them authentication capabilities over Ethernet, in a manner that was familiar to them from their dial-up days. There are two sides to the configuration, both a client and a server. We will start with the server side first.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# bba-group pope global
+Server(config-bba-group)# virtual-template 1
+</code></pre>
+</div>
+<p>The BBA group (Broadband Access) above is only needed if you want to run more than one PPPoE session.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# interface virtual-template 1
+Server(config-if)# ip address 192.168.12.2 255.255.255.0
+Server(config-if)# mtu 1492
+Server(config-if)# peer default address pool CLIENT
+</code></pre>
+</div>
+<p>Notice we have to reduce the MTU by 8 bytes due to the PPPoe overhead. Next we create the CLIENT IP address pool:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# ip local pool CLIENT 192.168.12.1
+</code></pre>
+</div>
+<p>Finally, we just need to activate the BBA group on the interface.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# interface FastEthernet0/0
+Server(config-if)# pppoe enable group global
+Server(config-if)# exit
+</code></pre>
+</div>
+
+<p>Now we move on to the Client:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Client(config)# interface dialer 1
+Client(config-if)# mtu 1492
+Client(config-if)# encapsulation ppp
+Client(config-if)# ip address negotiated
+Client(config-if)# dialer persistent
+Client(config-if)# dialer pool 1
+
+Client(config)# interface FastEthernet0/0
+Client(config-if)# pppoe-client dial-pool-number 1
+Client(config-if)# exit
+</code></pre>
+</div>
+<p>The dialer persistent command nails the connection up.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202%20wan/2017/04/01/PPPoE/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202%20wan/2017/04/01/PPPoE/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202%20wan/2017/04/01/PPP/">
+        PPP
+      </a>
+    </h1>
+
+    <span class="post-date">01 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>PPP stands for point-to-point protocol - it is  a very popular method for establishing a serial connection over which to pass IP traffic. PPP is composed of Link Control Protocol (LCP) as well as a family of NCPs used to establish network-layer links for various protocols (such as IPv4) after LCP has established the basic link. The steps to enable PPP on a Cisco router are shown below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
 </code></pre>
 </div>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202%20wan/2017/04/01/PPP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202%20wan/2017/04/01/PPP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Smartport-Macros/">
-        Smartport Macros
+      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/">
+        PPP Authentication
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">01 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -263,173 +397,55 @@ SW1(config-if)# storm-control broadcast level bps 30m 20m
     
 
     <article>
-      <p>Smartport Macros are used to define a well-known template of configuration onto multiple interfaces. Several Smartport Macros come predefined in the switch. To see them, use <code class="highlighter-rouge">show parser macro</code>. To expand one of the macros use <code class="highlighter-rouge">show parser macro name ___________</code>.</p>
+      <p>There are two forms of authentication available for PPP, PAP and CHAP. It is important to remember that these technologies are one way in nature, and therefore do not need to be configured bidirectionally. You really should think of this as a Client / Server model.</p>
 
-<p>This is the old style of configuring switchport macros:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# macro name VLAN146
-Enter macro commands one per line. End with the character '@'.
-switchport mode access
-switchport access vlan 146
-spanning-tree bpdufilter enable
-@
-SW1(conf)\#
+<p>With PAP authentication, a two-way handshake is used to establish identity. After the PPP link establishment is complete, a username and password pair is repeatedly sent by the remote node (in clear text) until authentication is acknowledged, or the connection is terminated. PPP is not secure as passwords are sent across the link in clear text.</p>
+
+<p>PAP supports either unidirectional or bidirectional authentication. This is the configuration for unidirectional, where R1 is the called device and R2 is the calling device:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# username ROUTER2 password cisco
+R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+R1(config-if)# ppp authentication pap
+R1(config-if)# end
 </code></pre>
 </div>
-<p>The # symbol can be used at the beginning of a line to designate comments. Then to apply the macro to an interface or interface range:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# interface range gig0/1-2
-SW1(conf-if-range)# macro apply VLAN146
-SW1(conf-if-range)# exit
-</code></pre>
-</div>
-
-<p>The modern style to define a switchport macro is here:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# define interface-range VLAN146 gig0/1-2
-SW1(conf)# interface range macro VLAN146
-SW1(conf-if-range)# switchport mode access
-SW1(conf-if-range)# switchport access vlan 146
-SW1(conf-if-range)# spanning-tree bpdufilter enable
-SW1(conf-if-range)# exit
-SW1(conf)# 
+<p>And here is the configuration for R2, the client:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R2(config)# interface serial0/0
+R2(config-if)# encapsulation ppp
+R2(config-if)# ppp pap sent-username ROUTER2 password cisco
+R2(config-if)# end
 </code></pre>
 </div>
 
-    <article>
-    <div class="post-more">
-      
-      <a href="/layer%202/2017/03/30/Smartport-Macros/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/layer%202/2017/03/30/Smartport-Macros/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Private-VLANs/">
-        Private VLANs
-      </a>
-    </h1>
-
-    <span class="post-date">30 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Protect Ports (discussed earlier) are a nice security feature of Cisco switches. When two ports are protected, they are not allowed to have direct communication with each other. But one limitation of protected ports is that they are only locally significant, so there is no way for protected ports to exist on different switches and follow the protection rules.</p>
-
-<p>The Private VLAN feature was created to solve this limitation. Private VLANs are more complex and can span multiple physical switches. Private VLANs split what would normally be a single broadcast domain defined by a single VLAN into multiple isolated broadcast subdomains, that are defined by a primary VLAN and its secondary VLANs. In essence it allows us to create VLANs inside VLANs, and is not un-similar to the concept of Confederations in BGP.</p>
-
-<p>Private VLANs are used to increase security. We most often see them in a shared color facility. This allows the color provider to have the customers exist on the same VLAN (and thus the same subnet), without allowing the different customers to communicate directly with each other.</p>
-
-<p>One pitfall you have to remember with Private VLANs is that it requires VTP to either be in Transparent mode or to be off.</p>
-
-<p>There is some terminology to remember when dealing with Private VLANs:</p>
+<p>CHAP identifies peers by use of a three-way handshake. The general steps are:</p>
 <ul>
-  <li><em>Promiscuous ports</em> are allowed to talk to all other ports within the primary VLAN</li>
-  <li><em>Isolated ports</em> are only allowed to talk with promiscuous ports</li>
-  <li><em>Community ports</em> are allowed to talk with other ports in their own community as well as any promiscuous ports,  but they are not allowed to talk to ports in other communities</li>
+  <li>After the LCP phase is complete, and CHAP is established as the authentication protocol between devices, the authenticator sends a challenge message to the peer</li>
+  <li>The peer responds with a value calculated through a one-way hash function (MD5)</li>
+  <li>The authenticator checks the response against its own calculation of the expected hash value. If the values match, the authentication is successful, otherwise the connection is terminated.</li>
 </ul>
 
-<p>The configuration steps are a little unnatural as well. The port roles are defined by the interface’s association to a primary VLAN and one or more secondary VLANs. First the secondary VLANs are created and defined as either community or isolated. Then the primary VLAN is defined, and the secondary VLANs are associated with the primary VLAN.</p>
-
-<p>Here is an example configuration with VLAN 500 as the primary VLAN, 501 a secondary community VLAN, and VLAN 502 a secondary isolated VLAN. Ports FastEthernet0/1 and FastEthernet0/2 are associated to VLAN 501, while FastEthernet03 and FastEthernet0/4 are associated with the secondary isolated VLAN 502.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vtp mode transparent
-SW1(config)# vlan 501
-SW1(config-vlan)# private-vlan community
-SW1(config-vlan)# vlan 500
-SW1(config-vlan)# private-vlan primary
-SW1(config-vlan)# private-vlan association add 501
+<p>Like PAP, authentication is one-way but can be configured bidirectionally. In this example, R1 is the CHAP server and R2 is the CHAP client.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# username ROUTER2 password cisco
+R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+R1(config-if)# ppp authenticate chap
+R1(config-if)# end
 </code></pre>
 </div>
-
-<p>Next, let’s go ahead and associate FastEthernet0/1 and FastEthernet0/2 to the 501 Secondary Community we just created:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface range fa0/1-2
-SW1(config-if-range)# switchport mode private-vlan host
-SW1(config-if-range)# switchport private-vlan host-association 500 501
+<p>And now,  R2 (the client) configuration:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R2(config)# username ROUTER1 password cisco
+R2(config)# interface serial0/0
+R2(config-if)# encapsulation ppp
+R2(config-if)# end
 </code></pre>
 </div>
-
-<p>Now, we can go ahead and configure FastEthernet0/24 as a promiscuous port.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface fa0/24
-SW1(config-if)# switchport mode private-vlan promiscuous
-SW1(config-if)# switchport private-vlan mapping 500 501
-</code></pre>
-</div>
-
-<p>Now we turn our attention to the creation of the isolated VLAN, VLAN 502.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vlan 502
-SW1(config-vlan)# private-vlan isolated
-SW1(config-vlan)# vlan 500
-SW1(config-vlan)# private-vlan primary
-SW1(config-vlan)# private-vlan association add 502
-</code></pre>
-</div>
-
-<p>Now we must associate our interfaces:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface range fa0/3-4
-SW1(config-if-range)# switchport mode private-vlan host
-SW1(config-if-range)# switchport private-vlan host-association 500 502
-</code></pre>
-</div>
-
-<p>And finally, we must add another association for our promiscuous port:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface fa0/24
-SW1(config-if)# switchport mode private-vlan promiscuous
-SW1(config-if)# switchport private-vlan mapping 500 502
-</code></pre>
-</div>
-
-<p>One great way to test your Private VLAN setup is to send a single ping to the broadcast address with <code class="highlighter-rouge">ping 255.255.255.255 repeat 1</code>.  The replies will only be from the hosts in your broadcast domain.</p>
-
-<p>One other thing to note. If you are configuring a Primary VLAN SVI to operate with secondary private VLANs, you need to map the secondary VLANs onto the SVI as in the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# interface Vlan 100
-SW1(config-if)# private-vlan mapping 1000,2000
-</code></pre>
-</div>
-<p>`</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Private-VLANs/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Private-VLANs/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/">
-        Spanning Tree Loop Guard
-      </a>
-    </h1>
-
-    <span class="post-date">29 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Loop Guard is a Spanning Tree feature that was added to prevent loops from forming due to hardware issues or STP software problems. A Spanning Tree loop occurs when a port that was previously in the blocking state is erroneously  transitioned to the Forwarding state.</p>
-
-<p>When a non-designated port stops receiving BPDUs, it will eventually transition itself to a designated port and begin forwarding BPDUs. Loop Guard works by preventing that non-designated port from transitioning to a forwarding state. Instead, it transitions the port to STP loop-inconsistent blocking state. So Loop Guard prevents a non-designated port from becoming a designated port, while Root Guard prevents a designated port from transitioning to a Root Port.</p>
-
-<p>Loop Guard is very similar to UDLD, but Loop Guard uses STP BPDUs to determine if there is a loop.</p>
-
-<p>Loop Guard is enabled on a per-port basis with the interface subcommand <code class="highlighter-rouge">spanning-tree guard loop</code>. To be completely effective, Loop Guard should be enabled on <em>all</em> non-designated ports, including root ports and alternate ports. Loop Guard can also be enabled globally with the <code class="highlighter-rouge">spanning-tree loopguard default</code> global configuration command. You can then disable Loop Guard on a per-port basis with <code class="highlighter-rouge">no spanning-tree guard loop</code>.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

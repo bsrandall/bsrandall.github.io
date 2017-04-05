@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/27/STP-Portfast/">
-        STP PortFast
+      <a href="/layer%202/2017/03/30/Smartport-Macros/">
+        Smartport Macros
       </a>
     </h1>
 
-    <span class="post-date">27 Mar 2017</span>
+    <span class="post-date">30 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,97 +177,53 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.</p>
+      <p>Smartport Macros are used to define a well-known template of configuration onto multiple interfaces. Several Smartport Macros come predefined in the switch. To see them, use <code class="highlighter-rouge">show parser macro</code>. To expand one of the macros use <code class="highlighter-rouge">show parser macro name ___________</code>.</p>
 
-<p>To enable PortFast on an interface, in interface sub configuration mode use <code class="highlighter-rouge">spanning-tree portfast</code>. If it is a trunk you must append the <code class="highlighter-rouge">trunk</code> keyword after the command, and if it is an access port you should use the <code class="highlighter-rouge">edge</code> keyword.</p>
+<p>This is the old style of configuring switchport macros:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# macro name VLAN146
+Enter macro commands one per line. End with the character '@'.
+switchport mode access
+switchport access vlan 146
+spanning-tree bpdufilter enable
+@
+SW1(conf)\#
+</code></pre>
+</div>
+<p>The # symbol can be used at the beginning of a line to designate comments. Then to apply the macro to an interface or interface range:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# interface range gig0/1-2
+SW1(conf-if-range)# macro apply VLAN146
+SW1(conf-if-range)# exit
+</code></pre>
+</div>
 
-<p>Another way to enable PortFast for access ports is to use <code class="highlighter-rouge">spanning-tree portfast default</code> in global configuration mode. Once enabled, all access ports will automatically have PortFast enabled.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/spanning%20tree/2017/03/27/STP-Portfast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/spanning%20tree/2017/03/27/STP-Portfast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/">
-        Spanning Tree BackboneFast
-      </a>
-    </h1>
-
-    <span class="post-date">27 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>BackboneFast enables fast reconvergence due to indirect link failures. The key operation happens when a switch begins receiving inferior BPDUs.  When a switch loses the link off its Root Port, it immediately starts sending BPDUs announcing itself as the new Root. Usually, when a switch receives inferior BPDUs, it will wait for its Max Age timer to expire before beginning STP convergence. Once its Max Age timer expires, the inferior BPDU ages out and the switch will then forward its superior BPDU to the neighbor switch who was sending the inferior BPDU.</p>
-
-<p>When BackboneFast is enabled, as soon as a switch receives an inferior BPDU, it will send RLQ (Root Link Query) messages out all it’s non-designated ports. The RLQ asks other switches if the current Root Bridge is accessible via that switch. Note it doesn’t wait for its Max Age timer to expire - it begins sending RLQ messages immediately. The RLQ is a new type of PDU defined within the BackboneFast specification. The RLQ is essentially a proactive way to age out ports compared to just waiting on the Max Age timer to expire.</p>
-
-<p>Based on the received RLQ responses, the switch will update its root ports and designated ports accordingly.. However all ports still transition through the regular IEEE 802.1D STP port states - listening, learning, and forwarding/blocking.</p>
-
-<p>To enable BackboneFast use the command <code class="highlighter-rouge">spanning-tree backbonefast</code> on all switches in the Layer 2 domain. The easiest way to verify that BackboneFast is enabled is to use the <code class="highlighter-rouge">show spanning-tree summary</code> command.</p>
-
-<p>This is a great Cisco article describing the operation: <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/12014-18.html">BackboneFast</a>.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/27/Debugging-STP/">
-        Debugging Spanning Tree Events
-      </a>
-    </h1>
-
-    <span class="post-date">27 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Here is a configuration for debugging Spanning Tree events:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# debug spanning-tree events
-SW1# debug condition vlan 2
-SW1# config t
-SW1(config)# service timestamps debug datetime msec
+<p>The modern style to define a switchport macro is here:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# define interface-range VLAN146 gig0/1-2
+SW1(conf)# interface range macro VLAN146
+SW1(conf-if-range)# switchport mode access
+SW1(conf-if-range)# switchport access vlan 146
+SW1(conf-if-range)# spanning-tree bpdufilter enable
+SW1(conf-if-range)# exit
+SW1(conf)# 
 </code></pre>
 </div>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/27/Debugging-STP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/30/Smartport-Macros/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/27/Debugging-STP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/30/Smartport-Macros/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/26/STP-Timers/">
-        STP Convergence Timers
+      <a href="/layer%202/2017/03/30/Private-VLANs/">
+        Private VLANs
       </a>
     </h1>
 
-    <span class="post-date">26 Mar 2017</span>
+    <span class="post-date">30 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -275,36 +231,97 @@ SW1(config)# service timestamps debug datetime msec
     
 
     <article>
-      <p>There are 3 timers we need to be concerned with in Spanning Tree: the Hello Time, the Forward Delay, and the Max-Age Time.</p>
+      <p>Protect Ports (discussed earlier) are a nice security feature of Cisco switches. When two ports are protected, they are not allowed to have direct communication with each other. But one limitation of protected ports is that they are only locally significant, so there is no way for protected ports to exist on different switches and follow the protection rules.</p>
 
-<p>The Hello Time is the frequency with which BPDUs are transmitted from the root bridge. It can be adjusted with the command <code class="highlighter-rouge">spanning-tree vlan 1-4094 hello-time 3</code> where 3 is in seconds. The default is 2 seconds, but in can be adjusted between 1 and 10 seconds. Non-root bridges will never generate BPDUs, but only relay BPDUs they receive on their root port.</p>
+<p>The Private VLAN feature was created to solve this limitation. Private VLANs are more complex and can span multiple physical switches. Private VLANs split what would normally be a single broadcast domain defined by a single VLAN into multiple isolated broadcast subdomains, that are defined by a primary VLAN and its secondary VLANs. In essence it allows us to create VLANs inside VLANs, and is not un-similar to the concept of Confederations in BGP.</p>
 
-<p>The Forward Delay is the time that is spent in the listening and learning states. Its value is 15 seconds by default, but it can be adjusted to anywhere between 4 and 30 seconds.</p>
+<p>Private VLANs are used to increase security. We most often see them in a shared color facility. This allows the color provider to have the customers exist on the same VLAN (and thus the same subnet), without allowing the different customers to communicate directly with each other.</p>
 
-<p>The Max Age timer controls the maximum length of time that passes before a bridge port saves its configuration BPDU. This time is 20 seconds by default, but it can be tuned to be anytime between 6 and 40 seconds.</p>
+<p>One pitfall you have to remember with Private VLANs is that it requires VTP to either be in Transparent mode or to be off.</p>
 
-<p>There is another item that is not a timer but is related. This is the <em>message age</em>. The root bridge sends all of its BPDUs with a message age of 0. Each downstream switch then adds 1 to this message age value. The actual age out time of the downstream switches is then (max age - message age).</p>
+<p>There is some terminology to remember when dealing with Private VLANs:</p>
+<ul>
+  <li><em>Promiscuous ports</em> are allowed to talk to all other ports within the primary VLAN</li>
+  <li><em>Isolated ports</em> are only allowed to talk with promiscuous ports</li>
+  <li><em>Community ports</em> are allowed to talk with other ports in their own community as well as any promiscuous ports,  but they are not allowed to talk to ports in other communities</li>
+</ul>
 
-<p>Here is a good article that describes the Max Age timer as it relates to superior BPDUs:  <a href="https://packetmagnifier.wordpress.com/2013/09/09/understanding-stp-max-age/">Max Age</a>. If a switch’s root port goes down, there is no need for it to go through the Max Age timer process - if there are no better BPDUs received, the switch will immediately start announcing itself as root and begin sending BPDUs. In the scenario in the article, the switch that went down is sending inferior BPDUs, but yet the receiving switch goes through the Max Age process before it transforms its non-designated port to a Designated Port and begins sending the superior BPDUs towards the switch that suffered the down link.</p>
+<p>The configuration steps are a little unnatural as well. The port roles are defined by the interface’s association to a primary VLAN and one or more secondary VLANs. First the secondary VLANs are created and defined as either community or isolated. Then the primary VLAN is defined, and the secondary VLANs are associated with the primary VLAN.</p>
 
+<p>Here is an example configuration with VLAN 500 as the primary VLAN, 501 a secondary community VLAN, and VLAN 502 a secondary isolated VLAN. Ports FastEthernet0/1 and FastEthernet0/2 are associated to VLAN 501, while FastEthernet03 and FastEthernet0/4 are associated with the secondary isolated VLAN 502.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vtp mode transparent
+SW1(config)# vlan 501
+SW1(config-vlan)# private-vlan community
+SW1(config-vlan)# vlan 500
+SW1(config-vlan)# private-vlan primary
+SW1(config-vlan)# private-vlan association add 501
+</code></pre>
+</div>
+
+<p>Next, let’s go ahead and associate FastEthernet0/1 and FastEthernet0/2 to the 501 Secondary Community we just created:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface range fa0/1-2
+SW1(config-if-range)# switchport mode private-vlan host
+SW1(config-if-range)# switchport private-vlan host-association 500 501
+</code></pre>
+</div>
+
+<p>Now, we can go ahead and configure FastEthernet0/24 as a promiscuous port.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface fa0/24
+SW1(config-if)# switchport mode private-vlan promiscuous
+SW1(config-if)# switchport private-vlan mapping 500 501
+</code></pre>
+</div>
+
+<p>Now we turn our attention to the creation of the isolated VLAN, VLAN 502.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vlan 502
+SW1(config-vlan)# private-vlan isolated
+SW1(config-vlan)# vlan 500
+SW1(config-vlan)# private-vlan primary
+SW1(config-vlan)# private-vlan association add 502
+</code></pre>
+</div>
+
+<p>Now we must associate our interfaces:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface range fa0/3-4
+SW1(config-if-range)# switchport mode private-vlan host
+SW1(config-if-range)# switchport private-vlan host-association 500 502
+</code></pre>
+</div>
+
+<p>And finally, we must add another association for our promiscuous port:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface fa0/24
+SW1(config-if)# switchport mode private-vlan promiscuous
+SW1(config-if)# switchport private-vlan mapping 500 502
+</code></pre>
+</div>
+
+<p>One great way to test your Private VLAN setup is to send a single ping to the broadcast address with <code class="highlighter-rouge">ping 255.255.255.255 repeat 1</code>.  The replies will only be from the hosts in your broadcast domain.</p>
+
+<p>One other thing to note. If you are configuring a Primary VLAN SVI to operate with secondary private VLANs, you need to map the secondary VLANs onto the SVI as in the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# interface Vlan 100
+SW1(config-if)# private-vlan mapping 1000,2000
+</code></pre>
+</div>
+<p>`</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/26/STP-Timers/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/30/Private-VLANs/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/26/STP-Timers/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/30/Private-VLANs/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/">
-        STP Path Selection with Port Cost
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/">
+        Spanning Tree Loop Guard
       </a>
     </h1>
 
-    <span class="post-date">21 Mar 2017</span>
+    <span class="post-date">29 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -312,20 +329,92 @@ SW1(config)# service timestamps debug datetime msec
     
 
     <article>
-      <p>There are two ways we can alter STP Path selection. We can alter the cost of a port, or we can change the priority of a port.</p>
+      <p>Loop Guard is a Spanning Tree feature that was added to prevent loops from forming due to hardware issues or STP software problems. A Spanning Tree loop occurs when a port that was previously in the blocking state is erroneously  transitioned to the Forwarding state.</p>
 
-<p>When a switch receives a BPDU, that BPDU contains the root path cost from the previous switch. The receiving switch then adds the cost of the link between it and the sending switch from which it received the BPDU. That is very important - it is the receiving switch that adds the cost associated with its interface to the Root Path Cost it received from the sending switch.</p>
+<p>When a non-designated port stops receiving BPDUs, it will eventually transition itself to a designated port and begin forwarding BPDUs. Loop Guard works by preventing that non-designated port from transitioning to a forwarding state. Instead, it transitions the port to STP loop-inconsistent blocking state. So Loop Guard prevents a non-designated port from becoming a designated port, while Root Guard prevents a designated port from transitioning to a Root Port.</p>
 
-<p>Cost is used for the selection of the root port to the upstream switch.</p>
+<p>Loop Guard is very similar to UDLD, but Loop Guard uses STP BPDUs to determine if there is a loop.</p>
 
-<p>Priority is used for influencing the root port of the downstream switch, and as such, it is set up on a port in Designated state. Cost has a higher precedence than priority. You will see priority on the local switch <code class="highlighter-rouge">show spanning-tree vlan 2</code> but it will actually affect the forwarding decision on the downstream connected switch.</p>
+<p>Loop Guard is enabled on a per-port basis with the interface subcommand <code class="highlighter-rouge">spanning-tree guard loop</code>. To be completely effective, Loop Guard should be enabled on <em>all</em> non-designated ports, including root ports and alternate ports. Loop Guard can also be enabled globally with the <code class="highlighter-rouge">spanning-tree loopguard default</code> global configuration command. You can then disable Loop Guard on a per-port basis with <code class="highlighter-rouge">no spanning-tree guard loop</code>.</p>
+
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/29/Protected-Port/">
+        Protected Port (PVLAN)
+      </a>
+    </h1>
+
+    <span class="post-date">29 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>The protected port, also known as PVLAN edge, is a security feature used to prevent traffic from being directly exchanged at Layer 2 between two or more hosts that are within the same VLAN. Protected ports only have local switch significance. A protected port does not forward any traffic (unicast, multicast, or broadcast) to any other protected port in the same switch. If you need to pass traffic between protected ports, the only possible way is through a L3 device.</p>
+
+<p>By default, all switch ports are unprotected. The configuration is as simple as below:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
+SW1(config-if)# switchport protected
+</code></pre>
+</div>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/29/Protected-Port/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/29/Protected-Port/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/">
+        Spanning Tree Root Guard
+      </a>
+    </h1>
+
+    <span class="post-date">28 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.</p>
+
+<p>Root Guard is enabled on a per port basis. Root Guard ensures that the port on which it is configured remains a designated port. If the bridge receives superior BPDUs on that designated port, Root Guard moves the port to root-inconsistent state, which is effectively equivalent to the STP listening state so no frames are forwarded.</p>
+
+<p>The difference between BPDU Guard and Root Guard is that Root Guard allows the port to participate in STP, so long as the port does not receive a <em>superior</em> BPDU. With BPDU Guard, <em>any</em> BPDU will put the port into an err-disabled state.</p>
+
+<p>Again, Root Guard is enabled on a per interface basis as below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
+SW!(config-if)# spanning-tree rootguard
+</code></pre>
+</div>
+
+<p>The Cisco explanation is located <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/10588-74.html">here</a>.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

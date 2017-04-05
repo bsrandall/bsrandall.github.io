@@ -6,38 +6,6 @@
 	<dict>
 		<key>sheetClusters</key>
 		<dict>
-			<key>03-21-2017-STP-Port-Cost (1).md</key>
-			<dict>
-				<key>explicitUnassignment</key>
-				<true/>
-				<key>firstUnassignment</key>
-				<real>512316838.99611002</real>
-				<key>lastModification</key>
-				<real>512316838.99611002</real>
-				<key>version</key>
-				<dict>
-					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>155</integer>
-					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
-					<integer>23</integer>
-				</dict>
-			</dict>
-			<key>03-21-2017-STP-Port-Cost - 2.md</key>
-			<dict>
-				<key>explicitUnassignment</key>
-				<true/>
-				<key>firstUnassignment</key>
-				<real>512316877.99113297</real>
-				<key>lastModification</key>
-				<real>512316893.54462898</real>
-				<key>version</key>
-				<dict>
-					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>158</integer>
-					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
-					<integer>23</integer>
-				</dict>
-			</dict>
 			<key>2017-02-20-Git.md</key>
 			<dict>
 				<key>lastModification</key>
@@ -635,11 +603,11 @@
 			<key>2017-04-01-PPPoE.md</key>
 			<dict>
 				<key>lastModification</key>
-				<real>512798355.80429399</real>
+				<real>513053299.559434</real>
 				<key>version</key>
 				<dict>
 					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-					<integer>251</integer>
+					<integer>282</integer>
 					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
 					<integer>23</integer>
 				</dict>
@@ -692,10 +660,123 @@
 					<integer>23</integer>
 				</dict>
 			</dict>
+			<key>2017-04-03-Route-Recursion.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>512922622.05238599</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>275</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>23</integer>
+				</dict>
+			</dict>
+			<key>2017-04-03-Static-Routing.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>512920163.27690297</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>271</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>23</integer>
+				</dict>
+			</dict>
+			<key>2017-04-04-Default-Routing.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>513053371.432266</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>285</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>23</integer>
+				</dict>
+			</dict>
+			<key>2017-04-04-Egress-Interface-vs-Next-Hop.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>513051995.05784398</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>279</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>23</integer>
+				</dict>
+			</dict>
+			<key>2017-04-05-Backup-Interface.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>513104272.61672801</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>297</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>23</integer>
+				</dict>
+			</dict>
+			<key>2017-04-05-CEF.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>513054110.25584698</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>289</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>23</integer>
+				</dict>
+			</dict>
+			<key>2017-04-05-Floating-Static-Routes.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>513103043.30944401</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>293</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>23</integer>
+				</dict>
+			</dict>
+			<key>2017-04-05-IP-SLA-Overview.md</key>
+			<dict>
+				<key>lastModification</key>
+				<real>513107079.84223598</real>
+				<key>version</key>
+				<dict>
+					<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+					<integer>301</integer>
+					<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
+					<integer>23</integer>
+				</dict>
+			</dict>
 		</dict>
+		<key>sheetOrder</key>
+		<real>513102365.286403</real>
 	</dict>
 	<key>sheetClusters</key>
 	<array>
+		<array>
+			<string>2017-04-05-IP-SLA-Overview.md</string>
+		</array>
+		<array>
+			<string>2017-04-05-Backup-Interface.md</string>
+		</array>
+		<array>
+			<string>2017-04-05-Floating-Static-Routes.md</string>
+		</array>
+		<array>
+			<string>2017-04-04-Default-Routing.md</string>
+		</array>
+		<array>
+			<string>2017-04-05-CEF.md</string>
+		</array>
 		<array>
 			<string>2017-02-20-Hello-World.md</string>
 		</array>
@@ -787,16 +868,10 @@
 			<string>2017-03-20-STP-Port-Election.md</string>
 		</array>
 		<array>
-			<string>03-21-2017-STP-Port-Cost (1).md</string>
-		</array>
-		<array>
 			<string>2017-03-26-STP-Timers.md</string>
 		</array>
 		<array>
 			<string>2017-03-21-STP-Port-Cost.md</string>
-		</array>
-		<array>
-			<string>03-21-2017-STP-Port-Cost - 2.md</string>
 		</array>
 		<array>
 			<string>2017-03-27-STP-Portfast.md</string>
@@ -853,6 +928,9 @@
 			<string>2017-04-01-Multilink-PPP.md</string>
 		</array>
 		<array>
+			<string>2017-04-01-PPPoE.md</string>
+		</array>
+		<array>
 			<string>2017-04-02-IPv4-Addressing.md</string>
 		</array>
 		<array>
@@ -865,9 +943,17 @@
 			<string>2017-04-02-Administrative-Distance.md</string>
 		</array>
 		<array>
-			<string>2017-04-01-PPPoE.md</string>
+			<string>2017-04-03-Static-Routing.md</string>
+		</array>
+		<array>
+			<string>2017-04-03-Route-Recursion.md</string>
+		</array>
+		<array>
+			<string>2017-04-04-Egress-Interface-vs-Next-Hop.md</string>
 		</array>
 	</array>
+	<key>sheetOrder</key>
+	<string>title</string>
 	<key>storeFormatVersion</key>
 	<integer>1</integer>
 	<key>versioning</key>
@@ -875,9 +961,14 @@
 		<key>sheetClusters</key>
 		<dict>
 			<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
-			<integer>268</integer>
+			<integer>302</integer>
 			<key>E7FA19B7-8383-4EF7-A8CA-7797840CF780</key>
 			<integer>23</integer>
+		</dict>
+		<key>sheetOrder</key>
+		<dict>
+			<key>23a8b942e2ef3cafeaf442c169aed0ebaaaff954f5cbed1c020dbca3d78f8798</key>
+			<integer>1</integer>
 		</dict>
 	</dict>
 </dict>

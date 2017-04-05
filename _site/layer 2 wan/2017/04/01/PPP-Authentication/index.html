@@ -174,22 +174,22 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 <p>With PAP authentication, a two-way handshake is used to establish identity. After the PPP link establishment is complete, a username and password pair is repeatedly sent by the remote node (in clear text) until authentication is acknowledged, or the connection is terminated. PPP is not secure as passwords are sent across the link in clear text.</p>
 
 <p>PAP supports either unidirectional or bidirectional authentication. This is the configuration for unidirectional, where R1 is the called device and R2 is the calling device:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# username ROUTER2 password cisco
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# username ROUTER2 password cisco
 R1(config)# interface serial0/0
 R1(config-if)# encapsulation ppp
 R1(config-if)# ppp authentication pap
 R1(config-if)# end
 </code></pre>
 </div>
-<p>`And here is the configuration for R2, the client:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R2(config)# interface serial0/0
+<p>And here is the configuration for R2, the client:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R2(config)# interface serial0/0
 R2(config-if)# encapsulation ppp
 R2(config-if)# ppp pap sent-username ROUTER2 password cisco
 R2(config-if)# end
 </code></pre>
 </div>
-<p>`
-CHAP identifies peers by use of a three-way handshake. The general steps are:</p>
+
+<p>CHAP identifies peers by use of a three-way handshake. The general steps are:</p>
 <ul>
   <li>After the LCP phase is complete, and CHAP is established as the authentication protocol between devices, the authenticator sends a challenge message to the peer</li>
   <li>The peer responds with a value calculated through a one-way hash function (MD5)</li>
@@ -197,21 +197,20 @@ CHAP identifies peers by use of a three-way handshake. The general steps are:</p
 </ul>
 
 <p>Like PAP, authentication is one-way but can be configured bidirectionally. In this example, R1 is the CHAP server and R2 is the CHAP client.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# username ROUTER2 password cisco
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# username ROUTER2 password cisco
 R1(config)# interface serial0/0
 R1(config-if)# encapsulation ppp
 R1(config-if)# ppp authenticate chap
 R1(config-if)# end
 </code></pre>
 </div>
-<p>`And now,  R2 (the client) configuration:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R2(config)# username ROUTER1 password cisco
+<p>And now,  R2 (the client) configuration:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R2(config)# username ROUTER1 password cisco
 R2(config)# interface serial0/0
 R2(config-if)# encapsulation ppp
 R2(config-if)# end
 </code></pre>
 </div>
-<p>`</p>
 
   </article>
 </div>
@@ -222,27 +221,27 @@ R2(config-if)# end
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/Longest-Match-Routing/">
-            Longest Match Routing
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/IP-SLA-Overview/">
+            IP SLA Overview
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/IPv4-Addressing/">
-            IPv4 Addressing
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/Floating-Static-Routes/">
+            Floating Static Routes
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/Administrative-Distance/">
-            Administrative Distance
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/CEF/">
+            CEF
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>

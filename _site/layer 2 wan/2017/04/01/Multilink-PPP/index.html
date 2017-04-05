@@ -171,7 +171,7 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <article>
     <p>Multilink PPP is a method used to aggregate multiple single PPP links and utilize them as one. It is not that dissimilar from EtherChannel used with Ethernet. PPP frames can be fragmented, sent down different links, and then reassembled in order on the far side of the link. Multilink PPP uses a 2 or 4 byte sequencing header in each packet, and the remote MLPPP recover is tasked with reconstructing the frames in the correct order. The configuration is pretty straightforward.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>`interface Serial0/1
+<div class="highlighter-rouge"><pre class="highlight"><code>interface Serial0/1
   description Link to R1
   no ip address
   encapsulation ppp
@@ -196,9 +196,8 @@ interface Multilink 1
 end
 </code></pre>
 </div>
-<p><code class="highlighter-rouge">
-Some optional parameters include </code>ppp multilink interleave<code class="highlighter-rouge">. Interleaving allows large packets to be multilink encapsulated and fragmented into a small enough size to satisfy the delay requirements of real-time traffic. The interleaving feature also provides a special transmit queue for the smaller, delay-sensitive packets, enabling them to be sent earlier than other flows. </code>ppp multilink fragement delay 10` is the command that determines the maximum delay - MLPPP will then chose a fragment size based on the configured delay.</p>
 
+<p>Some optional parameters include <code class="highlighter-rouge">ppp multilink interleave</code>. Interleaving allows large packets to be multilink encapsulated and fragmented into a small enough size to satisfy the delay requirements of real-time traffic. The interleaving feature also provides a special transmit queue for the smaller, delay-sensitive packets, enabling them to be sent earlier than other flows. <code class="highlighter-rouge">ppp multilink fragement delay 10</code> is the command that determines the maximum delay - MLPPP will then chose a fragment size based on the configured delay.</p>
 
   </article>
 </div>
@@ -209,27 +208,27 @@ Some optional parameters include </code>ppp multilink interleave<code class="hig
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/Longest-Match-Routing/">
-            Longest Match Routing
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/IP-SLA-Overview/">
+            IP SLA Overview
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/IPv4-Addressing/">
-            IPv4 Addressing
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/Floating-Static-Routes/">
+            Floating Static Routes
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
     
       <li>
         <h3>
-          <a href="/general%20routing/2017/04/02/Administrative-Distance/">
-            Administrative Distance
-            <small>02 Apr 2017</small>
+          <a href="/general%20routing/2017/04/05/CEF/">
+            CEF
+            <small>05 Apr 2017</small>
           </a>
         </h3>
       </li>
