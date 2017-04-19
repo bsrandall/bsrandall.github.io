@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-04-19T09:08:57-04:00</updated>
+ <updated>2017-04-19T09:40:40-04:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -17,7 +17,7 @@
    <link href="http://bsrandall.github.io/rip/2017/04/19/RIP-Messages/"/>
    <updated>2017-04-19T05:06:45-04:00</updated>
    <id>http://bsrandall.github.io/rip/2017/04/19/RIP-Messages</id>
-   <content type="html">&lt;p&gt;&lt;a href=&quot;http://www.tcpipguide.com/free/diagrams/ripformatv1.png&quot;&gt;link&lt;/a&gt;
+   <content type="html">&lt;p&gt;&lt;img src=&quot;&quot; alt=&quot;RIP Message&quot; /&gt;(/assets/ripformat.png)
 Each RIP Message that contains a single command and a version number can contain up to 25 routes. The command is either 1 for a Request Message or 2 for a Response Message. The Version will be 1 for RIPv1.&lt;/p&gt;
 
 &lt;p&gt;The &lt;em&gt;Address Family Identifier&lt;/em&gt;&lt;/p&gt;
