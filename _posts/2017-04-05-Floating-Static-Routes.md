@@ -3,6 +3,7 @@ layout: post
 title: Floating Static Routes
 category: General Routing
 tag: knowledge
+date: 2017-04-05 15:46:45
 ---
 A Floating Static route is a static route whose administrative distance has been increased in order to make the route function as a backup route. The global command would look like this:
 ```

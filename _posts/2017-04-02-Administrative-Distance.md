@@ -3,6 +3,7 @@ layout: post
 title: Administrative Distance
 category: General Routing
 tag: knowledge
+date: 2017-04-02 15:40:45
 ---
 Administrative Distance is used to determine which route should be installed into the IP routing table when there is a tie between different sources for the route (static vs EIGRP vs OSPF, etc). Administrative Distance is sometimes called the trustworthiness of the source. When a decision has to be made, the table containing Administrative Distance is consulted to choose the best route, with lower being better. Administrative Distance is only local and can be different for each router.
 
@@ -22,4 +23,3 @@ The `distance` command is used with the different routing protocols to change it
 | External EIGRP | 170 |
 | Internal BGP | 200 |  
 | Unknown | 255 |
-

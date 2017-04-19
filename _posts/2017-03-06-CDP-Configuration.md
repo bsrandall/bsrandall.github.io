@@ -3,6 +3,7 @@ layout: post
 title: CDP Configuration
 category: Layer 2
 tag: configuration
+date: 2017-03-06 15:40:45
 ---
 
 To enable CDP globally we use `cdp run`. To enable CDP on a per-interface basis, use `cdp enable`.
@@ -22,4 +23,3 @@ To enable CDP globally we use `cdp run`. To enable CDP on a per-interface basis,
 `R1#(config) show cdp interface [type number]` displays information about interfaces on which CDP is enabled
 
 `R1#(config) show cdp entry device-name` displays information about a specific neighbor
-

@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Smartport-Macros/">
-        Smartport Macros
+      <a href="/general%20routing/2017/04/06/Enhanced-Object-Tracking/">
+        Enhanced Object Tracking
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">06 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,53 +177,82 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Smartport Macros are used to define a well-known template of configuration onto multiple interfaces. Several Smartport Macros come predefined in the switch. To see them, use <code class="highlighter-rouge">show parser macro</code>. To expand one of the macros use <code class="highlighter-rouge">show parser macro name ___________</code>.</p>
+      <p>Enhanced Object Tracking is a sort of glue that binds the tracking of objects with upper layer protocols such as HSRP. Before Enhanced Object Tracking, HSRP could only look at interface line-protocol state for simple up / down status. Now you can create an advanced object (such as  an IP SLA object) and keep HSRP informed of the state of that object by using Enhanced Object Tracking.</p>
 
-<p>This is the old style of configuring switchport macros:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# macro name VLAN146
-Enter macro commands one per line. End with the character '@'.
-switchport mode access
-switchport access vlan 146
-spanning-tree bpdufilter enable
-@
-SW1(conf)\#
-</code></pre>
-</div>
-<p>The # symbol can be used at the beginning of a line to designate comments. Then to apply the macro to an interface or interface range:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# interface range gig0/1-2
-SW1(conf-if-range)# macro apply VLAN146
-SW1(conf-if-range)# exit
-</code></pre>
-</div>
+<p>Enhanced Object Tracking provides complete separation between the objects to be tracked and the action to be taken by a client when a tracked object changes. The tracking process periodically polls the tracked object and notes any change of value. The changes can be communicated immediately or after a delay to the interested client process.</p>
 
-<p>The modern style to define a switchport macro is here:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# define interface-range VLAN146 gig0/1-2
-SW1(conf)# interface range macro VLAN146
-SW1(conf-if-range)# switchport mode access
-SW1(conf-if-range)# switchport access vlan 146
-SW1(conf-if-range)# spanning-tree bpdufilter enable
-SW1(conf-if-range)# exit
-SW1(conf)# 
+<p>Enhanced Object Tracking is used with IP SLA to track the output from IP SLA objects and use the provided information to trigger an action. Every IP SLA operation maintains a return-code value. Two aspects of an IP SLA operation can be tracked, state and reachability. The difference between these is the acceptance of the OverThreshold return code. The table below shows the state and reachability aspects of IP SLA operations that can be tracked.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Tracking</strong></td>
+      <td><strong>Return Code</strong></td>
+      <td><strong>Track State</strong></td>
+    </tr>
+    <tr>
+      <td>State</td>
+      <td>OK</td>
+      <td>Up</td>
+    </tr>
+    <tr>
+      <td>Reachability</td>
+      <td>OK or OverThreshold</td>
+      <td>Up</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For both State and Reachability, all other return codes return down.</p>
+
+<h4 id="examples">Examples</h4>
+
+<p>The first example is IP-Route Reachability. This tracks the reachability of a particular IP Route. A tracked object is considered up when a routing table entry exists for the route and the route is accessible.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# track timer ip route 20
+R1(config)# track 4 ip route 10.16.0.0/16 reachability
+R1(config-track)# delay up 30
+R1(config)# end
 </code></pre>
 </div>
+<p><code class="highlighter-rouge">In the above example, the </code>track timer` is an optional command that specifies an interval in which the tracking object polls the tracked object. The default for IP-Route Reachability is 15 seconds.</p>
+
+<p>The <code class="highlighter-rouge">delay</code> option specifies a period of time to delay communicating state changes of a tracked object.</p>
+
+<p>The next example is using Tracking to poll an IP SLA operation. First we set up the IP SLA operation.</p>
+
+<p>R1(config)# ip sla 1
+R1(config-ip-sla)# icmp-echo 150.1.3.3
+R1(config-ip-sla-echo)# frequency 30
+R1(config-ip-sla-echo)# exit
+R1(config)# ip spa schedule 1 start-time now life 10800
+R1(config)# exit</p>
+
+<p>Next, we set up the tracking.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# track 1 ip sla 1 state
+R1(config)# delay up 60 down 30
+R1(config)# end
+</code></pre>
+</div>
+<p>`
+Now the tracking object can be used by other clients to monitor the IP SLA object we set up earlier. One interesting note here. We could have used state or reachability for our tracking object. The only difference with ICMP echo operation is that reachability also ensures that the latency is less than 5000ms</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Smartport-Macros/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/06/Enhanced-Object-Tracking/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Smartport-Macros/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/06/Enhanced-Object-Tracking/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Private-VLANs/">
-        Private VLANs
+      <a href="/general%20routing/2017/04/05/Backup-Interface/">
+        Backup Interface
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">05 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -231,97 +260,32 @@ SW1(conf)#
     
 
     <article>
-      <p>Protect Ports (discussed earlier) are a nice security feature of Cisco switches. When two ports are protected, they are not allowed to have direct communication with each other. But one limitation of protected ports is that they are only locally significant, so there is no way for protected ports to exist on different switches and follow the protection rules.</p>
+      <p>Backup Interface is a Cisco feature that can be used in place of floating static routes on point-to-point interfaces.</p>
 
-<p>The Private VLAN feature was created to solve this limitation. Private VLANs are more complex and can span multiple physical switches. Private VLANs split what would normally be a single broadcast domain defined by a single VLAN into multiple isolated broadcast subdomains, that are defined by a primary VLAN and its secondary VLANs. In essence it allows us to create VLANs inside VLANs, and is not un-similar to the concept of Confederations in BGP.</p>
-
-<p>Private VLANs are used to increase security. We most often see them in a shared color facility. This allows the color provider to have the customers exist on the same VLAN (and thus the same subnet), without allowing the different customers to communicate directly with each other.</p>
-
-<p>One pitfall you have to remember with Private VLANs is that it requires VTP to either be in Transparent mode or to be off.</p>
-
-<p>There is some terminology to remember when dealing with Private VLANs:</p>
-<ul>
-  <li><em>Promiscuous ports</em> are allowed to talk to all other ports within the primary VLAN</li>
-  <li><em>Isolated ports</em> are only allowed to talk with promiscuous ports</li>
-  <li><em>Community ports</em> are allowed to talk with other ports in their own community as well as any promiscuous ports,  but they are not allowed to talk to ports in other communities</li>
-</ul>
-
-<p>The configuration steps are a little unnatural as well. The port roles are defined by the interface’s association to a primary VLAN and one or more secondary VLANs. First the secondary VLANs are created and defined as either community or isolated. Then the primary VLAN is defined, and the secondary VLANs are associated with the primary VLAN.</p>
-
-<p>Here is an example configuration with VLAN 500 as the primary VLAN, 501 a secondary community VLAN, and VLAN 502 a secondary isolated VLAN. Ports FastEthernet0/1 and FastEthernet0/2 are associated to VLAN 501, while FastEthernet03 and FastEthernet0/4 are associated with the secondary isolated VLAN 502.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vtp mode transparent
-SW1(config)# vlan 501
-SW1(config-vlan)# private-vlan community
-SW1(config-vlan)# vlan 500
-SW1(config-vlan)# private-vlan primary
-SW1(config-vlan)# private-vlan association add 501
+<div class="highlighter-rouge"><pre class="highlight"><code>interface Serial0/0/0
+  backup interface Serial0/0/1
+  backup delay 10 30
 </code></pre>
 </div>
-
-<p>Next, let’s go ahead and associate FastEthernet0/1 and FastEthernet0/2 to the 501 Secondary Community we just created:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface range fa0/1-2
-SW1(config-if-range)# switchport mode private-vlan host
-SW1(config-if-range)# switchport private-vlan host-association 500 501
-</code></pre>
-</div>
-
-<p>Now, we can go ahead and configure FastEthernet0/24 as a promiscuous port.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface fa0/24
-SW1(config-if)# switchport mode private-vlan promiscuous
-SW1(config-if)# switchport private-vlan mapping 500 501
-</code></pre>
-</div>
-
-<p>Now we turn our attention to the creation of the isolated VLAN, VLAN 502.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vlan 502
-SW1(config-vlan)# private-vlan isolated
-SW1(config-vlan)# vlan 500
-SW1(config-vlan)# private-vlan primary
-SW1(config-vlan)# private-vlan association add 502
-</code></pre>
-</div>
-
-<p>Now we must associate our interfaces:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface range fa0/3-4
-SW1(config-if-range)# switchport mode private-vlan host
-SW1(config-if-range)# switchport private-vlan host-association 500 502
-</code></pre>
-</div>
-
-<p>And finally, we must add another association for our promiscuous port:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface fa0/24
-SW1(config-if)# switchport mode private-vlan promiscuous
-SW1(config-if)# switchport private-vlan mapping 500 502
-</code></pre>
-</div>
-
-<p>One great way to test your Private VLAN setup is to send a single ping to the broadcast address with <code class="highlighter-rouge">ping 255.255.255.255 repeat 1</code>.  The replies will only be from the hosts in your broadcast domain.</p>
-
-<p>One other thing to note. If you are configuring a Primary VLAN SVI to operate with secondary private VLANs, you need to map the secondary VLANs onto the SVI as in the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# interface Vlan 100
-SW1(config-if)# private-vlan mapping 1000,2000
-</code></pre>
-</div>
-<p>`</p>
+<p>In the example above interface Serial0/0/1 is the backup for interface Serial0/0/0. If Serial0/0/0 is down for 10 seconds, then Serial0/0/1 will take over as the primary interface. After Serial 0/0/0 has been up for 30 seconds, it will resume its role as the primary interface.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Private-VLANs/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/05/Backup-Interface/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Private-VLANs/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/05/Backup-Interface/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/">
-        Spanning Tree Loop Guard
+      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/">
+        Floating Static Routes
       </a>
     </h1>
 
-    <span class="post-date">29 Mar 2017</span>
+    <span class="post-date">05 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -329,32 +293,29 @@ SW1(config-if)# private-vlan mapping 1000,2000
     
 
     <article>
-      <p>Loop Guard is a Spanning Tree feature that was added to prevent loops from forming due to hardware issues or STP software problems. A Spanning Tree loop occurs when a port that was previously in the blocking state is erroneously  transitioned to the Forwarding state.</p>
-
-<p>When a non-designated port stops receiving BPDUs, it will eventually transition itself to a designated port and begin forwarding BPDUs. Loop Guard works by preventing that non-designated port from transitioning to a forwarding state. Instead, it transitions the port to STP loop-inconsistent blocking state. So Loop Guard prevents a non-designated port from becoming a designated port, while Root Guard prevents a designated port from transitioning to a Root Port.</p>
-
-<p>Loop Guard is very similar to UDLD, but Loop Guard uses STP BPDUs to determine if there is a loop.</p>
-
-<p>Loop Guard is enabled on a per-port basis with the interface subcommand <code class="highlighter-rouge">spanning-tree guard loop</code>. To be completely effective, Loop Guard should be enabled on <em>all</em> non-designated ports, including root ports and alternate ports. Loop Guard can also be enabled globally with the <code class="highlighter-rouge">spanning-tree loopguard default</code> global configuration command. You can then disable Loop Guard on a per-port basis with <code class="highlighter-rouge">no spanning-tree guard loop</code>.</p>
-
+      <p>A Floating Static route is a static route whose administrative distance has been increased in order to make the route function as a backup route. The global command would look like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ip route 192.168.23.0 255.255.255.0 192.168.13.3 121
+</code></pre>
+</div>
+<p>This would set the administrative distance to this route as 121, which would make it’s AD higher than a RIP, OSPF, or EIGRP learned route.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/29/Protected-Port/">
-        Protected Port (PVLAN)
+      <a href="/general%20routing/2017/04/05/CEF/">
+        CEF
       </a>
     </h1>
 
-    <span class="post-date">29 Mar 2017</span>
+    <span class="post-date">05 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -362,31 +323,37 @@ SW1(config-if)# private-vlan mapping 1000,2000
     
 
     <article>
-      <p>The protected port, also known as PVLAN edge, is a security feature used to prevent traffic from being directly exchanged at Layer 2 between two or more hosts that are within the same VLAN. Protected ports only have local switch significance. A protected port does not forward any traffic (unicast, multicast, or broadcast) to any other protected port in the same switch. If you need to pass traffic between protected ports, the only possible way is through a L3 device.</p>
+      <p>Routing is the process by which the router finds the interface to send outgoing packets out of. Switching is the actual process of physically transferring this packets from the ingress interface to the degree interface,</p>
 
-<p>By default, all switch ports are unprotected. The configuration is as simple as below:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
-SW1(config-if)# switchport protected
-</code></pre>
-</div>
+<p>Process Switching is the oldest of the switching methods available in Cisco devices. When a packet arrives, the switching process relies on the CPU to do start at the top of the RIB and for each route do a binary AND against the destination to determine the longest match. It has to do this for every packet as it arrives. The time it may take for a lookup is dependent on where the route sits in the forwarding table, so your worst case scenario is the router would have to do 100,000 lookups.</p>
+
+<p>Fast Switching is an improvement on Process Switching where a lookup only has to be done on the first inbound packet. The rest of the “flow” knows the switching path and utilizes what was learned from the lookup on the first packet.</p>
+
+<p>Cisco Express Forwarding is the modern switching process found in Cisco devices. Once the router builds the RIB, the router pre calculates the routes and then stores these calculations in working memory, or in the case of devices that perform hardware acceleration, in port based ASICs.</p>
+
+<p>To see the CEF calculated for a given route, use <code class="highlighter-rouge">show ip cef 192.168.1.10</code>, for example.</p>
+
+<p>One thing to remember is that the switching process is responsible for load balancing. This is done on a flow basis, not on a per packet basis as that would be too inefficient and packets would almost always arrive out of order on the other end.</p>
+
+<p><code class="highlighter-rouge">show ip interface</code> will tell you if CEF has been enabled. A key indicator of a router that does not have CEF enabled is one that has high CPU usage. It is also important to remember that packets that are logged do not get CEF switched, so any logging requires a lot of available CPU.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/29/Protected-Port/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/05/CEF/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/29/Protected-Port/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/05/CEF/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/">
-        Spanning Tree Root Guard
+      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/">
+        Egress Interface vs Next Hop Static Routing
       </a>
     </h1>
 
-    <span class="post-date">28 Mar 2017</span>
+    <span class="post-date">04 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -394,27 +361,20 @@ SW1(config-if)# switchport protected
     
 
     <article>
-      <p>Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.</p>
+      <p>There are some difference on router behavior depending on if you use a Next Hop IP address or an Egress Interface as the destination in your static route. This article will describe some of this e differences.</p>
 
-<p>Root Guard is enabled on a per port basis. Root Guard ensures that the port on which it is configured remains a designated port. If the bridge receives superior BPDUs on that designated port, Root Guard moves the port to root-inconsistent state, which is effectively equivalent to the STP listening state so no frames are forwarded.</p>
+<p>If you use the Next Hop IP address, the router will have to find the interface leading towards the destination address before the route will be installed in the forwarding table. When the router finds the egress interface it will then check to see if the interface is point-to-point or multipoint. If it is multipoint, then the router will need the MAC address of the Next Hop address. If it doesn’t have it, then it will need to use ARP.</p>
 
-<p>The difference between BPDU Guard and Root Guard is that Root Guard allows the port to participate in STP, so long as the port does not receive a <em>superior</em> BPDU. With BPDU Guard, <em>any</em> BPDU will put the port into an err-disabled state.</p>
+<p>If you use the outgoing interface the router does not have to do the recursive lookup to find the correct outgoing interface. But the problem is the router doesn’t know which layer 2 neighbor routers exist on that link. So the only choice the router has is to ARP for the final destination address (rather than next hop as above). Where this can get outrageous is that the router will need to have MAC addresses resolved for <em>all hosts</em> in the subnet and you will need proxy ARP enabled on all routers in the segment. The example gets even more outrageous if you define a default route that points to a multipoint interface. So it should be clear this should only be used on point-to-point interfaces.</p>
 
-<p>Again, Root Guard is enabled on a per interface basis as below.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
-SW!(config-if)# spanning-tree rootguard
-</code></pre>
-</div>
-
-<p>The Cisco explanation is located <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/10588-74.html">here</a>.</p>
-
+<p>Point-to-point interfaces do not have the same problem as the router knows there is only one host to receive the traffic on the other end. In other words, recursion will not be required nor will Layer 2 resolution be required.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

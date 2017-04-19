@@ -3,6 +3,7 @@ layout: post
 title: Spanning Tree BPDU Guard
 category: Spanning Tree
 tag: knowledge
+date: 2017-03-28 15:40:45
 ---
 BPDU Guard is a STP PortFast safety enhancement. It works by disabling a port any time the interface hears a BPDU. PortFast by itself will not do that, so if you have PortFast enabled on an interface, and an end user plugs a switch into that link, all kinds of events can happen (including the plugged in switch becoming the Root Bridge!). BPDU Guard ensures that unauthorized switches cannot be plugged into the network. A sample configuration is below.
 ```

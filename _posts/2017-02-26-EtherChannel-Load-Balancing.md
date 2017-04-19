@@ -3,6 +3,7 @@ layout: post
 title: EtherChannel Load-Balancing
 category: EtherChannel
 tag: knowledge
+date: 2017-02-26 15:40:45
 ---
 The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.
 
@@ -24,7 +25,7 @@ To configure EtherChannel load-balancing, in global config use the following:
 ```
 `port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
 ```
-`
+\`
 The default is src-mac. 
 
 One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.

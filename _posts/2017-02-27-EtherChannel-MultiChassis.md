@@ -3,6 +3,7 @@ layout: post
 title: MultiChassis EtherChannel
 category: EtherChannel
 tag: knowledge
+date: 2017-02-27 15:40:45
 ---
 A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.
 

@@ -3,6 +3,7 @@ layout: post
 title: Hello World
 category: General
 tag: inspiration
+date: 2017-02-20 13:40:45
 ---
 This is my first post in my newly launched blog. I decided to go with Jekyll and a GitHub page for my blog backend. I wanted my content to be in Markdown, as that seems to be the authoring flavor of the day. Jekyll and GitHub just made sense due to their support of Markdown.
 
@@ -12,8 +13,7 @@ The other two benefits to my blog is hopefully improving on my Markdown and typi
 
 This is some sample IOS commands using Markdown:
 
-```SW1# switchport trunk encapsulation dot1q```
-```SW1# switchport mode trunk```
+`SW1# switchport trunk encapsulation dot1q`
+`SW1# switchport mode trunk`
 
 Well I am off to the races. Or as most of those who have gone before me stress, off to start the marathon!
-

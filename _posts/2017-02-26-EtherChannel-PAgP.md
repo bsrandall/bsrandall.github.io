@@ -3,6 +3,7 @@ layout: post
 title: EtherChannel PaGP
 category: EtherChannel
 tag: knowledge
+date: 2017-02-26 14:40:45
 ---
 Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.
 
@@ -21,5 +22,4 @@ For all EtherChannels (including on and PAgP), when a group is first created, al
 - Spanning-tree Port Fast setting
 
 For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.  
-
 

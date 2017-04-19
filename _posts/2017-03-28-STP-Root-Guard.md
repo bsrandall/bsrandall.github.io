@@ -3,6 +3,7 @@ layout: post
 title: Spanning Tree Root Guard
 category: Spanning Tree
 tag: knowledge
+date: 2017-03-28 16:40:45
 ---
 Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.
 

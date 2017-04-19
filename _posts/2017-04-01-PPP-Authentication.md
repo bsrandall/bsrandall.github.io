@@ -3,6 +3,7 @@ layout: post
 title: PPP Authentication
 category: Layer 2 WAN
 tag: knowledge
+date: 2017-04-01 16:40:45
 ---
 There are two forms of authentication available for PPP, PAP and CHAP. It is important to remember that these technologies are one way in nature, and therefore do not need to be configured bidirectionally. You really should think of this as a Client / Server model.
 

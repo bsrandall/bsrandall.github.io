@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Bidirectional Forwarding Detection &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Bidirectional Forwarding Detection</h1>
+  <span class="post-date">10 Apr 2017</span>
+   | 
+  
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+  
+  
+  <article>
+    <p>Bidirectional Forwarding Detection (BFD) is a protocol that is able to detect link failures within milliseconds or even microseconds between two adjacent routers. Most of the routing protocols have some mechanism to detect down links. OSPF has hello packets and the dead interval, EIGRP uses hello packets and a holddown timer, etc. Unfortunately since these mechanisms depend on the control plane, they are not very fast at determining a failure has occurred. But networks that support real-time traffic such as VoIP require fast convergence times. The closest comparison is reducing timer mechanisms of the routing protocols, but BFD is still faster in every situation.</p>
+
+<p>BFD was designed to be fast. Its packets can be processed by some interface modules or line cards so there isn’t much overhead. BFD runs independent of routing protocols, but once it is up you can configure the routing protocols to use BFD for link failure detection instead of their own mechanisms. BFD operates in the forwarding place as compared to the control plane mechanisms of routing protocols.</p>
+
+<p>BFD has two operating modes, asynchronous and demand modes. The asynchronous mode is similar to the hello and holddown timers where BFD will keep sending hello packets (called BFD control packets) and when you don’t receive some of them, the session is torn down. Right now, no vendors support demand mode which relies on polling. Asynchronous mode requires that BFD be enabled and operational on both sides of the link.</p>
+
+<p>In the Cisco implementation, there is one BFD process that runs, regardless of the number of Layer 3 routing protocols that are dependent upon it. Cisco BED also requires CEF to be enabled.</p>
+
+<p>Both modes support <strong>echo mode</strong>. When a device sends BFD echo packets along the forwarding path, the BFD session at the other end does not participate in the actual forwarding of the echo packets. This reduces the number of control packets that have to be sent out and also may slightly increase the link failure detection time as no processing has to occur at the remote end. BFD echo mode is enabled by default.</p>
+
+<p>You first enable BDF on an interface as below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(conf)# interface GigabitEthernet0/1
+R1(conf-if)# bfs interval *milliseconds* `min_rx` *milliseconds* multiplier *interval-multiplier*
+R1(conf-if)# end
+</code></pre>
+</div>
+<p>`Really BFD by itself is not useful. You must enable another client or protocol to use BFD for link failure notification for BFD to be of any use. Optional protocols include OSPF, EIGRP, BGP, IS-IS, and HSRP.</p>
+
+<h4 id="bgp">BGP</h4>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# router bgp 2828
+R1(config-router)# neighbor 27.143.12.88 **fall-over bfd**
+R1(config-router)# end
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">#### EIGRP
+R1(config)# router eigrp 100
+R1(config)# log-adjacency-changes
+R1(config-router)# bfd all-interfaces **or**
+R1(config-router)# bfd interface GigabitEthernet0/1
+R1(config-router)# end
+</code>``
+`#### OSPF
+There are two methods for enabling BFD support for OSPF:</p>
+<ul>
+  <li>You can enable BFD for all interfaces for which OSPF is routing by using the <code class="highlighter-rouge">bfd all-interfaces</code> command in router configuration mode. You can then disable BFD support on individual interfaces using the <code class="highlighter-rouge">ip ospf bfd disable</code> command.</li>
+  <li>You can enable BFD on a per interface basis with <code class="highlighter-rouge">ip ospf bfd</code> command in interface configuration mode.
+    <h4 id="hsrp">HSRP</h4>
+    <p>You enable bfd to register with HSRP by issuing the <code class="highlighter-rouge">standby bfd</code> interface command or by issuing the <code class="highlighter-rouge">standby bfd all-interfaces</code> command in global configuration mode.</p>
+  </li>
+</ul>
+
+  </article>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/rip/2017/04/19/RIP-Messages/">
+            RIP Messages
+            <small>19 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/rip/2017/04/19/RIP-Timers/">
+            RIP Timers
+            <small>19 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/rip/2017/04/18/RIP-General/">
+            RIP General
+            <small>18 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+<div class="comments">
+  <h2>Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'http://bsrandall.github.io/general%20routing/2017/04/10/BFD/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/general%20routing/2017/04/10/BFD'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = '//your_short_name.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

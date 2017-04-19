@@ -3,6 +3,7 @@ layout: post
 title: EtherChannel Layer 3
 category: EtherChannel
 tag: knowledge
+date: 2017-02-27 14:40:45
 ---
 
 To configure Layer 3 EtherChannels, you have to ensure that the ports that are part of the EtherChannel are first set to `no switchport` before adding them to the channel-group. An example LACP config follows:

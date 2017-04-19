@@ -3,6 +3,7 @@ layout: post
 title: IPv4 Addressing
 category: General Routing
 tag: knowledge
+date: 2017-04-02 12:40:45
 ---
 IP is a logical addressing method as compared to MAC layer physical addresses. It operates at the Network Layer (Layer 3) of the OSI model.
 

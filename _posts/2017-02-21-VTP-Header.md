@@ -3,6 +3,7 @@ layout: post
 title: VTP Messages
 category: VTP
 tag: knowledge
+date: 2017-02-21 18:40:45
 ---
 All VTP packets contain these fields in the header:
 - VTP version (1, 2, or 3)

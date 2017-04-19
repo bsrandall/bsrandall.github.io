@@ -3,6 +3,7 @@ layout: post
 title: Backup Interface
 category: General Routing
 tag: knowledge
+date: 2017-04-05 16:40:45
 ---
 Backup Interface is a Cisco feature that can be used in place of floating static routes on point-to-point interfaces. 
 

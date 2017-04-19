@@ -4,7 +4,7 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-04-05T18:55:05-04:00</updated>
+ <updated>2017-04-19T09:08:57-04:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
@@ -13,67 +13,670 @@
 
  
  <entry>
-   <title>IP SLA Overview</title>
-   <link href="http://bsrandall.github.io/general%20routing/2017/04/05/IP-SLA-Overview/"/>
-   <updated>2017-04-05T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/general%20routing/2017/04/05/IP-SLA-Overview</id>
-   <content type="html">&lt;p&gt;Cisco IP SLA uses active traffic monitoring for measuring traffic performance. It performs this by generating traffic in a continuous, reliable, and predictable manner and then analyzing the results. The information collected includes response time, one-way latency, jitter, packet loss, voice quality scoring, network resource availability, application performance, and server response time.&lt;/p&gt;
+   <title>RIP Messages</title>
+   <link href="http://bsrandall.github.io/rip/2017/04/19/RIP-Messages/"/>
+   <updated>2017-04-19T05:06:45-04:00</updated>
+   <id>http://bsrandall.github.io/rip/2017/04/19/RIP-Messages</id>
+   <content type="html">&lt;p&gt;&lt;a href=&quot;http://www.tcpipguide.com/free/diagrams/ripformatv1.png&quot;&gt;link&lt;/a&gt;
+Each RIP Message that contains a single command and a version number can contain up to 25 routes. The command is either 1 for a Request Message or 2 for a Response Message. The Version will be 1 for RIPv1.&lt;/p&gt;
 
-&lt;p&gt;If configuring simple IP SLA Operations such as ICMP echo, the operation only has to be configured on the local router. But for the more advanced Operations, you must set up the remote router or device to &lt;em&gt;respond&lt;/em&gt; to your IP SLA traffic. The IP SLA Responder is a component embedded in the destination Cisco device that allows the system to anticipate and respond to IP SLA request packets. Only a Cisco device can be a source for a destination IP SLA Responder.&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;Address Family Identifier&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;To see the IP SLA Operation types, enter IP SLA configuration mode as follows:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)#ip sla 1
-R1(config-ip-sla)#?
-IP SLAs entry configuration commands:
-  dhcp         DHCP Operation
-  dns          DNS Query Operation
-  ethernet     Ethernet Operations
-  exit         Exit Operation Configuration
-  ftp          FTP Operation
-  http         HTTP Operation
-  icmp-echo    ICMP Echo Operation
-  icmp-jitter  ICMP Jitter Operation
-  mpls         MPLS Operation
-  path-echo    Path Discovered ICMP Echo Operation
-  path-jitter  Path Discovered ICMP Jitter Operation
-  tcp-connect  TCP Connect Operation
-  udp-echo     UDP Echo Operation
-  udp-jitter   UDP Jitter Operation
-  voip         Voice Over IP Operation
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIP Timers</title>
+   <link href="http://bsrandall.github.io/rip/2017/04/19/RIP-Timers/"/>
+   <updated>2017-04-19T04:06:45-04:00</updated>
+   <id>http://bsrandall.github.io/rip/2017/04/19/RIP-Timers</id>
+   <content type="html">&lt;p&gt;There are several timers related to RIP. The &lt;strong&gt;update timer&lt;/strong&gt; on Cisco routers varies between 25.5 and 30 seconds (to prevent synchronization). This is the interval a router waits before sending new periodic Response messages.&lt;/p&gt;
+
+&lt;p&gt;Cisco calls the expiration timer (or timeout) the &lt;strong&gt;invalid timer&lt;/strong&gt;. This is the amount of time a route can stay in the route table without being updated. The default Cisco invalid timer for RIP is 180 seconds (6 Update periods). If an updated route is not heard within the invalid timer, the hop count for the route is changed to 16, the equivalent of making the route unreachable. In IOS, the route in the routing table will say “possibly down” when viewed via &lt;code class=&quot;highlighter-rouge&quot;&gt;show ip route&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;strong&gt;garbage timer&lt;/strong&gt; (or flush timer) is the amount of time the route that was made unreachable by the invalid timer will continue to be advertised.. Once the garbage timer expires, the route will be completely removed from the routing table. With Cisco IOS it is set to 240 seconds by default, 60 seconds longer than the invalid timer.&lt;/p&gt;
+
+&lt;p&gt;RFC 1058 for RIP does not call for the use of &lt;strong&gt;holddown timers&lt;/strong&gt;, but Cisco’s implementation implements it. We saw this earlier - the timer starts when a route is received that is already in the route table, but the new route has a higher hop count than the stored route. It is 180 seconds by default.&lt;/p&gt;
+
+&lt;p&gt;The four timers can be manipulated with the command:
+&lt;strong&gt;timers basic&lt;/strong&gt; &lt;em&gt;update invalid holddown flush&lt;/em&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIP General</title>
+   <link href="http://bsrandall.github.io/rip/2017/04/18/RIP-General/"/>
+   <updated>2017-04-18T13:54:45-04:00</updated>
+   <id>http://bsrandall.github.io/rip/2017/04/18/RIP-General</id>
+   <content type="html">&lt;p&gt;RIP exchanges UDP encapsulated packets over UDP port 520. RIP has two message types:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Request messages&lt;/strong&gt; are used to ask neighboring routers to send an update&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Response message&lt;/strong&gt; carries the actual update&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When a RIP router process starts, it broadcasts a Request message out &lt;em&gt;each&lt;/em&gt; RIP-enabled interface. The begins the state machine with neighbors receiving a RIP request and responding with a RIP Response.&lt;/p&gt;
+
+&lt;p&gt;When the requesting router receives the Response message, it processes the enclosed information and responds in one of 3 ways, depending on the information in the RIP Response.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;If a route in the Response is new, it is entered into the route table along with the address of the advertising router.&lt;/li&gt;
+  &lt;li&gt;If there is a route for a network that RIP has already entered into the table and the new route has a lower metric (hop count), then the new route will replace the old route.&lt;/li&gt;
+  &lt;li&gt;If there is a route for a network that RIP has already entered into the table and the new route has a higher hop count and the update was originated by the recorded next-hop router, the router will be marked as unreachable for a specified holddown period. If the same neighbor is still advertising the higher hop count at the end of the holddown timer, the routing table is updated with the new metric.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;RIP does not store information received in a Topology table, nor do routers have a picture of the entire topology. They receive routes in Response messages, process the information in those messages, and then move on. The RIP Response messages contain that router’s full routing table, with the exception of routes that are stressed by the split-horizon rule.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>IPv6 Stateless Address AUtoconfiguration</title>
+   <link href="http://bsrandall.github.io/ipv6%20general/2017/04/17/IPv6-SLAAC/"/>
+   <updated>2017-04-17T17:54:45-04:00</updated>
+   <id>http://bsrandall.github.io/ipv6%20general/2017/04/17/IPv6-SLAAC</id>
+   <content type="html">&lt;p&gt;Stateless Address Autoconfiguration is a mechanism that allows a host to generate its own unicast address using a combination of locally available information and information advertised by routers. Here are the 4 steps:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;The host creates its own link-local unicast address by appending a randomly generated or EUI-64 created Interface ID to FE80::/10.&lt;/li&gt;
+  &lt;li&gt;The host performs Duplicate Address Detection on its newly created link-local address.&lt;/li&gt;
+  &lt;li&gt;The host (if it hasn’t already received one), sends a Router Solicitation message. The Router Advertisement includes the prefix, prefix length, and link MTU. The host uses this information along with its self created Interface ID to create its global unicast address. The default gateway is the Router’s link-local address.&lt;/li&gt;
+  &lt;li&gt;The host performs Duplicate Address Detection on its global unicast address before using.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In addition to SLAAC, there is also DHCPv6, which is a stateful process. Whether a host that is configured to obtain its addressing information automatically uses SLAAC or DHCPv6 depends upon the configuration of the router’s Router Advertisement message.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>IPv6 EUI-64 Addressing</title>
+   <link href="http://bsrandall.github.io/ipv6%20general/2017/04/17/IPv6-EUI-64/"/>
+   <updated>2017-04-17T16:54:45-04:00</updated>
+   <id>http://bsrandall.github.io/ipv6%20general/2017/04/17/IPv6-EUI-64</id>
+   <content type="html">&lt;p&gt;EUI-64 is an IEEE defined process where EUI stands for Extended Unique Identifier. The EUI-64 process enables automatic Interface ID (host portion) creation. It uses the interface’s Ethernet MAC address to generate a 64-bit interface ID. The idea behind it is that a MAC address is globally unique, so combined with Router Advertisements providing prefix and prefix length, a device can self assign its IP address. The steps of EUI-64 address creation are outlined below.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;The MAC address is split in the middle with 24 bits on the left and 24 bits on the right.&lt;/li&gt;
+  &lt;li&gt;FFFE is inserted between the 24 bits.&lt;/li&gt;
+  &lt;li&gt;The seventh bit is inverted (if it is 0 it becomes 1 and vice versa). The hexadecimal value (since it is the 7th bit or 2nd bit from the right) will go from 0 to 2.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Here is an example of how to configure an EUI-64 address on an interface.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# interface gig0/1
+R1(config-if)# ipv6 address ipv6-prefix/prefix-length **eui-64**
+R1(config-if)# end
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;p&gt;`
+There are some privacy concerns relating to using a device’s MAC address to generate its Layer 3 address. Because of this, many vendors have replaced the EUI-64 process with a random process to generate the Interface ID.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Neighbor Discovery Protocol</title>
+   <link href="http://bsrandall.github.io/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol/"/>
+   <updated>2017-04-17T12:54:45-04:00</updated>
+   <id>http://bsrandall.github.io/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol</id>
+   <content type="html">&lt;p&gt;Neighbor Discovery Protocol (NDP) is used by IPv6 hosts and routers for the following purposes:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Stateless Address Autoconfiguration (SLAAC)&lt;/li&gt;
+  &lt;li&gt;Duplicate Address Detection&lt;/li&gt;
+  &lt;li&gt;for Layer-2 Data-Link address resolution (similar to IPv4 ARP)&lt;/li&gt;
+  &lt;li&gt;to determine if neighbors are reachable (Neighbor Unreachability Detection)&lt;/li&gt;
+  &lt;li&gt;when a router fails, a host actively searches for functioning alternates.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;To set up a Cisco routing device as an SLA responder, you would use the following:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# ip sla responder
+&lt;p&gt;Neighbor Discovery uses 5 ICMPv6 messages:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Router Solicitation message&lt;/li&gt;
+  &lt;li&gt;Router Advertisement message&lt;/li&gt;
+  &lt;li&gt;Neighbor Solicitation message&lt;/li&gt;
+  &lt;li&gt;Neighbor Advertisement message&lt;/li&gt;
+  &lt;li&gt;Redirect message&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Router Solicitation messages are used by hosts when it needs prefix, prefix length, default gateway, and other information for Stateless Address Autoconfiguration (SLAAC). Router Advertisement messages are the messages used by Routers to convey that information to hosts.&lt;/p&gt;
+
+&lt;p&gt;Neighbor Solicitation and Neighbor Advertisement messages are two more protocols that use ICMPv6 Neighbor Discovery. These messages are used by a device to request Layer 2 link layer address information from another device on the same network or to provide this information to the requesting device. Neighbor Solicitation and Neighbor Advertisement messages are part of three important processes:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Address resolution&lt;/li&gt;
+  &lt;li&gt;Duplicate Address Detection (DAD)&lt;/li&gt;
+  &lt;li&gt;Neighbor Unreachability Detection (DUD)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;An IPv6 host will maintain two tables for each interface:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Neighbor cache&lt;/li&gt;
+  &lt;li&gt;Destination Cache&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Neighbor cache is equivalent to an ARP table in IPv4. The neighbor cache contains mappings of hosts on the same network, while the destination cache contains layer-2 to layer-3 resolutions for devices on other links or networks.  To see the Neighbor table, issue &lt;code class=&quot;highlighter-rouge&quot;&gt;show ipv6 neighbors&lt;/code&gt; command.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>IPv6 Address types</title>
+   <link href="http://bsrandall.github.io/ipv6%20general/2017/04/16/IPv6-Address-Types/"/>
+   <updated>2017-04-16T14:54:45-04:00</updated>
+   <id>http://bsrandall.github.io/ipv6%20general/2017/04/16/IPv6-Address-Types</id>
+   <content type="html">&lt;p&gt;There are 3 types of IPv6 addresses:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Unicast&lt;/li&gt;
+  &lt;li&gt;Anycast&lt;/li&gt;
+  &lt;li&gt;Multicast&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There is no “broadcast” type as in IPv4, but an “all nodes” multicast address does exist, which essentially serves the same purpose.&lt;/p&gt;
+&lt;h4 id=&quot;unicast&quot;&gt;Unicast&lt;/h4&gt;
+&lt;p&gt;A unicast address is an address that identifies a single device. A &lt;em&gt;global&lt;/em&gt; unicast address is one that is assigned to a single host and is globally unique. These are the equivalent of a routable IPv4 address.
+&lt;a href=&quot;http://www.cisco.com/c/dam/en/us/td/i/300001-400000/330001-340000/330001-331000/330523.tif/_jcr_content/renditions/330523.jpg&quot;&gt;link&lt;/a&gt;
+The host portion of the address is called the Interface ID. This is a more accurate description as a host can have more than one address (as can an interface, but often not).&lt;/p&gt;
+
+&lt;p&gt;IPv6 addresses, unlike IPv4 addresses, have the subnet bits built in as part of the network portion of the address. In IPv4, the subnet bits were borrowed from the host portion. One benefit from this is that the Interface ID can be a consistent length for all IPv6 addresses, simplifying parsing of the address. The Interface ID, with very few exceptions, is 64 bits long. Also, with very few exceptions, the Subnet ID field is 16 bits long, providing for 65,636 separate subnets. This leaves 48 bits for the Global Routing Prefix of the address.&lt;/p&gt;
+
+&lt;p&gt;The currently allocated IPv6 global unicast addresses are 2xxx::/4 through 3xxx::/4. The most common allocation is a /48 global routing prefix, a 16-bit subnet ID, and a 64 bit Interface ID.&lt;/p&gt;
+
+&lt;p&gt;IPv6 also has &lt;em&gt;link-local&lt;/em&gt; unicast address in addition to the global unicast address type. The difference is that a link-local address’ scope is limited to a single link, and its uniqueness in not guaranteed outside of that link. The first 10 bits are always FE80 (1111111010). Link-local addresses have great utility for functions like Neighbor Discovery Protocol and Address Autoconfiguration. They are similar to the 169.254.0.0/16 in IPv4. Link local addresses are never routable. Below is an example configuration in which you will see a subnet is not even declared.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# interface GigabitEthernet0/1
+R1(config-if)# ipv6 address FE80::1 link-local
+R1config-if)# exit
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;p&gt;`Link-local addresses are significant only within a single link. Packets with link-local sources or destinations are mostly used by the router’s control plane protocols, such as IPv6 routing protocols.&lt;/p&gt;
 
-&lt;p&gt;After an IP SLA Operation has been configured, you must schedule the operation to run:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# ip sla schedule 1 start-time now life forever
+&lt;p&gt;There is also &lt;em&gt;unique-local&lt;/em&gt; IPv6 addresses. These are equivalent to IPv4 RFC1918 addresses. They are likely unique, but not routable via global BGP. Thee always start with FC00::/7.&lt;/p&gt;
+
+&lt;h4 id=&quot;anycast&quot;&gt;Anycast&lt;/h4&gt;
+&lt;p&gt;An any cast address really represents more of a service than an address. An any cast address can reside on multiple hosts. Routers do not know they reside on different hosts but assume that they have multiple routes to the same host, so a single router simply choses the route to which it has the lowest cost route. Anycast also offers reliable backup, for if a single device goes down, routers will just route to the next lowest-cost available server. There are some reserved Anycast addresses, but for most services, an anycast address is just a global unicast address providing the any cast service.&lt;/p&gt;
+
+&lt;h4 id=&quot;multicast&quot;&gt;Multicast&lt;/h4&gt;
+&lt;p&gt;A multicast address identifies a set of devices - a &lt;em&gt;multicast group&lt;/em&gt;. The first 8 bits of a multicast address are always 1s (FF00). The next 4 bits are the Flags. The following 4 bits are the Scope. Finally, the last 112 bits represent the Group ID.&lt;/p&gt;
+
+&lt;h4 id=&quot;address-type-identification&quot;&gt;Address Type Identification&lt;/h4&gt;
+&lt;p&gt;| &lt;strong&gt;Address Type&lt;/strong&gt;      | &lt;strong&gt;Binary Prefic&lt;/strong&gt; | &lt;strong&gt;IPv6 notation&lt;/strong&gt; |
+| Unspecified  | 00…0 (128 bits) | ::/128 |
+| Loopback | 00…1 (128 bits) | ::1/128 |
+| Multicast | 11111111 | FF00::/8 |
+| Link-local Unicast | 1111111010 | FE80::/10 |
+| Unique-local Unicast | 11111100 | FC000::/10 |&lt;/p&gt;
+
+&lt;p&gt;Global unicast addresses are everything else.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>IPv6 Addressing</title>
+   <link href="http://bsrandall.github.io/ipv6%20general/2017/04/16/IPv6-General/"/>
+   <updated>2017-04-16T13:54:45-04:00</updated>
+   <id>http://bsrandall.github.io/ipv6%20general/2017/04/16/IPv6-General</id>
+   <content type="html">&lt;p&gt;IPv6 is a 128-bit address compared to IPv4 32-bit address. It is represented as 8 16-bit fields separated by colons. Since these 16-bit fields are written in hex, it is 8 four-digit hex values. A couple of rules exist to shorten the address:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;leading&lt;/em&gt; 0’s of any 16-bit field can be eliminated :00FF can become :FF&lt;/li&gt;
+  &lt;li&gt;any single contiguous string of one or more 16-bit segments consisting of all 0’s can be shortened with a double colon - FE80:0000:0000:0000:0000:0000:0000:0001 becomes FE80::1
+    &lt;ul&gt;
+      &lt;li&gt;however only one double colon is allowed to exist in any address.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Within an IPv6 address, each hexadecimal number represents 4 bits. For example F represents 1111 and 8 represents 1000. IPv6 address format makes it very clear that an address is not something numerical, it is a bit string versus a numerical number. IPv4 often fools people into thinking the address is something that can be quantified when it cannot.&lt;/p&gt;
+
+&lt;p&gt;IPv6 prefixes are always identified with a bitcount. 3ffe:1944:100:a::bc:2500:d0b/64 for example. When you are writing just the prefix, you set the host bits to all 0’s just as you would with an IPv4 address - 3ffe:1944:100:a::/64 would be the prefix of the address above.&lt;/p&gt;
+
+&lt;p&gt;On Cisco routers, IPv6 routing has to be specifically enabled using the global configuration command &lt;strong&gt;ipv6 unicast routing&lt;/strong&gt;. If a router is configured with IPv6 addresses, but IPv6 is not enabled using the &lt;strong&gt;ipv6 unicast routing&lt;/strong&gt; command, then the router is essentially acting as an IPv6 host.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Bidirectional Forwarding Detection</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/10/BFD/"/>
+   <updated>2017-04-10T14:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/10/BFD</id>
+   <content type="html">&lt;p&gt;Bidirectional Forwarding Detection (BFD) is a protocol that is able to detect link failures within milliseconds or even microseconds between two adjacent routers. Most of the routing protocols have some mechanism to detect down links. OSPF has hello packets and the dead interval, EIGRP uses hello packets and a holddown timer, etc. Unfortunately since these mechanisms depend on the control plane, they are not very fast at determining a failure has occurred. But networks that support real-time traffic such as VoIP require fast convergence times. The closest comparison is reducing timer mechanisms of the routing protocols, but BFD is still faster in every situation.&lt;/p&gt;
+
+&lt;p&gt;BFD was designed to be fast. Its packets can be processed by some interface modules or line cards so there isn’t much overhead. BFD runs independent of routing protocols, but once it is up you can configure the routing protocols to use BFD for link failure detection instead of their own mechanisms. BFD operates in the forwarding place as compared to the control plane mechanisms of routing protocols.&lt;/p&gt;
+
+&lt;p&gt;BFD has two operating modes, asynchronous and demand modes. The asynchronous mode is similar to the hello and holddown timers where BFD will keep sending hello packets (called BFD control packets) and when you don’t receive some of them, the session is torn down. Right now, no vendors support demand mode which relies on polling. Asynchronous mode requires that BFD be enabled and operational on both sides of the link.&lt;/p&gt;
+
+&lt;p&gt;In the Cisco implementation, there is one BFD process that runs, regardless of the number of Layer 3 routing protocols that are dependent upon it. Cisco BED also requires CEF to be enabled.&lt;/p&gt;
+
+&lt;p&gt;Both modes support &lt;strong&gt;echo mode&lt;/strong&gt;. When a device sends BFD echo packets along the forwarding path, the BFD session at the other end does not participate in the actual forwarding of the echo packets. This reduces the number of control packets that have to be sent out and also may slightly increase the link failure detection time as no processing has to occur at the remote end. BFD echo mode is enabled by default.&lt;/p&gt;
+
+&lt;p&gt;You first enable BDF on an interface as below.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(conf)# interface GigabitEthernet0/1
+R1(conf-if)# bfs interval *milliseconds* `min_rx` *milliseconds* multiplier *interval-multiplier*
+R1(conf-if)# end
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;p&gt;`Really BFD by itself is not useful. You must enable another client or protocol to use BFD for link failure notification for BFD to be of any use. Optional protocols include OSPF, EIGRP, BGP, IS-IS, and HSRP.&lt;/p&gt;
 
-&lt;p&gt;To then see the results of the IP SLA configuration, use the following:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1# show ip sla statistics
+&lt;h4 id=&quot;bgp&quot;&gt;BGP&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# router bgp 2828
+R1(config-router)# neighbor 27.143.12.88 **fall-over bfd**
+R1(config-router)# end
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#### EIGRP
+R1(config)# router eigrp 100
+R1(config)# log-adjacency-changes
+R1(config-router)# bfd all-interfaces **or**
+R1(config-router)# bfd interface GigabitEthernet0/1
+R1(config-router)# end
+&lt;/code&gt;``
+`#### OSPF
+There are two methods for enabling BFD support for OSPF:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;You can enable BFD for all interfaces for which OSPF is routing by using the &lt;code class=&quot;highlighter-rouge&quot;&gt;bfd all-interfaces&lt;/code&gt; command in router configuration mode. You can then disable BFD support on individual interfaces using the &lt;code class=&quot;highlighter-rouge&quot;&gt;ip ospf bfd disable&lt;/code&gt; command.&lt;/li&gt;
+  &lt;li&gt;You can enable BFD on a per interface basis with &lt;code class=&quot;highlighter-rouge&quot;&gt;ip ospf bfd&lt;/code&gt; command in interface configuration mode.
+    &lt;h4 id=&quot;hsrp&quot;&gt;HSRP&lt;/h4&gt;
+    &lt;p&gt;You enable bfd to register with HSRP by issuing the &lt;code class=&quot;highlighter-rouge&quot;&gt;standby bfd&lt;/code&gt; interface command or by issuing the &lt;code class=&quot;highlighter-rouge&quot;&gt;standby bfd all-interfaces&lt;/code&gt; command in global configuration mode.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>VRF Lite</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/10/VRF-Lite/"/>
+   <updated>2017-04-10T13:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/10/VRF-Lite</id>
+   <content type="html">&lt;p&gt;By default, a Cisco router will run using one global routing and forwarding table. VRF Lite gives us the ability to virtualize the physical router into logical routers with their own independent IP routing tables. You can designate interfaces or sub interfaces to be associated with a particular VRF.&lt;/p&gt;
 
-&lt;p&gt;So starting from the top, a real quick example of an IP SLA configuration to ping an IP address every 30 seconds for 3 hours would look like this:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# ip sla 1
+&lt;p&gt;Here is a simple VRF configuration.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# ip vrf red
+R1(config-vrf)# exit
+R1(config)# ip vrf blue
+R1(config-vrf)# exit
+R1(config)# interface FastEthernet0/0
+R1(config-if)# ip vrf forwarding Blue
+R1(config-if)# exit
+R1(config)# interface FastEthernet0/1
+R1(config-if)# ip vrf forwarding Red
+R1(config-if)# exit
+R1(config)# router ospf 1 vrf Blue
+R1(config-router)# network 192.168.0.0 0.0.0.255 area 0
+R1(config-router)# exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+To use ping, you will have to remember to specify the VRF or else the router will use the global routing table.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`ping vrf Blue 1.1.1.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>On Demand Routing</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/10/On-Demand-Routing/"/>
+   <updated>2017-04-10T12:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/10/On-Demand-Routing</id>
+   <content type="html">&lt;p&gt;ODR allows you to easily install IP stub networks where the hubs dynamically maintain routes to the stub networks. With ODR, this installation is accomplished without requiring the configuration of an IP routing protocol on the stubs.&lt;/p&gt;
+
+&lt;p&gt;A stub router supporting ODR advertises IP prefixes corresponding to the IP networks configured on all directly connected interfaces. If the network has multiple logical IP networks configured, only the primary IP network is advertised through ODR. ODR is able to pass VLSM information since it sends prefixes. Once ODR is enabled on a hub router, the hub router begins installing sub network routes in the IP forwarding table. The hub router can also be configured to distribute these routes into any configured dynamic IP routing protocols.&lt;/p&gt;
+
+&lt;p&gt;ODR uses Cisco Discovery Protocol (CDP) to carry minimal routing information between the hub and stub routers. The hub router provides default route information to the stubs routers, thereby eliminating the need to configure a default route on each stub router.&lt;/p&gt;
+
+&lt;p&gt;To disallow a particular interface from sending its prefix, disable CDP on that interface.&lt;/p&gt;
+
+&lt;p&gt;To enable ODR, simply issue the following.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(conf)# router odr
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Tunnels and Recursive Routing Errors</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/10/Tunnels-Recursive-Routing-Errors/"/>
+   <updated>2017-04-10T11:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/10/Tunnels-Recursive-Routing-Errors</id>
+   <content type="html">&lt;p&gt;A recursive routing error occurs when a lookup for prefix X points to prefix Y, and a lookup for prefix Y points to prefix X. This happens with tunnels when the router has learned the destination IP address for the tunnel interface through the tunnel itself. What usually triggers it is enabling the IGP on the tunnel interface. Let’s say the tunnel destination is the loopback of the far end device, and the tunnel IP address is 192.168.13.1. Let there be a router between the two tunnel devices. Normally, the routing table will have a route to reach the loopback via the router in the middle. But once the IGP starts advertising the Tunnel routes, the route for the loopback will be the Tunnel IP address. The route for the Tunnel IP address will be the loopback. This is where our recursion exists.&lt;/p&gt;
+
+&lt;p&gt;The easiest solution is to not advertise the tunnel destination interface in the IGP. Either don’t advertise it or use route filtering.&lt;/p&gt;
+
+&lt;p&gt;The other options to solve are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Ensure the administrative distance of the tunnel destination IP address through the tunnel is higher than what you have in the routing table now&lt;/li&gt;
+  &lt;li&gt;Ensure the metric to the tunnel destination IP address through the tunnel is worse than what you have in the routing table now.&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>IP in IP Tunnels</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/10/IP-in-IP-Tunneling/"/>
+   <updated>2017-04-10T10:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/10/IP-in-IP-Tunneling</id>
+   <content type="html">&lt;p&gt;With GRE Tunnels, IPv4 (or other protocols) are encapsulated in GRE packets. With IP in IP tunnels, IPv6 or IPv4 packets are encapsulated inside IPv4 or IPv6 packets. In IOS, three combinations are possible:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;IPv4 in IPv4 (ipip)&lt;/li&gt;
+  &lt;li&gt;IPv6 in IPv6 (ipv6)&lt;/li&gt;
+  &lt;li&gt;IPv6 in IPv4 (ipv6ip)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So there is no combination for IPv4 in IPv6. GRE adds the extra capability of encapsulating other protocols other than IP. GRE also allows you to enforce packet sequencing, add an additional checksum, and to specify a tunnel key. Of course, all of these features come at the cost of additional overhead.&lt;/p&gt;
+
+&lt;p&gt;IP in IP tunnels are created the same way as GRE tunnels, you just select a different tunnel mode.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Backup Interface and Keepalives</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/10/Backup-Interface-Keepalive/"/>
+   <updated>2017-04-10T09:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/10/Backup-Interface-Keepalive</id>
+   <content type="html">&lt;p&gt;By default, the state of a point-to-point GRE interface is determined by routing availability for the tunnel destination, thus as long as the router has a route for the tunnel destination, the tunnel interface state will be UP. However, this does not account for possible transit issues. To fix the problem, GRE keepalives can be enabled on the point-to-point GRE tunnels. The format of the command is &lt;code class=&quot;highlighter-rouge&quot;&gt;keepalive &amp;lt;interval&amp;gt; &amp;lt;number_of_retries&amp;gt;&lt;/code&gt;. The interval defines the frequency in seconds for sending keepalives and the number of retries defines the maximum number of keepalives being sent after the first failed keepalive, before the router changes the tunnel state to DOWN.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>GRE Tunnels</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/09/GRE-Tunnels/"/>
+   <updated>2017-04-09T13:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/09/GRE-Tunnels</id>
+   <content type="html">&lt;p&gt;A GRE Tunnel is an encapsulated tunnel between two devices that makes the connection act like a point-to-point interface. We are essentially putting packets inside packets; in other words, we are encapsulating the IP packets into GRE packets.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://networklessons.com/wp-content/uploads/2013/04/three-cisco-routers-with-tunnel.png&quot;&gt;link&lt;/a&gt;
+We will use the above figure to create a sample tunnel between the HQ and Branch routers.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`HQ(config)#interface tunnel 1     
+HQ(config-if)#tunnel source fastEthernet 0/0
+HQ(config-if)#tunnel destination 192.168.23.3
+HQ(config-if)#ip address 192.168.13.1 255.255.255.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&quot;language-`&quot;&gt;`Branch(config)#interface tunnel 1
+Branch(config-if)#tunnel source fastEthernet 0/0
+Branch(config-if)#tunnel destination 192.168.12.1
+Branch(config-if)#ip address 192.168.13.3 255.255.255.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;`
+The default tunneling mode is GRE so it is not required to set it explicitly in this case.&lt;/p&gt;
+
+&lt;p&gt;Notice we are setting the destination address to be the outside interface that is reachable over the un-encapsulated network. You can also use loopback addresses.&lt;/p&gt;
+
+&lt;p&gt;Some options that GRE tunneling supports are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;add an additional checksum&lt;/li&gt;
+  &lt;li&gt;specify a tunnel key&lt;/li&gt;
+  &lt;li&gt;enforce packet sequencing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Those options are seen under the &lt;strong&gt;tunnel&lt;/strong&gt; subcommand in interface configuration mode.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`Router(config-if)# tunnel ?
+  bandwidth           Set tunnel bandwidth informational parameter
+  **checksum            enable end to end checksumming of packets**
+  destination         destination of tunnel
+  flow                flow options
+  **key                 security or selector key**
+  mode                tunnel encapsulation method
+  mpls                MPLS tunnel commands
+  path-mtu-discovery  Enable Path MTU Discovery on tunnel
+  protection          Enable tunnel protection
+  rbscp               Set tunnel RBSCP parameters
+  route-via           Select subset of routes for tunnel transport
+  **sequence-datagrams  drop datagrams arriving out of order**
+  source              source of tunnel packets
+  tos                 set type of service byte
+  ttl                 set time to live
+  udlr                associate tunnel with unidirectional interface
+  vrf                 set tunnel vrf membership
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Policy Routing Order of Operation</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/"/>
+   <updated>2017-04-09T12:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation</id>
+   <content type="html">&lt;p&gt;A route-map can have multiple set operations on a single match clause. The list below shows the order of operations, regardless of the sequence number we use or the order we input them.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;set ip next-hop verify-availability track&lt;/code&gt; - first when used with object tracking&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;set ip next-hop&lt;/code&gt; - alone or with the CDP (but without default) version of &lt;code class=&quot;highlighter-rouge&quot;&gt;verify-availability&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;set ip next-hop recursive&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;set interface&lt;/li&gt;
+  &lt;li&gt;Route table&lt;/li&gt;
+  &lt;li&gt;set ip default next-hop&lt;/li&gt;
+  &lt;li&gt;set default interface&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Policy Routing using next-hop, default, and recursive</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/"/>
+   <updated>2017-04-09T11:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop</id>
+   <content type="html">&lt;p&gt;When using policy routing and the &lt;code class=&quot;highlighter-rouge&quot;&gt;ip next-hop&lt;/code&gt; set option in a route map, you can optionally use the &lt;em&gt;default&lt;/em&gt; keyword. The difference is simple.&lt;/p&gt;
+
+&lt;p&gt;When you do not use the default keyword, routing utilizes PBR first and consults the routing table if there is no match or non reachability. If you use the default keyword, then routing uses the routing table first and if no route can be found then attempts to use the Policy Based Routing process.&lt;/p&gt;
+
+&lt;p&gt;Both the &lt;code class=&quot;highlighter-rouge&quot;&gt;set ip next-hop&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;set ip default next-hop&lt;/code&gt; commands require that the next-hop be found on a directly-connected subnet, otherwise PBR will fail and normal forwarding will be used. However, we can use &lt;code class=&quot;highlighter-rouge&quot;&gt;set ip next-hop recursive&lt;/code&gt; to use an address off a subnet that &lt;em&gt;is not&lt;/em&gt; directly connected.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>PBR - verify-availability</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/09/Policy-Routing-Verify-Availability/"/>
+   <updated>2017-04-09T10:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/09/Policy-Routing-Verify-Availability</id>
+   <content type="html">&lt;p&gt;Within the route-map statement, there is an option when using &lt;code class=&quot;highlighter-rouge&quot;&gt;ip next-hop&lt;/code&gt; of &lt;code class=&quot;highlighter-rouge&quot;&gt;verify-availability&lt;/code&gt;. This article will describe what it does and the two flavors of utilization.&lt;/p&gt;
+
+&lt;p&gt;If used solely by itself, &lt;code class=&quot;highlighter-rouge&quot;&gt;verify-availabilty&lt;/code&gt; uses CDP to establish that the next-hop IP address is reachable. If the IP address used is in the CDP neighbor table, then the next-hop is deemed accessible, otherwise it is not.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;verify-availability&lt;/code&gt; can be extended to also use a tracking object. Here is an example of that configuration.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R2(config)#route-map PBR permit 10
+R2(config-route-map)#match ip address HTTP-SERVER
+R2(config-route-map)#set ip next-hop verify-availability 192.168.24.4 1 track 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;
+If using either of these methods to implement &lt;/code&gt;verify-reachability`, if the next-hop IP address is not reachable then routing is not performed based on the policy but is routed according to the the routing table.&lt;/p&gt;
+
+&lt;p&gt;We can use a combination of commands to route a different way if our &lt;code class=&quot;highlighter-rouge&quot;&gt;verify-reachability&lt;/code&gt; fails.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# route-map RM1
+R1(config-route-map)# match ip address AL1
+R1(config-route-map)# set ip next-hop 155.1.0.5
+R1(config-route-map)# set ip next-hop verify reachability
+R1(config-route-map)# set ip default next-hop 155.1.13.3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`In this example, if we match to AL1 AND 155.1.0.5 is reachable (CDP check), then we route to 155.1.0.5. However if we match AL1 and 155.1.0.5 is not in the CDP neighbor table, then we route to 155.1.13.3.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Local Policy Routing</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/08/Local-Policy-Routing/"/>
+   <updated>2017-04-08T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/08/Local-Policy-Routing</id>
+   <content type="html">&lt;p&gt;In a previous post, we saw how policy based routing can be used to change the next hop IP address for traffic matching certain criteria that is passing through the router. But what about traffic that originates on the router?&lt;/p&gt;
+
+&lt;p&gt;It is very similar but we use a different source on our access-lists (obviously) and we use a different command (global instead of sub-interface) to activate it.&lt;/p&gt;
+
+&lt;p&gt;Let’s assume our router has interfaces on the 192.168.12.0/24 and 192.168.13.0/24 subnets. Let’s set up Local Policy Routing to ensure that traffic originated on these interfaces and destined for 4.4.4.4 is sent to a next-hop IP address of 192.168.13.3. First, we set up our access lists.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# ip access-list extended ICMP-R1
+R1(config-ext-nacl)# permit imp host 192.168.12.1 host 4.4.4.4
+R1(config-ext-nacl)# permit imp host 192.168.13.1 host 4.4.4.4
+R1(config)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`Now the next step would be to use a route map to set the next hop IP when we have a match.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# route-map PBR-R1 permit 10
+R1(config-route-map)# match ip address ICMP-R1
+R1(config-route-map)# set ip next-hop 192.168.13.3
+R1(config)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`Now, we must make sure we activate it. Unlike with policy based routing, for local policy routing we enable it globally.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(conf)# ip local policy route-map PBR-R1
+R1(conf)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+That is all!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Policy Based Routing</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/07/Policy-Routing/"/>
+   <updated>2017-04-07T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/07/Policy-Routing</id>
+   <content type="html">&lt;p&gt;Policy-based routing can be used to change the next-hop IP address for traffic matching certain criteria. This can be useful to overrule the routing table for certain types of traffic. For example you may want to force all traffic from a certain host to use an alternate link. The key to making this work is an access-list and a route map.&lt;/p&gt;
+
+&lt;p&gt;For example, let’s assume that we want all ICMP traffic from host 192.168.1.100 to traverse a link whose next hop is 192.168.13.3 if the destination IP address is 4.4.4.4. We can use an extended access list to classify the traffic.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# ip access-list extended ICMP-H1
+R1(config-ext-nacl)# permit imp host 192.168.1.100 host 4.4.4.4
+R1(config)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`Now the next step would be to use a route map to set the next hop IP when we have a match.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# route-map PBR-H1 permit 10
+R1(config-route-map)# match ip address ICMP-H1
+R1(config-route-map)# set ip next-hop 192.168.13.3
+R1(config)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`Now, we must make sure we activate it on the ingress interface.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# interface GigabitEthernet0/1
+R1(config-if)# ip policy route-map PBR-H1
+R1(config)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;
+&lt;/code&gt;debug ip policy` will turn debugging on for policy routing.&lt;/p&gt;
+
+&lt;p&gt;This configuration is for traffic passing &lt;em&gt;through&lt;/em&gt; the router. To apply policy based routing for traffic that is 8originated8 by the router, see the next post “Local Policy Routing”.&lt;/p&gt;
+
+&lt;p&gt;One thing to remember is that there can only be one ip policy on the interface, so if you need to perform multiple actions, you may have to use a route map with multiple sections like this.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# route-map RM-R4-R6 permit 20
+R1(config-route-map)# match ip address FROM-R4
+R1(config-route-map)# set ip next-hop 155.146.13.1
+R1(config-route-map)# route-map RM-R4-R6 permit 20
+R1(config-route-map)# match ip address FROM-R6
+R1(config-route-map)# set ip next-hop 155.1.0.5
+R1(config-route-map)# exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+Some important show commands are listed below:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1#sh ip policy
+Interface      Route map
+Gi0/1.146      RM-R4-R6
+R1\#
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&quot;language-`&quot;&gt;`R1#show route-map
+route-map RM-R4-R6, permit, sequence 10
+  Match clauses:
+ip address (access-lists): FROM_R4
+  Set clauses:
+ip next-hop 155.1.13.3
+  Policy routing matches: 18 packets, 1116 bytes
+route-map RM-R4-R6, permit, sequence 20
+  Match clauses:
+ip address (access-lists): FROM_R6
+  Set clauses:
+ip next-hop 155.1.0.5
+  Policy routing matches: 9 packets, 564 bytes
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;`&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Enhanced Object Tracking</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/06/Enhanced-Object-Tracking/"/>
+   <updated>2017-04-06T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/06/Enhanced-Object-Tracking</id>
+   <content type="html">&lt;p&gt;Enhanced Object Tracking is a sort of glue that binds the tracking of objects with upper layer protocols such as HSRP. Before Enhanced Object Tracking, HSRP could only look at interface line-protocol state for simple up / down status. Now you can create an advanced object (such as  an IP SLA object) and keep HSRP informed of the state of that object by using Enhanced Object Tracking.&lt;/p&gt;
+
+&lt;p&gt;Enhanced Object Tracking provides complete separation between the objects to be tracked and the action to be taken by a client when a tracked object changes. The tracking process periodically polls the tracked object and notes any change of value. The changes can be communicated immediately or after a delay to the interested client process.&lt;/p&gt;
+
+&lt;p&gt;Enhanced Object Tracking is used with IP SLA to track the output from IP SLA objects and use the provided information to trigger an action. Every IP SLA operation maintains a return-code value. Two aspects of an IP SLA operation can be tracked, state and reachability. The difference between these is the acceptance of the OverThreshold return code. The table below shows the state and reachability aspects of IP SLA operations that can be tracked.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;Tracking&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;Return Code&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;Track State&lt;/strong&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;State&lt;/td&gt;
+      &lt;td&gt;OK&lt;/td&gt;
+      &lt;td&gt;Up&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Reachability&lt;/td&gt;
+      &lt;td&gt;OK or OverThreshold&lt;/td&gt;
+      &lt;td&gt;Up&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;For both State and Reachability, all other return codes return down.&lt;/p&gt;
+
+&lt;h4 id=&quot;examples&quot;&gt;Examples&lt;/h4&gt;
+
+&lt;p&gt;The first example is IP-Route Reachability. This tracks the reachability of a particular IP Route. A tracked object is considered up when a routing table entry exists for the route and the route is accessible.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# track timer ip route 20
+R1(config)# track 4 ip route 10.16.0.0/16 reachability
+R1(config-track)# delay up 30
+R1(config)# end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;In the above example, the &lt;/code&gt;track timer` is an optional command that specifies an interval in which the tracking object polls the tracked object. The default for IP-Route Reachability is 15 seconds.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;delay&lt;/code&gt; option specifies a period of time to delay communicating state changes of a tracked object.&lt;/p&gt;
+
+&lt;p&gt;The next example is using Tracking to poll an IP SLA operation. First we set up the IP SLA operation.&lt;/p&gt;
+
+&lt;p&gt;R1(config)# ip sla 1
 R1(config-ip-sla)# icmp-echo 150.1.3.3
 R1(config-ip-sla-echo)# frequency 30
 R1(config-ip-sla-echo)# exit
 R1(config)# ip spa schedule 1 start-time now life 10800
-R1(config)# exit
+R1(config)# exit&lt;/p&gt;
+
+&lt;p&gt;Next, we set up the tracking.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R1(config)# track 1 ip sla 1 state
+R1(config)# delay up 60 down 30
+R1(config)# end
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+&lt;p&gt;`
+Now the tracking object can be used by other clients to monitor the IP SLA object we set up earlier. One interesting note here. We could have used state or reachability for our tracking object. The only difference with ICMP echo operation is that reachability also ensures that the latency is less than 5000ms&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Backup Interface</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/05/Backup-Interface/"/>
+   <updated>2017-04-05T12:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/05/Backup-Interface</id>
+   <content type="html">&lt;p&gt;Backup Interface is a Cisco feature that can be used in place of floating static routes on point-to-point interfaces.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;interface Serial0/0/0
+  backup interface Serial0/0/1
+  backup delay 10 30
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;In the example above interface Serial0/0/1 is the backup for interface Serial0/0/0. If Serial0/0/0 is down for 10 seconds, then Serial0/0/1 will take over as the primary interface. After Serial 0/0/0 has been up for 30 seconds, it will resume its role as the primary interface.&lt;/p&gt;
 </content>
  </entry>
  
  <entry>
    <title>Floating Static Routes</title>
    <link href="http://bsrandall.github.io/general%20routing/2017/04/05/Floating-Static-Routes/"/>
-   <updated>2017-04-05T00:00:00-04:00</updated>
+   <updated>2017-04-05T11:46:45-04:00</updated>
    <id>http://bsrandall.github.io/general%20routing/2017/04/05/Floating-Static-Routes</id>
    <content type="html">&lt;p&gt;A Floating Static route is a static route whose administrative distance has been increased in order to make the route function as a backup route. The global command would look like this:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ip route 192.168.23.0 255.255.255.0 192.168.13.3 121
@@ -86,7 +689,7 @@ R1(config)# exit
  <entry>
    <title>CEF</title>
    <link href="http://bsrandall.github.io/general%20routing/2017/04/05/CEF/"/>
-   <updated>2017-04-05T00:00:00-04:00</updated>
+   <updated>2017-04-05T11:40:45-04:00</updated>
    <id>http://bsrandall.github.io/general%20routing/2017/04/05/CEF</id>
    <content type="html">&lt;p&gt;Routing is the process by which the router finds the interface to send outgoing packets out of. Switching is the actual process of physically transferring this packets from the ingress interface to the degree interface,&lt;/p&gt;
 
@@ -101,22 +704,6 @@ R1(config)# exit
 &lt;p&gt;One thing to remember is that the switching process is responsible for load balancing. This is done on a flow basis, not on a per packet basis as that would be too inefficient and packets would almost always arrive out of order on the other end.&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;show ip interface&lt;/code&gt; will tell you if CEF has been enabled. A key indicator of a router that does not have CEF enabled is one that has high CPU usage. It is also important to remember that packets that are logged do not get CEF switched, so any logging requires a lot of available CPU.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Backup Interface</title>
-   <link href="http://bsrandall.github.io/general%20routing/2017/04/05/Backup-Interface/"/>
-   <updated>2017-04-05T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/general%20routing/2017/04/05/Backup-Interface</id>
-   <content type="html">&lt;p&gt;Backup Interface is a Cisco feature that can be used in place of floating static routes on point-to-point interfaces.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;interface Serial0/0/0
-  backup interface Serial0/0/1
-  backup delay 10 30
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;In the example above interface Serial0/0/1 is the backup for interface Serial0/0/0. If Serial0/0/0 is down for 10 seconds, then Serial0/0/1 will take over as the primary interface. After Serial 0/0/0 has been up for 30 seconds, it will resume its role as the primary interface.&lt;/p&gt;
 </content>
  </entry>
  
@@ -151,9 +738,20 @@ R1(config)# exit
  </entry>
  
  <entry>
+   <title>Route Recursion</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/03/Route-Recursion/"/>
+   <updated>2017-04-03T11:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/03/Route-Recursion</id>
+   <content type="html">&lt;p&gt;Every time a router has to do a router lookup, a recursive lookup will be performed, unless the destination is directly connected. When a route lists an IP address as the next hop, unless that next hop is directly connected the router must find the path to that route. It may have to work through multiple recursions in order to eventually find the correct interface to route out of.&lt;/p&gt;
+
+&lt;p&gt;When a particular interface goes down, all routes depending on that interface are removed from the RIB. One important thing to remember here is that the route is only removed if the next hop IP address is not reachable - if there is a secondary path via another interface, then that route will remain valid. However, if you use the interface as the destination for the static route, then the route will fail.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Static Routing</title>
    <link href="http://bsrandall.github.io/general%20routing/2017/04/03/Static-Routing/"/>
-   <updated>2017-04-03T00:00:00-04:00</updated>
+   <updated>2017-04-03T10:40:45-04:00</updated>
    <id>http://bsrandall.github.io/general%20routing/2017/04/03/Static-Routing</id>
    <content type="html">&lt;p&gt;Static routes do have some advantages over dynamic routing:&lt;/p&gt;
 &lt;ul&gt;
@@ -187,42 +785,9 @@ R1(config)# exit
  </entry>
  
  <entry>
-   <title>Route Recursion</title>
-   <link href="http://bsrandall.github.io/general%20routing/2017/04/03/Route-Recursion/"/>
-   <updated>2017-04-03T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/general%20routing/2017/04/03/Route-Recursion</id>
-   <content type="html">&lt;p&gt;Every time a router has to do a router lookup, a recursive lookup will be performed, unless the destination is directly connected. When a route lists an IP address as the next hop, unless that next hop is directly connected the router must find the path to that route. It may have to work through multiple recursions in order to eventually find the correct interface to route out of.&lt;/p&gt;
-
-&lt;p&gt;When a particular interface goes down, all routes depending on that interface are removed from the RIB. One important thing to remember here is that the route is only removed if the next hop IP address is not reachable - if there is a secondary path via another interface, then that route will remain valid. However, if you use the interface as the destination for the static route, then the route will fail.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Longest Match Routing</title>
-   <link href="http://bsrandall.github.io/general%20routing/2017/04/02/Longest-Match-Routing/"/>
-   <updated>2017-04-02T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/general%20routing/2017/04/02/Longest-Match-Routing</id>
-   <content type="html">&lt;p&gt;Longest Match Routing is the idea that a packet will follow the most specific route entry that it matches. So if there was a host route (/32) that existed for the destination, the host route would have precedence over any shorter prefix such as a /24.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>IPv4 Addressing</title>
-   <link href="http://bsrandall.github.io/general%20routing/2017/04/02/IPv4-Addressing/"/>
-   <updated>2017-04-02T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/general%20routing/2017/04/02/IPv4-Addressing</id>
-   <content type="html">&lt;p&gt;IP is a logical addressing method as compared to MAC layer physical addresses. It operates at the Network Layer (Layer 3) of the OSI model.&lt;/p&gt;
-
-&lt;p&gt;An address mask is used to identify the network and host portions of the address.  It is 32-bits long, the same length as an IPv4 address. In general, an address mask is assigned to a network or an organization. The organization then subnets that address mask into per data-link subnet masks for assignment.&lt;/p&gt;
-
-&lt;p&gt;The number of available subnets under a major address mask and the number of hosts on each subnet are both calculated with the same formula 2^n-2.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
    <title>Administrative Distance</title>
    <link href="http://bsrandall.github.io/general%20routing/2017/04/02/Administrative-Distance/"/>
-   <updated>2017-04-02T00:00:00-04:00</updated>
+   <updated>2017-04-02T11:40:45-04:00</updated>
    <id>http://bsrandall.github.io/general%20routing/2017/04/02/Administrative-Distance</id>
    <content type="html">&lt;p&gt;Administrative Distance is used to determine which route should be installed into the IP routing table when there is a tie between different sources for the route (static vs EIGRP vs OSPF, etc). Administrative Distance is sometimes called the trustworthiness of the source. When a decision has to be made, the table containing Administrative Distance is consulted to choose the best route, with lower being better. Administrative Distance is only local and can be different for each router.&lt;/p&gt;
 
@@ -288,14 +853,22 @@ R1(config)# exit
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
-
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Longest Match Routing</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/02/Longest-Match-Routing/"/>
+   <updated>2017-04-02T10:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/02/Longest-Match-Routing</id>
+   <content type="html">&lt;p&gt;Longest Match Routing is the idea that a packet will follow the most specific route entry that it matches. So if there was a host route (/32) that existed for the destination, the host route would have precedence over any shorter prefix such as a /24.&lt;/p&gt;
 </content>
  </entry>
  
  <entry>
    <title>IPv4 ARP</title>
    <link href="http://bsrandall.github.io/general%20routing/2017/04/02/ARP/"/>
-   <updated>2017-04-02T00:00:00-04:00</updated>
+   <updated>2017-04-02T09:40:45-04:00</updated>
    <id>http://bsrandall.github.io/general%20routing/2017/04/02/ARP</id>
    <content type="html">&lt;p&gt;Address Resolution Protocol (ARP) is used to determine the data-link identifier (MAC address) of a host with a known IPv4 address. The ARP request packet contains the IPV4 address of the device in question (the target), as well as the IPv4 and MAC address of the device making the request (the sender). The ARP packet is then encapsulated in a frame with the sender’s MAC address as the source and a broadcast address for the destination. The target will send an ARP Reply to the source address, supplying its MAC address. The ARP reply will lest the target as the original sender.&lt;/p&gt;
 
@@ -313,9 +886,22 @@ R1(config)# exit
  </entry>
  
  <entry>
+   <title>IPv4 Addressing</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/04/02/IPv4-Addressing/"/>
+   <updated>2017-04-02T08:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/04/02/IPv4-Addressing</id>
+   <content type="html">&lt;p&gt;IP is a logical addressing method as compared to MAC layer physical addresses. It operates at the Network Layer (Layer 3) of the OSI model.&lt;/p&gt;
+
+&lt;p&gt;An address mask is used to identify the network and host portions of the address.  It is 32-bits long, the same length as an IPv4 address. In general, an address mask is assigned to a network or an organization. The organization then subnets that address mask into per data-link subnet masks for assignment.&lt;/p&gt;
+
+&lt;p&gt;The number of available subnets under a major address mask and the number of hosts on each subnet are both calculated with the same formula 2^n-2.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>PPPoE</title>
    <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPPoE/"/>
-   <updated>2017-04-01T00:00:00-04:00</updated>
+   <updated>2017-04-01T14:40:45-04:00</updated>
    <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPPoE</id>
    <content type="html">&lt;p&gt;PPPoE allows us to establish a PPP link over an Ethernet connection. ISPs were the main ones to use this as it gave them authentication capabilities over Ethernet, in a manner that was familiar to them from their dial-up days. There are two sides to the configuration, both a client and a server. We will start with the server side first.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Server(config)# bba-group pope global
@@ -359,22 +945,46 @@ Client(config-if)# exit
  </entry>
  
  <entry>
-   <title>PPP</title>
-   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP/"/>
-   <updated>2017-04-01T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP</id>
-   <content type="html">&lt;p&gt;PPP stands for point-to-point protocol - it is  a very popular method for establishing a serial connection over which to pass IP traffic. PPP is composed of Link Control Protocol (LCP) as well as a family of NCPs used to establish network-layer links for various protocols (such as IPv4) after LCP has established the basic link. The steps to enable PPP on a Cisco router are shown below.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# interface serial0/0
-R1(config-if)# encapsulation ppp
+   <title>PPP Multilink</title>
+   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/Multilink-PPP/"/>
+   <updated>2017-04-01T13:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/Multilink-PPP</id>
+   <content type="html">&lt;p&gt;Multilink PPP is a method used to aggregate multiple single PPP links and utilize them as one. It is not that dissimilar from EtherChannel used with Ethernet. PPP frames can be fragmented, sent down different links, and then reassembled in order on the far side of the link. Multilink PPP uses a 2 or 4 byte sequencing header in each packet, and the remote MLPPP recover is tasked with reconstructing the frames in the correct order. The configuration is pretty straightforward.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;interface Serial0/1
+  description Link to R1
+  no ip address
+  encapsulation ppp
+  ppp multilink
+  ppp multilink group 1
+  serial restart-delay 0
+end
+
+interface Serial1/1
+  description Link to R1
+  no ip address
+  encapsulation ppp
+  ppp multilink
+  ppp multilink group 1
+  serial restart-delay 0
+end
+
+interface Multilink 1
+  ip address 192.168.12.2 255.255.255.0
+  ppp multilink
+  ppp multilink group 1
+end
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+
+&lt;p&gt;Some optional parameters include &lt;code class=&quot;highlighter-rouge&quot;&gt;ppp multilink interleave&lt;/code&gt;. Interleaving allows large packets to be multilink encapsulated and fragmented into a small enough size to satisfy the delay requirements of real-time traffic. The interleaving feature also provides a special transmit queue for the smaller, delay-sensitive packets, enabling them to be sent earlier than other flows. &lt;code class=&quot;highlighter-rouge&quot;&gt;ppp multilink fragement delay 10&lt;/code&gt; is the command that determines the maximum delay - MLPPP will then chose a fragment size based on the configured delay.&lt;/p&gt;
 </content>
  </entry>
  
  <entry>
    <title>PPP Authentication</title>
    <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP-Authentication/"/>
-   <updated>2017-04-01T00:00:00-04:00</updated>
+   <updated>2017-04-01T12:40:45-04:00</updated>
    <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP-Authentication</id>
    <content type="html">&lt;p&gt;There are two forms of authentication available for PPP, PAP and CHAP. It is important to remember that these technologies are one way in nature, and therefore do not need to be configured bidirectionally. You really should think of this as a Client / Server model.&lt;/p&gt;
 
@@ -422,46 +1032,22 @@ R2(config-if)# end
  </entry>
  
  <entry>
-   <title>PPP Multilink</title>
-   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/Multilink-PPP/"/>
-   <updated>2017-04-01T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/Multilink-PPP</id>
-   <content type="html">&lt;p&gt;Multilink PPP is a method used to aggregate multiple single PPP links and utilize them as one. It is not that dissimilar from EtherChannel used with Ethernet. PPP frames can be fragmented, sent down different links, and then reassembled in order on the far side of the link. Multilink PPP uses a 2 or 4 byte sequencing header in each packet, and the remote MLPPP recover is tasked with reconstructing the frames in the correct order. The configuration is pretty straightforward.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;interface Serial0/1
-  description Link to R1
-  no ip address
-  encapsulation ppp
-  ppp multilink
-  ppp multilink group 1
-  serial restart-delay 0
-end
-
-interface Serial1/1
-  description Link to R1
-  no ip address
-  encapsulation ppp
-  ppp multilink
-  ppp multilink group 1
-  serial restart-delay 0
-end
-
-interface Multilink 1
-  ip address 192.168.12.2 255.255.255.0
-  ppp multilink
-  ppp multilink group 1
-end
+   <title>PPP</title>
+   <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP/"/>
+   <updated>2017-04-01T11:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/PPP</id>
+   <content type="html">&lt;p&gt;PPP stands for point-to-point protocol - it is  a very popular method for establishing a serial connection over which to pass IP traffic. PPP is composed of Link Control Protocol (LCP) as well as a family of NCPs used to establish network-layer links for various protocols (such as IPv4) after LCP has established the basic link. The steps to enable PPP on a Cisco router are shown below.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-
-&lt;p&gt;Some optional parameters include &lt;code class=&quot;highlighter-rouge&quot;&gt;ppp multilink interleave&lt;/code&gt;. Interleaving allows large packets to be multilink encapsulated and fragmented into a small enough size to satisfy the delay requirements of real-time traffic. The interleaving feature also provides a special transmit queue for the smaller, delay-sensitive packets, enabling them to be sent earlier than other flows. &lt;code class=&quot;highlighter-rouge&quot;&gt;ppp multilink fragement delay 10&lt;/code&gt; is the command that determines the maximum delay - MLPPP will then chose a fragment size based on the configured delay.&lt;/p&gt;
 </content>
  </entry>
  
  <entry>
    <title>HDLC</title>
    <link href="http://bsrandall.github.io/layer%202%20wan/2017/04/01/HDLC/"/>
-   <updated>2017-04-01T00:00:00-04:00</updated>
+   <updated>2017-04-01T10:40:45-04:00</updated>
    <id>http://bsrandall.github.io/layer%202%20wan/2017/04/01/HDLC</id>
    <content type="html">&lt;p&gt;HDLC is a Layer 2 protocol - the Cisco version is a slight tweak from the original ISO version, so Cisco HDLC will not operate with HDLC implementations from other vendors. It is used on serial interfaces to make direct connections between routers. It is actually the default point-to-point serial protocol for Cisco routers, but PPP is more commonly used.&lt;/p&gt;
 
@@ -665,9 +1251,24 @@ SW1(config-if)# private-vlan mapping 1000,2000
  </entry>
  
  <entry>
+   <title>Protected Port (PVLAN)</title>
+   <link href="http://bsrandall.github.io/layer%202/2017/03/29/Protected-Port/"/>
+   <updated>2017-03-29T11:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/layer%202/2017/03/29/Protected-Port</id>
+   <content type="html">&lt;p&gt;The protected port, also known as PVLAN edge, is a security feature used to prevent traffic from being directly exchanged at Layer 2 between two or more hosts that are within the same VLAN. Protected ports only have local switch significance. A protected port does not forward any traffic (unicast, multicast, or broadcast) to any other protected port in the same switch. If you need to pass traffic between protected ports, the only possible way is through a L3 device.&lt;/p&gt;
+
+&lt;p&gt;By default, all switch ports are unprotected. The configuration is as simple as below:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface gig0/1
+SW1(config-if)# switchport protected
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Spanning Tree Loop Guard</title>
    <link href="http://bsrandall.github.io/spanning%20tree/2017/03/29/STP-Loop-Guard/"/>
-   <updated>2017-03-29T00:00:00-04:00</updated>
+   <updated>2017-03-29T10:40:45-04:00</updated>
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/29/STP-Loop-Guard</id>
    <content type="html">&lt;p&gt;Loop Guard is a Spanning Tree feature that was added to prevent loops from forming due to hardware issues or STP software problems. A Spanning Tree loop occurs when a port that was previously in the blocking state is erroneously  transitioned to the Forwarding state.&lt;/p&gt;
 
@@ -681,24 +1282,9 @@ SW1(config-if)# private-vlan mapping 1000,2000
  </entry>
  
  <entry>
-   <title>Protected Port (PVLAN)</title>
-   <link href="http://bsrandall.github.io/layer%202/2017/03/29/Protected-Port/"/>
-   <updated>2017-03-29T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/layer%202/2017/03/29/Protected-Port</id>
-   <content type="html">&lt;p&gt;The protected port, also known as PVLAN edge, is a security feature used to prevent traffic from being directly exchanged at Layer 2 between two or more hosts that are within the same VLAN. Protected ports only have local switch significance. A protected port does not forward any traffic (unicast, multicast, or broadcast) to any other protected port in the same switch. If you need to pass traffic between protected ports, the only possible way is through a L3 device.&lt;/p&gt;
-
-&lt;p&gt;By default, all switch ports are unprotected. The configuration is as simple as below:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1(config)# interface gig0/1
-SW1(config-if)# switchport protected
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-</content>
- </entry>
- 
- <entry>
    <title>Spanning Tree Root Guard</title>
    <link href="http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-Root-Guard/"/>
-   <updated>2017-03-28T00:00:00-04:00</updated>
+   <updated>2017-03-28T12:40:45-04:00</updated>
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-Root-Guard</id>
    <content type="html">&lt;p&gt;Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.&lt;/p&gt;
 
@@ -720,7 +1306,7 @@ SW!(config-if)# spanning-tree rootguard
  <entry>
    <title>Spanning Tree BPDU Guard</title>
    <link href="http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Guard/"/>
-   <updated>2017-03-28T00:00:00-04:00</updated>
+   <updated>2017-03-28T11:40:45-04:00</updated>
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Guard</id>
    <content type="html">&lt;p&gt;BPDU Guard is a STP PortFast safety enhancement. It works by disabling a port any time the interface hears a BPDU. PortFast by itself will not do that, so if you have PortFast enabled on an interface, and an end user plugs a switch into that link, all kinds of events can happen (including the plugged in switch becoming the Root Bridge!). BPDU Guard ensures that unauthorized switches cannot be plugged into the network. A sample configuration is below.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;interface gig0/1
@@ -744,7 +1330,7 @@ spanning-tree portfast default
  <entry>
    <title>Spanning Tree BPDU Filter</title>
    <link href="http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Filter/"/>
-   <updated>2017-03-28T00:00:00-04:00</updated>
+   <updated>2017-03-28T10:40:45-04:00</updated>
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/28/STP-BPDU-Filter</id>
    <content type="html">&lt;p&gt;BPDU Filter is another optional feature of STP. It is similar to BPDU Guard, in that it is used to terminate the STP domain. Like BPDU Guard, it can be enabled globally or per interface, but unlike BPDU Guard, BGPU filter behaves differently depending on how it is enabled.&lt;/p&gt;
 
@@ -760,37 +1346,9 @@ SW1(config-if)# spanning-tree bpdufilter enable
  </entry>
  
  <entry>
-   <title>STP UplinkFast</title>
-   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-UplinkFast/"/>
-   <updated>2017-03-27T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-UplinkFast</id>
-   <content type="html">&lt;p&gt;UplinkFast provides fast convergence in case the link on which the root port is connected suffers a failure. It does this with the use of an uplink group. An uplink group is a set of Layer 2 interfaces, of which only one is forwarding at a particular time. If the root port (forwarding port) goes down, then a successor root port is chosen which immediately goes into Forwarding state, bypassing the Listening and Learning phases.&lt;/p&gt;
-
-&lt;p&gt;UplinkFast functionality is built into RSTP, so UplinkFast is only applicable with legacy IEEE 802.1D.&lt;/p&gt;
-
-&lt;p&gt;When UplinkFast is enabled on a switch, that switch’s bridge priority will automatically be increased to 49152 and its port cost will be increased to 3000. This is to ensure that the switch does not become a transit switch.&lt;/p&gt;
-
-&lt;p&gt;To enable UplinkFast, go to the switch on which you want it to run and run &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree uplinkfast&lt;/code&gt; in global configuration mode.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>STP PortFast</title>
-   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-Portfast/"/>
-   <updated>2017-03-27T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-Portfast</id>
-   <content type="html">&lt;p&gt;PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.&lt;/p&gt;
-
-&lt;p&gt;To enable PortFast on an interface, in interface sub configuration mode use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast&lt;/code&gt;. If it is a trunk you must append the &lt;code class=&quot;highlighter-rouge&quot;&gt;trunk&lt;/code&gt; keyword after the command, and if it is an access port you should use the &lt;code class=&quot;highlighter-rouge&quot;&gt;edge&lt;/code&gt; keyword.&lt;/p&gt;
-
-&lt;p&gt;Another way to enable PortFast for access ports is to use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast default&lt;/code&gt; in global configuration mode. Once enabled, all access ports will automatically have PortFast enabled.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
    <title>Spanning Tree BackboneFast</title>
    <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-BackboneFast/"/>
-   <updated>2017-03-27T00:00:00-04:00</updated>
+   <updated>2017-03-27T13:40:45-04:00</updated>
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-BackboneFast</id>
    <content type="html">&lt;p&gt;BackboneFast enables fast reconvergence due to indirect link failures. The key operation happens when a switch begins receiving inferior BPDUs.  When a switch loses the link off its Root Port, it immediately starts sending BPDUs announcing itself as the new Root. Usually, when a switch receives inferior BPDUs, it will wait for its Max Age timer to expire before beginning STP convergence. Once its Max Age timer expires, the inferior BPDU ages out and the switch will then forward its superior BPDU to the neighbor switch who was sending the inferior BPDU.&lt;/p&gt;
 
@@ -806,9 +1364,37 @@ SW1(config-if)# spanning-tree bpdufilter enable
  </entry>
  
  <entry>
+   <title>STP UplinkFast</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-UplinkFast/"/>
+   <updated>2017-03-27T12:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-UplinkFast</id>
+   <content type="html">&lt;p&gt;UplinkFast provides fast convergence in case the link on which the root port is connected suffers a failure. It does this with the use of an uplink group. An uplink group is a set of Layer 2 interfaces, of which only one is forwarding at a particular time. If the root port (forwarding port) goes down, then a successor root port is chosen which immediately goes into Forwarding state, bypassing the Listening and Learning phases.&lt;/p&gt;
+
+&lt;p&gt;UplinkFast functionality is built into RSTP, so UplinkFast is only applicable with legacy IEEE 802.1D.&lt;/p&gt;
+
+&lt;p&gt;When UplinkFast is enabled on a switch, that switch’s bridge priority will automatically be increased to 49152 and its port cost will be increased to 3000. This is to ensure that the switch does not become a transit switch.&lt;/p&gt;
+
+&lt;p&gt;To enable UplinkFast, go to the switch on which you want it to run and run &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree uplinkfast&lt;/code&gt; in global configuration mode.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>STP PortFast</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-Portfast/"/>
+   <updated>2017-03-27T11:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/STP-Portfast</id>
+   <content type="html">&lt;p&gt;PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.&lt;/p&gt;
+
+&lt;p&gt;To enable PortFast on an interface, in interface sub configuration mode use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast&lt;/code&gt;. If it is a trunk you must append the &lt;code class=&quot;highlighter-rouge&quot;&gt;trunk&lt;/code&gt; keyword after the command, and if it is an access port you should use the &lt;code class=&quot;highlighter-rouge&quot;&gt;edge&lt;/code&gt; keyword.&lt;/p&gt;
+
+&lt;p&gt;Another way to enable PortFast for access ports is to use &lt;code class=&quot;highlighter-rouge&quot;&gt;spanning-tree portfast default&lt;/code&gt; in global configuration mode. Once enabled, all access ports will automatically have PortFast enabled.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Debugging Spanning Tree Events</title>
    <link href="http://bsrandall.github.io/spanning%20tree/2017/03/27/Debugging-STP/"/>
-   <updated>2017-03-27T00:00:00-04:00</updated>
+   <updated>2017-03-27T10:40:45-04:00</updated>
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/27/Debugging-STP</id>
    <content type="html">&lt;p&gt;Here is a configuration for debugging Spanning Tree events:&lt;/p&gt;
 
@@ -850,29 +1436,16 @@ SW1(config)# service timestamps debug datetime msec
 
 &lt;p&gt;When a switch receives a BPDU, that BPDU contains the root path cost from the previous switch. The receiving switch then adds the cost of the link between it and the sending switch from which it received the BPDU. That is very important - it is the receiving switch that adds the cost associated with its interface to the Root Path Cost it received from the sending switch.&lt;/p&gt;
 
-&lt;p&gt;Cost is used for the selection of the root port to the upstream switch.&lt;/p&gt;
+&lt;p&gt;Cost is used for the selection of the root port to the upstream switch. But cost is carried along the path and accumulated in the root cost, which is the cost that is used to elect root ports. So changing the cost on a port may have implications on ports further downstream than the one you are affecting.&lt;/p&gt;
 
 &lt;p&gt;Priority is used for influencing the root port of the downstream switch, and as such, it is set up on a port in Designated state. Cost has a higher precedence than priority. You will see priority on the local switch &lt;code class=&quot;highlighter-rouge&quot;&gt;show spanning-tree vlan 2&lt;/code&gt; but it will actually affect the forwarding decision on the downstream connected switch.&lt;/p&gt;
 </content>
  </entry>
  
  <entry>
-   <title>STP Root Bridge Election</title>
-   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/"/>
-   <updated>2017-03-20T00:00:00-04:00</updated>
-   <id>http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Root-Bridge-Election</id>
-   <content type="html">&lt;p&gt;STP Root Bridge Election is based on the Bridge ID of the switches in the active Layer 2 domain. The Bridge ID is made up of the 4-bit bridge priority, a 12-bit Systems ID, and the 48-bit MAC address. The bridge priority is configurable from 0 to 61440. The default is 32768. The System ID is taken from the VLAN number (IEEE 802.1t).&lt;/p&gt;
-
-&lt;p&gt;The election process is very simple. Each bridge starts off assuming it is the Root Bridge and sends BPDUs out advertising itself as such. If it receives a superior BPDU (a BPDU that has a Bridge ID lower than its current root bridge Bridge ID), it ceases advertising that Root Bridge and begins advertising the new Root Bridge with the lower Bridge ID. This process continues until all switches in the domain agree to the same Root Bridge.&lt;/p&gt;
-
-&lt;p&gt;Note that since MAC addresses are guaranteed to be unique, there will always be 1 Root Bridge elected. If all switches are set to the default priority, then the switch with the lowest MAC Address will become the Root Bridge. this is a bad idea for many reasons. One, you typically want your distribution layer switch to be the Root Bridge. Second, older switches will have lower MAC addresses, so your switch with the least resources ends up having a heavier load along with a higher chance for failure&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>STP Root Bridge Election</title>
+   <title>STP Port Election</title>
    <link href="http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Port-Election/"/>
-   <updated>2017-03-20T00:00:00-04:00</updated>
+   <updated>2017-03-20T11:40:45-04:00</updated>
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Port-Election</id>
    <content type="html">&lt;p&gt;After the election of the STP Root Bridge, all ports in the Layer 2 Switch topology will need to be assigned a state. The steps can be listed as follows:&lt;/p&gt;
 &lt;ul&gt;
@@ -898,6 +1471,19 @@ SW1(config)# service timestamps debug datetime msec
 &lt;p&gt;It is helpful to keep in mind for elections that there is only one bridge that originates BPDUs - the root bridge. Other bridges update some fields (such as Sending Bridge ID, Message Age, etc) when retransmitting out their designated ports.&lt;/p&gt;
 
 &lt;p&gt;The access ports will be designated ports typically and will send BPDUs toward the host, unless BPDU Filter is set.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>STP Root Bridge Election</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/"/>
+   <updated>2017-03-20T10:40:45-04:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/20/STP-Root-Bridge-Election</id>
+   <content type="html">&lt;p&gt;STP Root Bridge Election is based on the Bridge ID of the switches in the active Layer 2 domain. The Bridge ID is made up of the 4-bit bridge priority, a 12-bit Systems ID, and the 48-bit MAC address. The bridge priority is configurable from 0 to 61440. The default is 32768. The System ID is taken from the VLAN number (IEEE 802.1t).&lt;/p&gt;
+
+&lt;p&gt;The election process is very simple. Each bridge starts off assuming it is the Root Bridge and sends BPDUs out advertising itself as such. If it receives a superior BPDU (a BPDU that has a Bridge ID lower than its current root bridge Bridge ID), it ceases advertising that Root Bridge and begins advertising the new Root Bridge with the lower Bridge ID. This process continues until all switches in the domain agree to the same Root Bridge.&lt;/p&gt;
+
+&lt;p&gt;Note that since MAC addresses are guaranteed to be unique, there will always be 1 Root Bridge elected. If all switches are set to the default priority, then the switch with the lowest MAC Address will become the Root Bridge. this is a bad idea for many reasons. One, you typically want your distribution layer switch to be the Root Bridge. Second, older switches will have lower MAC addresses, so your switch with the least resources ends up having a heavier load along with a higher chance for failure&lt;/p&gt;
 </content>
  </entry>
  
@@ -1111,9 +1697,18 @@ To view the session, simply use &lt;/code&gt;show monitor session 1`.&lt;/p&gt;
  </entry>
  
  <entry>
+   <title>Common Spanning Tree</title>
+   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/08/CST/"/>
+   <updated>2017-03-08T10:40:45-05:00</updated>
+   <id>http://bsrandall.github.io/spanning%20tree/2017/03/08/CST</id>
+   <content type="html">&lt;p&gt;Common Spanning-Tree (CST) assumes one spanning-tree instance for the entire bridged network, regardless of the number of VLANs. Running only one instance reduces CPU load. All CST BPDUs are sent over trunks using the native VLAN with untagged frames.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Spanning Tree Intro</title>
    <link href="http://bsrandall.github.io/spanning%20tree/2017/03/08/Spanning-Tree-Intro/"/>
-   <updated>2017-03-08T00:00:00-05:00</updated>
+   <updated>2017-03-08T09:40:45-05:00</updated>
    <id>http://bsrandall.github.io/spanning%20tree/2017/03/08/Spanning-Tree-Intro</id>
    <content type="html">&lt;p&gt;&lt;img src=&quot;https://networklessons.com/wp-content/uploads/2013/01/switches-redundant-cable-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
@@ -1133,18 +1728,9 @@ To view the session, simply use &lt;/code&gt;show monitor session 1`.&lt;/p&gt;
  </entry>
  
  <entry>
-   <title>Common Spanning Tree</title>
-   <link href="http://bsrandall.github.io/spanning%20tree/2017/03/08/CST/"/>
-   <updated>2017-03-08T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/spanning%20tree/2017/03/08/CST</id>
-   <content type="html">&lt;p&gt;Common Spanning-Tree (CST) assumes one spanning-tree instance for the entire bridged network, regardless of the number of VLANs. Running only one instance reduces CPU load. All CST BPDUs are sent over trunks using the native VLAN with untagged frames.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
    <title>UDLD</title>
    <link href="http://bsrandall.github.io/layer%202/2017/03/07/UDLD/"/>
-   <updated>2017-03-07T00:00:00-05:00</updated>
+   <updated>2017-03-07T12:40:45-05:00</updated>
    <id>http://bsrandall.github.io/layer%202/2017/03/07/UDLD</id>
    <content type="html">&lt;p&gt;UDLD, or Unidirectional Link Detection, is a Cisco proprietary, Layer 2 protocol that helps detects if either the transmit or the receive fails on a link. It’s purpose is similar to LoopGuard, but it is completely independent of Spanning Tree. The operation of UDLD is fairly simple. A switch sends UDLD Hellos and if it receives echoes of those Hellos back it knows the link is an active two way link. As soon as it quits receiving the UDLD Hellos, it knows there must be a unidirectional link failure. UDLD operates at the physical port level, compared to say STP LoopGuard which works at the logical port level (EtherChannel). Also UDLD functions at linkup, while LoopGuard does not. It is recommended to enable both UDLD and LoopGuard.&lt;/p&gt;
 
@@ -1168,7 +1754,7 @@ SW1(config)# errdisable recovery interval 30
  <entry>
    <title>LLDP</title>
    <link href="http://bsrandall.github.io/layer%202/2017/03/06/LLDP/"/>
-   <updated>2017-03-06T00:00:00-05:00</updated>
+   <updated>2017-03-06T11:40:45-05:00</updated>
    <id>http://bsrandall.github.io/layer%202/2017/03/06/LLDP</id>
    <content type="html">&lt;p&gt;LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks. LLDP is described under IEEE 802.1AB LLDP.&lt;/p&gt;
 
@@ -1195,7 +1781,7 @@ System Name: SW1.cisco.com
  <entry>
    <title>CDP Configuration</title>
    <link href="http://bsrandall.github.io/layer%202/2017/03/06/CDP-Configuration/"/>
-   <updated>2017-03-06T00:00:00-05:00</updated>
+   <updated>2017-03-06T10:40:45-05:00</updated>
    <id>http://bsrandall.github.io/layer%202/2017/03/06/CDP-Configuration</id>
    <content type="html">&lt;p&gt;To enable CDP globally we use &lt;code class=&quot;highlighter-rouge&quot;&gt;cdp run&lt;/code&gt;. To enable CDP on a per-interface basis, use &lt;code class=&quot;highlighter-rouge&quot;&gt;cdp enable&lt;/code&gt;.&lt;/p&gt;
 
@@ -1214,14 +1800,13 @@ System Name: SW1.cisco.com
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) show cdp interface [type number]&lt;/code&gt; displays information about interfaces on which CDP is enabled&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;R1#(config) show cdp entry device-name&lt;/code&gt; displays information about a specific neighbor&lt;/p&gt;
-
 </content>
  </entry>
  
  <entry>
    <title>CDP Basics</title>
    <link href="http://bsrandall.github.io/layer%202/2017/03/06/CDP-Basics/"/>
-   <updated>2017-03-06T00:00:00-05:00</updated>
+   <updated>2017-03-06T09:40:45-05:00</updated>
    <id>http://bsrandall.github.io/layer%202/2017/03/06/CDP-Basics</id>
    <content type="html">&lt;p&gt;CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.&lt;/p&gt;
 
@@ -1269,14 +1854,13 @@ System Name: SW1.cisco.com
 &lt;p&gt;Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.&lt;/p&gt;
 
 &lt;p&gt;The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).&lt;/p&gt;
-
 </content>
  </entry>
  
  <entry>
    <title>MultiChassis EtherChannel</title>
    <link href="http://bsrandall.github.io/etherchannel/2017/02/27/EtherChannel-MultiChassis/"/>
-   <updated>2017-02-27T00:00:00-05:00</updated>
+   <updated>2017-02-27T10:40:45-05:00</updated>
    <id>http://bsrandall.github.io/etherchannel/2017/02/27/EtherChannel-MultiChassis</id>
    <content type="html">&lt;p&gt;A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.&lt;/p&gt;
 
@@ -1297,39 +1881,29 @@ The protocols are so customized, that different platforms from the same vendor c
  </entry>
  
  <entry>
-   <title>EtherChannel PaGP</title>
-   <link href="http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-PAgP/"/>
-   <updated>2017-02-26T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-PAgP</id>
-   <content type="html">&lt;p&gt;Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.&lt;/p&gt;
+   <title>EtherChannel Layer 3</title>
+   <link href="http://bsrandall.github.io/etherchannel/2017/02/27/EtherChannel-Layer-3/"/>
+   <updated>2017-02-27T09:40:45-05:00</updated>
+   <id>http://bsrandall.github.io/etherchannel/2017/02/27/EtherChannel-Layer-3</id>
+   <content type="html">&lt;p&gt;To configure Layer 3 EtherChannels, you have to ensure that the ports that are part of the EtherChannel are first set to &lt;code class=&quot;highlighter-rouge&quot;&gt;no switchport&lt;/code&gt; before adding them to the channel-group. An example LACP config follows:&lt;/p&gt;
 
-&lt;p&gt;The two modes of PAgP are:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;auto: places a port into a passive negotiating state&lt;/li&gt;
-  &lt;li&gt;desirable: places a port into active negotiating state&lt;/li&gt;
-&lt;/ul&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; interface port-channel 1
+  no switchport
+  ip address 10.0.0.1 255.255.255.0
 
-&lt;p&gt;For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.&lt;/p&gt;
-
-&lt;p&gt;PAgP supports up to 8 Ethernet ports of the same type.&lt;/p&gt;
-
-&lt;p&gt;For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Allowed-VLAN list&lt;/li&gt;
-  &lt;li&gt;Spanning-tree path cost for each VLAN&lt;/li&gt;
-  &lt;li&gt;Spanning-tree port priority for each VLAN&lt;/li&gt;
-  &lt;li&gt;Spanning-tree Port Fast setting&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.&lt;/p&gt;
-
+interface GigabitEthernet0/1
+  no ip address
+  no switchport
+  channel-group 1 mode active
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 </content>
  </entry>
  
  <entry>
    <title>EtherChannel Load-Balancing</title>
    <link href="http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-Load-Balancing/"/>
-   <updated>2017-02-26T00:00:00-05:00</updated>
+   <updated>2017-02-26T10:40:45-05:00</updated>
    <id>http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-Load-Balancing</id>
    <content type="html">&lt;p&gt;The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.&lt;/p&gt;
 
@@ -1355,6 +1929,36 @@ The protocols are so customized, that different platforms from the same vendor c
 The default is src-mac.&lt;/p&gt;
 
 &lt;p&gt;One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>EtherChannel PaGP</title>
+   <link href="http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-PAgP/"/>
+   <updated>2017-02-26T09:40:45-05:00</updated>
+   <id>http://bsrandall.github.io/etherchannel/2017/02/26/EtherChannel-PAgP</id>
+   <content type="html">&lt;p&gt;Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.&lt;/p&gt;
+
+&lt;p&gt;The two modes of PAgP are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;auto: places a port into a passive negotiating state&lt;/li&gt;
+  &lt;li&gt;desirable: places a port into active negotiating state&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.&lt;/p&gt;
+
+&lt;p&gt;PAgP supports up to 8 Ethernet ports of the same type.&lt;/p&gt;
+
+&lt;p&gt;For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Allowed-VLAN list&lt;/li&gt;
+  &lt;li&gt;Spanning-tree path cost for each VLAN&lt;/li&gt;
+  &lt;li&gt;Spanning-tree port priority for each VLAN&lt;/li&gt;
+  &lt;li&gt;Spanning-tree Port Fast setting&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.&lt;/p&gt;
+
 </content>
  </entry>
  
@@ -1403,9 +2007,22 @@ SW2# switchport mode trunk
  </entry>
  
  <entry>
+   <title>EtherChannel</title>
+   <link href="http://bsrandall.github.io/etherchannel/2017/02/23/EtherChannel-General/"/>
+   <updated>2017-02-23T09:40:45-05:00</updated>
+   <id>http://bsrandall.github.io/etherchannel/2017/02/23/EtherChannel-General</id>
+   <content type="html">&lt;p&gt;LAG goal is to trick our Spanning Tree Protocol into forwarding active/active across multiple links. The risk we take is an infinite loop in the data plane, as there is no TTL with Ethernet. The LAG negotiation protocols help to mitigate this risk. Static LAG is supported but not recommended, as a failure to LAG can cause an STP Loop. If you do deploy Static LAG, it is recommended to deploy EtherChannel Guard to help mitigate the chances of a loop.&lt;/p&gt;
+
+&lt;p&gt;PAgP and LACP accomplish the exact same thing, just in different ways.&lt;/p&gt;
+
+&lt;p&gt;Since both PAgP and LACP both require the member ports to have the same characteristics, a good command to start with is &lt;code class=&quot;highlighter-rouge&quot;&gt;show interfaces status&lt;/code&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>MST IST-CIST</title>
    <link href="http://bsrandall.github.io/mst/2017/02/23/MST-IST-CIST/"/>
-   <updated>2017-02-23T00:00:00-05:00</updated>
+   <updated>2017-02-23T07:40:45-05:00</updated>
    <id>http://bsrandall.github.io/mst/2017/02/23/MST-IST-CIST</id>
    <content type="html">&lt;p&gt;IST is the Internal Spanning Tree, also known as instance 0. This instance is designated to carry all STP information, including information from other instances. MSTP does not send BPDUs for ever instance separately - these are all contained within the IST BPDU.&lt;/p&gt;
 
@@ -1441,37 +2058,9 @@ SW2# switchport mode trunk
  </entry>
  
  <entry>
-   <title>EtherChannel</title>
-   <link href="http://bsrandall.github.io/etherchannel/2017/02/23/EtherChannel-General/"/>
-   <updated>2017-02-23T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/etherchannel/2017/02/23/EtherChannel-General</id>
-   <content type="html">&lt;p&gt;LAG goal is to trick our Spanning Tree Protocol into forwarding active/active across multiple links. The risk we take is an infinite loop in the data plane, as there is no TTL with Ethernet. The LAG negotiation protocols help to mitigate this risk. Static LAG is supported but not recommended, as a failure to LAG can cause an STP Loop. If you do deploy Static LAG, it is recommended to deploy EtherChannel Guard to help mitigate the chances of a loop.&lt;/p&gt;
-
-&lt;p&gt;PAgP and LACP accomplish the exact same thing, just in different ways.&lt;/p&gt;
-
-&lt;p&gt;Since both PAgP and LACP both require the member ports to have the same characteristics, a good command to start with is &lt;code class=&quot;highlighter-rouge&quot;&gt;show interfaces status&lt;/code&gt;.&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>VTP Pruning</title>
-   <link href="http://bsrandall.github.io/vtp/2017/02/22/VTP-Pruning/"/>
-   <updated>2017-02-22T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/vtp/2017/02/22/VTP-Pruning</id>
-   <content type="html">&lt;p&gt;The principal of VTP pruning is if a client sends a broadcast to its connected switch’s access port, that switch will flood the broadcast to all other connected switches in the VTP / Layer 2 domain. Because of VTP, all the other switches would be aware of the client VLAN, and would thus be required to flood the broadcast to all other switches.&lt;/p&gt;
-
-&lt;p&gt;But what if the other switches do not have any clients connected to access ports in that VLAN? They are still having to process the request, and the network segment still has to bear the broadcast traffic.&lt;/p&gt;
-
-&lt;p&gt;When you enable VTP pruning, you are enabling it for the entire VTP domain.&lt;/p&gt;
-
-&lt;p&gt;NEED TO FINISH&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
    <title>Multiple Spanning Tree</title>
    <link href="http://bsrandall.github.io/mst/2017/02/22/MST/"/>
-   <updated>2017-02-22T00:00:00-05:00</updated>
+   <updated>2017-02-22T10:40:45-05:00</updated>
    <id>http://bsrandall.github.io/mst/2017/02/22/MST</id>
    <content type="html">&lt;p&gt;Multiple Spanning Tree (MST) was developed to overcome the high resource requirements of PVST. In reality, there are only a few logical redundant design on a network, regardless of the number of VLANs or the number of physical links. With MST you can run several different logical topologies (instances), and map VLANs to those instances. You get the benefit of running a redundant, fully utilized network without the resource overhead on the switches.&lt;/p&gt;
 
@@ -1480,14 +2069,48 @@ SW2# switchport mode trunk
 &lt;p&gt;MST is defined by IEEE 802.1s. A special instance, instance 0 or the Internal Spanning Tree (IST), is designated to carry all STP information. The BPDUs for IST carry all the standard RSTP information, as well as the configuration name, revision number, and a &lt;em&gt;hash value&lt;/em&gt; calculated over the VLAN to instance mapping.&lt;/p&gt;
 
 &lt;p&gt;You should not run MSTP on access ports.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>VTP Pruning</title>
+   <link href="http://bsrandall.github.io/vtp/2017/02/22/VTP-Pruning/"/>
+   <updated>2017-02-22T09:40:45-05:00</updated>
+   <id>http://bsrandall.github.io/vtp/2017/02/22/VTP-Pruning</id>
+   <content type="html">&lt;p&gt;The principal of VTP pruning is if a client sends a broadcast to its connected switch’s access port, that switch will flood the broadcast to all other connected switches in the VTP / Layer 2 domain. Because of VTP, all the other switches would be aware of the client VLAN, and would thus be required to flood the broadcast to all other switches.&lt;/p&gt;
 
+&lt;p&gt;But what if the other switches do not have any clients connected to access ports in that VLAN? They are still having to process the request, and the network segment still has to bear the broadcast traffic.&lt;/p&gt;
+
+&lt;p&gt;When you enable VTP pruning, you are enabling it for the entire VTP domain.&lt;/p&gt;
+
+&lt;p&gt;VTP pruning is enabled on the VTP server(s) with the simple global configuration command &lt;code class=&quot;highlighter-rouge&quot;&gt;vtp pruning&lt;/code&gt;. To verify what VLANs have been pruned, you should use &lt;code class=&quot;highlighter-rouge&quot;&gt;show interface trunk&lt;/code&gt;. Note that the VLANs will still be seen in the output of &lt;code class=&quot;highlighter-rouge&quot;&gt;show vlan&lt;/code&gt;, but you will see they are pruned in the command as shown below.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW4#sh int trunk
+
+Port        Mode             Encapsulation  Status        Native vlan
+Gi0/3       auto             802.1q         trunking      1
+Gi1/0       auto             802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Gi0/3       1-4094
+Gi1/0       1-4094
+
+Port        Vlans allowed and active in management domain
+Gi0/3       1,5,7-10,22,43,58,67,79,146
+Gi1/0       1,5,7-10,22,43,58,67,79,146
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Gi0/3       none
+Gi1/0       none
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
 </content>
  </entry>
  
  <entry>
    <title>VTP Versions</title>
    <link href="http://bsrandall.github.io/vtp/2017/02/21/VTP-Versions/"/>
-   <updated>2017-02-21T00:00:00-05:00</updated>
+   <updated>2017-02-21T14:40:45-05:00</updated>
    <id>http://bsrandall.github.io/vtp/2017/02/21/VTP-Versions</id>
    <content type="html">&lt;p&gt;VTP is a Cisco proprietary protocol that allows VLAN administration to be shared across switches. It gives an administrator the capability to centrally administer VLAN creation across one or two switches, and have those VLANs propagate across a VTP domain made up of any number of switches.&lt;/p&gt;
 
@@ -1503,7 +2126,7 @@ SW2# switchport mode trunk
 &lt;/ul&gt;
 
 &lt;p&gt;With version 3, there are two types of VTP servers - primary and secondary. There is only one primary server, and the rest of the secondary servers act as backups to the primary. To declare a server as primary, use the following:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`SW1# vtp primary vlan
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SW1# vtp primary vlan
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;p&gt;Notice the command is done in privileged mode, not configure mode!&lt;/p&gt;
@@ -1513,7 +2136,7 @@ SW2# switchport mode trunk
  <entry>
    <title>VTP Messages</title>
    <link href="http://bsrandall.github.io/vtp/2017/02/21/VTP-Header/"/>
-   <updated>2017-02-21T00:00:00-05:00</updated>
+   <updated>2017-02-21T13:40:45-05:00</updated>
    <id>http://bsrandall.github.io/vtp/2017/02/21/VTP-Header</id>
    <content type="html">&lt;p&gt;All VTP packets contain these fields in the header:&lt;/p&gt;
 &lt;ul&gt;
@@ -1550,9 +2173,39 @@ SW2# switchport mode trunk
  </entry>
  
  <entry>
+   <title>Dynamic Trunking Protocol (DTP)</title>
+   <link href="http://bsrandall.github.io/vlan/2017/02/21/DTP/"/>
+   <updated>2017-02-21T12:40:45-05:00</updated>
+   <id>http://bsrandall.github.io/vlan/2017/02/21/DTP</id>
+   <content type="html">&lt;p&gt;Dynamic Trunking Protocol is a Cisco proprietary protocol that, when configured, attempts to negotiate trunking between two connected ports. It will try to negotiate trunking as well as the encapsulation type.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport mode dynamic auto&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;allows the interfaces to become a trunk if the neighboring trunk is set to trunk or desirable mode&lt;/li&gt;
+  &lt;li&gt;this is the default setting for newer Cisco switches&lt;/li&gt;
+  &lt;li&gt;if both ends of a trunk are set to dynamic auto, they will not form a trunk&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport mode dynamic desireable&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;makes the interface actively attempt to negotiate trunking&lt;/li&gt;
+  &lt;li&gt;the link will become a trunk if the neighbor interface is set to trunk, auto, or desirable&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport nonegotiate&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;prevents the interface from sending DTP frames&lt;/li&gt;
+  &lt;li&gt;can use this when the interface switch port mode is &lt;em&gt;access&lt;/em&gt; or &lt;em&gt;trunk&lt;/em&gt; only&lt;/li&gt;
+  &lt;li&gt;if enabled, to establish a trunk the neighbor interface must be manually set to &lt;em&gt;trunk&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Dot1q</title>
    <link href="http://bsrandall.github.io/vlan/2017/02/21/Dot1q/"/>
-   <updated>2017-02-21T00:00:00-05:00</updated>
+   <updated>2017-02-21T11:40:45-05:00</updated>
    <id>http://bsrandall.github.io/vlan/2017/02/21/Dot1q</id>
    <content type="html">&lt;h4 id=&quot;trunks&quot;&gt;Trunks&lt;/h4&gt;
 &lt;p&gt;Dot1q is the standard trunking protocol used for transporting multiple VLANs across a trunk port. A trunk is a point-to-point link that carries the traffic for multiple VLANs across a single trunk. Dot1q is a standard that tags VLANs for identification. The receiving switch will then strip the VLAN tag from the frame before passing it to the appropriate access port.&lt;/p&gt;
@@ -1583,40 +2236,9 @@ SW2# switchport mode trunk
  </entry>
  
  <entry>
-   <title>Dynamic Trunking Protocol (DTP)</title>
-   <link href="http://bsrandall.github.io/vlan/2017/02/21/DTP/"/>
-   <updated>2017-02-21T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/vlan/2017/02/21/DTP</id>
-   <content type="html">&lt;p&gt;Dynamic Trunking Protocol is a Cisco proprietary protocol that, when configured, attempts to negotiate trunking between two connected ports. It will try to negotiate trunking as well as the encapsulation type.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport mode dynamic auto&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;allows the interfaces to become a trunk if the neighboring trunk is set to trunk or desirable mode&lt;/li&gt;
-  &lt;li&gt;this is the default setting for newer Cisco switches&lt;/li&gt;
-  &lt;li&gt;if both ends of a trunk are set to dynamic auto, they will not form a trunk&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport mode dynamic desireable&lt;/code&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;makes the interface actively attempt to negotiate trunking&lt;/li&gt;
-  &lt;li&gt;the link will become a trunk if the neighbor interface is set to trunk, auto, or desirable&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport nonegotiate&lt;/code&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;prevents the interface from sending DTP frames&lt;/li&gt;
-  &lt;li&gt;can use this when the interface switch port mode is &lt;em&gt;access&lt;/em&gt; or &lt;em&gt;trunk&lt;/em&gt; only&lt;/li&gt;
-  &lt;li&gt;if enabled, to establish a trunk the neighbor interface must be manually set to &lt;em&gt;trunk&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-</content>
- </entry>
- 
- <entry>
    <title>VLANs</title>
    <link href="http://bsrandall.github.io/vlan/2017/02/21/Allowed-VLANs/"/>
-   <updated>2017-02-21T00:00:00-05:00</updated>
+   <updated>2017-02-21T10:40:45-05:00</updated>
    <id>http://bsrandall.github.io/vlan/2017/02/21/Allowed-VLANs</id>
    <content type="html">&lt;p&gt;By default, all VLANs are allowed to traverse an 802.1Q trunk once it is active. To restrict which VLANs are allowed to cross a trunk, you must go into IOS and explicitly define the VLANs that are allowed.&lt;/p&gt;
 
@@ -1633,7 +2255,7 @@ SW2# switchport mode trunk
  <entry>
    <title>Access Ports</title>
    <link href="http://bsrandall.github.io/vlan/2017/02/21/Access-Ports/"/>
-   <updated>2017-02-21T00:00:00-05:00</updated>
+   <updated>2017-02-21T09:40:45-05:00</updated>
    <id>http://bsrandall.github.io/vlan/2017/02/21/Access-Ports</id>
    <content type="html">&lt;p&gt;Access ports are those ports that are connected to end devices, not other switches. We define an access port on the command line with 
 SW1# switchport mode access&lt;/p&gt;
@@ -1645,9 +2267,67 @@ SW1# switchport mode access&lt;/p&gt;
  </entry>
  
  <entry>
+   <title>IP SLA Overview</title>
+   <link href="http://bsrandall.github.io/general%20routing/2017/02/20/IP-SLA-Overview/"/>
+   <updated>2017-02-20T12:40:45-05:00</updated>
+   <id>http://bsrandall.github.io/general%20routing/2017/02/20/IP-SLA-Overview</id>
+   <content type="html">&lt;p&gt;Cisco IP SLA uses active traffic monitoring for measuring traffic performance. It performs this by generating traffic in a continuous, reliable, and predictable manner and then analyzing the results. The information collected includes response time, one-way latency, jitter, packet loss, voice quality scoring, network resource availability, application performance, and server response time.&lt;/p&gt;
+
+&lt;p&gt;If configuring simple IP SLA Operations such as ICMP echo, the operation only has to be configured on the local router. But for the more advanced Operations, you must set up the remote router or device to &lt;em&gt;respond&lt;/em&gt; to your IP SLA traffic. The IP SLA Responder is a component embedded in the destination Cisco device that allows the system to anticipate and respond to IP SLA request packets. Only a Cisco device can be a source for a destination IP SLA Responder.&lt;/p&gt;
+
+&lt;p&gt;To see the IP SLA Operation types, enter IP SLA configuration mode as follows:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)#ip sla 1
+R1(config-ip-sla)#?
+IP SLAs entry configuration commands:
+  dhcp         DHCP Operation
+  dns          DNS Query Operation
+  ethernet     Ethernet Operations
+  exit         Exit Operation Configuration
+  ftp          FTP Operation
+  http         HTTP Operation
+  icmp-echo    ICMP Echo Operation
+  icmp-jitter  ICMP Jitter Operation
+  mpls         MPLS Operation
+  path-echo    Path Discovered ICMP Echo Operation
+  path-jitter  Path Discovered ICMP Jitter Operation
+  tcp-connect  TCP Connect Operation
+  udp-echo     UDP Echo Operation
+  udp-jitter   UDP Jitter Operation
+  voip         Voice Over IP Operation
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To set up a Cisco routing device as an SLA responder, you would use the following:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# ip sla responder
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After an IP SLA Operation has been configured, you must schedule the operation to run:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# ip sla schedule 1 start-time now life forever
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To then see the results of the IP SLA configuration, use the following:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1# show ip sla statistics
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;So starting from the top, a real quick example of an IP SLA configuration to ping an IP address every 30 seconds for 3 hours would look like this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;R1(config)# ip sla 1
+R1(config-ip-sla)# icmp-echo 150.1.3.3
+R1(config-ip-sla-echo)# frequency 30
+R1(config-ip-sla-echo)# exit
+R1(config)# ip spa schedule 1 start-time now life 10800
+R1(config)# exit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>VLANs</title>
    <link href="http://bsrandall.github.io/vlan/2017/02/20/VLANs/"/>
-   <updated>2017-02-20T00:00:00-05:00</updated>
+   <updated>2017-02-20T10:40:45-05:00</updated>
    <id>http://bsrandall.github.io/vlan/2017/02/20/VLANs</id>
    <content type="html">&lt;h4 id=&quot;standard-vlans&quot;&gt;Standard VLANs&lt;/h4&gt;
 &lt;p&gt;Cisco calls VLANS 1 - 1005 Normal VLANs. Of those, VLAN 1 is the Cisco default. You can use this VLAN, but your are not allowed to delete it. VLANs 1002 - 1005 are the Cisco defaults for FDDI and Token Ring. These also cannot be deleted.&lt;/p&gt;
@@ -1661,7 +2341,7 @@ SW1# switchport mode access&lt;/p&gt;
 &lt;h4 id=&quot;extended-vlans&quot;&gt;Extended VLANs&lt;/h4&gt;
 &lt;p&gt;Extended VLANs are in the range of 1006 - 4094. Extended range VLANs are not controlled by VTP and cannot be pruned. The router must be in VTP transparent mode in order to create extended VLANs.&lt;/p&gt;
 
-&lt;p&gt;Extended range VLANs are not stored in van.dat&lt;/p&gt;
+&lt;p&gt;Extended range VLANs are not stored in vlan.dat&lt;/p&gt;
 
 &lt;h4 id=&quot;vlan-database&quot;&gt;VLAN Database&lt;/h4&gt;
 &lt;p&gt;Only applies to standard VLANs.&lt;/p&gt;
@@ -1669,9 +2349,22 @@ SW1# switchport mode access&lt;/p&gt;
  </entry>
  
  <entry>
+   <title>Git</title>
+   <link href="http://bsrandall.github.io/general/2017/02/20/Git/"/>
+   <updated>2017-02-20T09:40:45-05:00</updated>
+   <id>http://bsrandall.github.io/general/2017/02/20/Git</id>
+   <content type="html">&lt;p&gt;I am not a git master, nor do I strive to become one. But I do need to know some basic details to manage this blog as well as my INE VIRL configurations. There are probably better ways to do this, but for my purposes, these are the commands I am running to push my updates from my MacBook to by GitHub page:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git add --all&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt; ~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git commit -m &quot;update notes&quot;&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git push -u origin master&lt;/code&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Hello World</title>
    <link href="http://bsrandall.github.io/general/2017/02/20/Hello-World/"/>
-   <updated>2017-02-20T00:00:00-05:00</updated>
+   <updated>2017-02-20T08:40:45-05:00</updated>
    <id>http://bsrandall.github.io/general/2017/02/20/Hello-World</id>
    <content type="html">&lt;p&gt;This is my first post in my newly launched blog. I decided to go with Jekyll and a GitHub page for my blog backend. I wanted my content to be in Markdown, as that seems to be the authoring flavor of the day. Jekyll and GitHub just made sense due to their support of Markdown.&lt;/p&gt;
 
@@ -1685,21 +2378,6 @@ SW1# switchport mode access&lt;/p&gt;
 &lt;code class=&quot;highlighter-rouge&quot;&gt;SW1# switchport mode trunk&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;Well I am off to the races. Or as most of those who have gone before me stress, off to start the marathon!&lt;/p&gt;
-
-</content>
- </entry>
- 
- <entry>
-   <title>Git</title>
-   <link href="http://bsrandall.github.io/general/2017/02/20/Git/"/>
-   <updated>2017-02-20T00:00:00-05:00</updated>
-   <id>http://bsrandall.github.io/general/2017/02/20/Git</id>
-   <content type="html">&lt;p&gt;I am not a git master, nor do I strive to become one. But I do need to know some basic details to manage this blog as well as my INE VIRL configurations. There are probably better ways to do this, but for my purposes, these are the commands I am running to push my updates from my MacBook to by GitHub page:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git add --all&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt; ~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git commit -m &quot;update notes&quot;&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Dropbox/jekyll.bsrandall.github.io(master) &amp;gt;&amp;gt; git push -u origin master&lt;/code&gt;&lt;/p&gt;
-
 </content>
  </entry>
  

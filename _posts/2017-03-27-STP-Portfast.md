@@ -3,6 +3,7 @@ layout: post
 title: STP PortFast
 category: Spanning Tree
 tag: knowledge
+date: 2017-03-27 15:40:45
 ---
 PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.
 

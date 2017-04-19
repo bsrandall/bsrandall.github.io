@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/17/Spanning-Tree-Types/">
-        Spanning Tree Types
+      <a href="/layer%202%20wan/2017/04/01/PPP/">
+        PPP
       </a>
     </h1>
 
-    <span class="post-date">17 Mar 2017</span>
+    <span class="post-date">01 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,39 +177,29 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>There are several different versions of the Spanning Tree Protocol that we will come across. We will review them in chronological order today.</p>
-
-<p>The original spanning tree is Common Spanning Tree, or CST. It was defined with IEEE 802.1D. The basic premise is to create a logical loop free topology for Ethernet networks by building a spanning tree of connected layer-2 bridges. The links that are not part of the spanning tree are disabled, leaving a single active path between any two network nodes.</p>
-
-<p>PVST and PVST+ are both Cisco proprietary protocols. Cisco developed them as they believed we may need different spanning-trees on a per-VLAN basis for  the best path flow. PVST only ran over ISL trunks, but with PVST+ compatibility with 802.1q trunks arrived. The + version also added new features such as UplinkFast, BackboneFast, and PortFast.</p>
-
-<p>RSTP is the IEEE’s answer to Cisco’s PVST+ implementation. RSTP took many of the added features of PVST+ and standardized them into IEEE 802.1w. RSTP added new bridge port roles and port states.</p>
-
-<p>Cisco then responded to the IEEE 802.1w Rapid Spanning Tree Protocol with RPVST+, which is just RSTP with per-vlan support. RPVST+ supports both ISL and 802.1Q trunks.</p>
-
-<p>When the concept of VLANs finally hit home when VoIP hit the LAN, everyone finally agreed that we needed VLAN support for STP. However, it was also determined that there are usually on three paths needed to support redundancy with Spanning Tree designs. But yet with Spanning Trees based on a per-VLAN approach, we may end up with way more than 3 instances of Spanning Tree running on the router.</p>
-
-<p>This led to the introduction of Multiple Spanning Tree Protocol. It was originally defined with 802.1s and was later merged into IEEE 802.1Q-2005. MSTP creates on common Spanning Tree for the entire Layer 2 network. If a network contains multiple VLANs, we can create multiple Spanning Trees and then assign specific VLANs to specific Spanning Tree instances. Since most networks will need a maximum of two Spanning Tree instances, MSTP greatly reduces the overhead on the router compared to RPVST which needed a separate instance per VLAN.</p>
-
-<p>Cisco MST supports both 802.1Q and ISL trunks.</p>
+      <p>PPP stands for point-to-point protocol - it is  a very popular method for establishing a serial connection over which to pass IP traffic. PPP is composed of Link Control Protocol (LCP) as well as a family of NCPs used to establish network-layer links for various protocols (such as IPv4) after LCP has established the basic link. The steps to enable PPP on a Cisco router are shown below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# interface serial0/0
+R1(config-if)# encapsulation ppp
+</code></pre>
+</div>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/17/Spanning-Tree-Types/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202%20wan/2017/04/01/PPP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/17/Spanning-Tree-Types/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202%20wan/2017/04/01/PPP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/13/VSS/">
-        Virtual Switch System
+      <a href="/layer%202%20wan/2017/04/01/HDLC/">
+        HDLC
       </a>
     </h1>
 
-    <span class="post-date">13 Mar 2017</span>
+    <span class="post-date">01 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -217,184 +207,33 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>VSS, or Virtual Switch System, exists in Cisco Catalyst 6500 and 4500 switches running IOS-XE. VSS simplifies the network by reducing the number of network elements. VSS can combine multiple Catalyst Switches into a single logical device. VSS logically combines a pair of switches into a single network element.</p>
+      <p>HDLC is a Layer 2 protocol - the Cisco version is a slight tweak from the original ISO version, so Cisco HDLC will not operate with HDLC implementations from other vendors. It is used on serial interfaces to make direct connections between routers. It is actually the default point-to-point serial protocol for Cisco routers, but PPP is more commonly used.</p>
 
-<p>The two switches in the pair negotiate their roles - one will assume the role of the active switch while the other assumes the role of the standby switch. The VSS active switch controls the VSS, running the Layer 2 and Layer 3 protocols for both switches. Both switches perform packet forwarding as needed, but the standby switch sends all control traffic to the VSS active switch for processing.</p>
+<p>You must always remember when connecting two serial interfaces, the DCE side must set a clock rate.</p>
 
-<p>The virtual switch link (VSL) is the link which ties the active and standby switches together. It is typically implemented as an EtherChannel, and therefore can support up to 8 links in the bundle. The attached devices (such as access switches) can then connect to the VSS using Multichassis EtherChannel. Unlike normal EtherChannel witch connects multiple links between two switches, MultiChassis EtherChannel can connect one switch over multiple links to two switches. In total, a VSS can support up to 256 EtherChannels in a combination of regular EtherChannels and MultiChassis EtherChannels (MEC).</p>
-
-<h4 id="configuration">Configuration</h4>
-
-<p>Both switches in a VSS pair need to belong to the same VSS domain. This domain is a number between 1 and 255. After creating the domain, you must configure one switch to be switch number 1 and the other switch to be switch number 2.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# switch virtual domain 10
-SW1(config-vs-domain)# switch 1
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2(config)# switch virtual domain 10
-SW2(config-vs-domain)# switch 2
-</code></pre>
-</div>
-
-<p>Next you should create the VSL between the two VSS switches.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface port-channel 5
-SW1(config-if)# switchport
-SW1(config-if)# switch virtual link 1
-SW1(config-if)# no shutdown
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2(config)# interface port-channel 10
-SW2(config-if)# switchport
-SW2(config-if)# switch virtual link 2
-SW2(config-if)# no shutdown
-</code></pre>
-</div>
-
-<p>Next, you have to put the physical interfaces into the appropriate port-channels created for the VSL.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# int range gig1/0-3
-SW1(config-if-range)# switchport mode trunk
-SW1(config-if-range)# channel-group 5 mode on
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# int range gig1/0-3
-SW1(config-if-range)# switchport mode trunk
-SW1(config-if-range)# channel-group 10 mode on
-</code></pre>
-</div>
-
-<p>Next, to complete the switch conversion process you need to run the following command on each switch:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# switch convert mode virtual
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2# switch convert mode virtual
-</code></pre>
-</div>
-
-<p>The switch will reload and when they come back up they will now be part of the VSS domain.</p>
-
-<p>Some sample show commands are:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# show switch virtual
-
-SW1# show switch virtual role
-
-SW1# show switch virtual link
-
-SW1# show switch virtual link port-channel
+<p>If you are changing back from PPP to HDLC, the following shows how you would accomplish it.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# interface serial0/0
+R1(config-if)# encapsulation hdlc
 </code></pre>
 </div>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/13/VSS/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202%20wan/2017/04/01/HDLC/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/13/VSS/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202%20wan/2017/04/01/HDLC/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/11/SPAN-Configuration/">
-        SPAN Configuration
+      <a href="/layer%202/2017/03/30/Voice-VLAN/">
+        Voice VLAN
       </a>
     </h1>
 
-    <span class="post-date">11 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
-    
-    
-
-    <article>
-      <p>Basic SPAN Configuration:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 1 source interface fa0/12
-SW1(config)# monitor session 1 destination interface fa0/24
-</code></pre>
-</div>
-
-<p>Here is an example where we will only monitor respective traffic from fa0/18 and only monitor sent traffic from interface fa0/19. Additionally we will filter (remove) VLANs 1 through 3. Finally, we will preserve the encapsulation from the sources:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 1 source interface fa0/18 rx
-SW1(config)# monitor session 1 source interface fa0/19 tx
-SW1(config)# monitor session 1 filter vlan 1-3
-SW1(config)# monitor session 1 destination interface fa0/24 encapsulation replicate
-</code></pre>
-</div>
-
-<p>Next we have a RSPAN sample configuration. We will monitor all traffic on VLANs 66-68 on SW1 and send it to VLAN 199, which will then be delivered to port fa0/24 on SW2:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vlan 199
-SW1(config-vlan)# remote span
-SW1(config-vlan)# exit
-SW1(config)# monitor session 1 source vlan 66-68
-SW1(config)# monitor session 1 destination remote van 199
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2(config)# vlan 199
-SW2(config-vlan)# remote span
-SW2(config-vlan)# exit
-SW2(config)# monitor session 2 source remote vlan 199
-SW2(config)# monitor session 2 destination interface fa0/24
-</code></pre>
-</div>
-
-<p>Notice above that the monitor session numbers do not have to match on each switch.</p>
-
-<p>Finally, we have a ERSPAN example. We will configure R1 to capture received traffic and send it to SW1 gig2/1.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# monitor session 1 type erspan-source
-R1(config-mon-erspan-src)# source interface gig1/1 rx
-R1(config-mon-erspan-src)# no shutdown
-R1(config-mon-erspan-src)# destination
-R1(config-mon-erspan-src-dst)# erspan-id 101
-R1(config-mon-erspan-src-dst)# ip address 10.1.1.1
-R1(config-mon-erspan-src-dst)# origin ip address 172.16.1.1
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 2 type erspan-destination
-SW1(config-mon-erspan-dst)# destination interface gig2/1
-SW1(config-mon-erspan-dst)# no shutdown
-SW1(config-mon-erspan-dst)# source
-SW1(config-mon-erspan-dst-src)# erspan-id 101
-SW1(config-mon-erspan-dst)# ip address 10.1.1.1
-</code></pre>
-</div>
-
-<p>A couple of configuration notes. First, you must make sure the destination port is not in a shutdown state or else the SPAN session will not come up.</p>
-
-<p>If you want to leave the original encapsulation of the frames intact, use the <code class="highlighter-rouge">encapsulation replicate</code> option on the monitor session destination command.</p>
-
-<p>One confusing option is the <code class="highlighter-rouge">ingress dot1q vlan 10</code> option on the destination interface. This is actually telling the switch to accept incoming frames on the <em>destination</em> monitor switch and place the frames in VLAN 10. This would let you use the destination port like a normal access port. Seems kind of silly to me as to why you would want to do that, but I am sure there is a reason.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>`monitor session 1 destination interface gig0/24 ingress dot1q vlan 146
-</code></pre>
-</div>
-<p>`The above accepts inbound packets with 802.1Q encapsulation with the given VLAN as the default VLAN. Compare that to the example below, which accepts incoming packets with untagged encapsulation type with the specified VLAN as the default VLAN.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`monitor session 1 destination interface gig0/24 ingress vlan 146
-</code></pre>
-</div>
-<p><code class="highlighter-rouge">
-To view the session, simply use </code>show monitor session 1`.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/layer%202/2017/03/11/SPAN-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/layer%202/2017/03/11/SPAN-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202/2017/03/09/SPAN/">
-        SPAN
-      </a>
-    </h1>
-
-    <span class="post-date">09 Mar 2017</span>
+    <span class="post-date">30 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -402,51 +241,35 @@ To view the session, simply use </code>show monitor session 1`.</p>
     
 
     <article>
-      <p>SPAN stands for Switch Port Analyzer. It is a way to direct all traffic from a source port or source VLAN to a single port. Some uses include IDS/IPS, VoIP Call recording, or troubleshooting / analysis.</p>
+      <p>On Cisco switch’s, you can configure a particular VLAN known as the voice VLAN. It is a special VLAN that Cisco developed that is meant to lead from the switch the the 3 port switch on the back of an IP Phone. The traffic from the computer will be sent untagged, regardless of whether the access VLAN for that port is the default VLAN. All traffic from the phone gets tagged to its assigned voice VLAN. It behaves in many way like a trunk, but from an operational perspective it is still a port in access mode. The configuration looks like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# switchport mode access
+SW1(config-if)# switchport access vlan 100
+SW1(config-if)# switchport voice vlan 101
+</code></pre>
+</div>
+<p>If you you show commands, you will not find the interface to be in trunk operational mode, but remember it works like a rudimentary trunk.</p>
 
-<p>If the destination port is on the local switch, we say it is in SPAN operation mode. The destination port could also be mapped to a port on a remote switch, in which case we call it Remote SPAN or RSPAN. In RSPAN, a specific VLAN must be configured across the entire switching path from the source port or VLAN to the RSPAN destination port. So the source is still at least one port or at least one VLAN,  but the destination is always the RSPAN VLAN. At the switch where the RSPAN destination port exists, the RSPAN VLAN is delivered to the RSPAN port.</p>
+<p>As soon as you apply the <code class="highlighter-rouge">switchport voice vlan</code> command, Portfast is enabled on the interface, though you will not see it in the running-config.</p>
 
-<p>Encapsulated Remote SPAN (ERSPAN) is a variant of RSPAN in which we are encapsulating the Remote SPAN information. ERSPAN creates a GRE tunnel for all captured traffic and allows it to be extended across Layer 3 domains. This became an option with IOS-XE.</p>
-
-<p>Regardless of the type of SPAN we are running, the source port can be any type of port including EtherChannel, trunk port, routed port, etc. When using a VLAN as the source, all active ports in that VLAN are monitored, and the monitored ports are updated dynamically as membership to that VLAN changes. A port configured as a SPAN destination cannot be part of a SPAN source VLAN.</p>
-
-<p>It is important to understand that when you configure a SPAN destination port, the existing configuration is removed but is restored if you later remove the SPAN configuration. The destination port does not support any security, nor does it support any Layer 2 protocols such as CDP, VTP, etc. If the destination port was part of an EtherChannel, it will be removed from the EtherChannel once the SPAN configuration is applied.</p>
-
-<p>There are a number of restrictions with SPAN including:</p>
-<ul>
-  <li>the source can be one or more ports or a VLAN, but not both</li>
-  <li>up to 64 destination ports can be configured on a switch</li>
-  <li>you must be careful not to overload the destination port, especially if a VLAN is being monitored.</li>
-  <li>within a single SPAN session, you cannot deliver traffic to a destination port when it is sourced by a mix of SPAN, RSPAN, or ERSPAN source ports or VLANs. This usually comes into play when you want to mirror source traffic to both a local port on a switch (SPAN mode) and a remote port on another switch (RSPAN mode).</li>
-  <li>only one SPAN/RSPAN/ERSPAN session can send traffic to a single destination port</li>
-  <li>if you use a trunk port as a SPAN or RSPAN source, then by default all VLANs on the trunk are monitored by default</li>
-  <li>traffic that is routed from another VLAN to a source VLAN cannot be monitored with SPAN</li>
-</ul>
-
-<p>Finally, SPAN, RSPAN, and ERSPAN support three types of traffic: transmitted, received, and both (default). If you set a SPAN to monitor just receive or just transmit, some conditions apply:</p>
-<ul>
-  <li>for Receive (RX) the goal is to deliver all traffic that is received by the SPAN source. As a result, each frame that is received by the source port or VLAN is copied to the destination port or VLAN <em>before</em> any modifications are made to the frame (such as ACL filtering, QoS, etc)</li>
-  <li>for Transmit (TX), all relevant filtering or modification to the frame is done before the switch forwards the traffic to the SPAN or RSPAN destination.</li>
-  <li>SPAN usually ignores certain Layer 2 frames like CDP, BPDUs, etc. However, SPAN can be configured to forward that traffic to the destination port/VLAN with the <code class="highlighter-rouge">encapsulation replicate</code> command</li>
-</ul>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/09/SPAN/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/30/Voice-VLAN/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/09/SPAN/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/30/Voice-VLAN/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/">
-        Spanning Tree Intro
+      <a href="/layer%202/2017/03/30/Storm-Control/">
+        Storm Control
       </a>
     </h1>
 
-    <span class="post-date">08 Mar 2017</span>
+    <span class="post-date">30 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -454,27 +277,74 @@ To view the session, simply use </code>show monitor session 1`.</p>
     
 
     <article>
-      <p><img src="https://networklessons.com/wp-content/uploads/2013/01/switches-redundant-cable-1.png" alt="" /></p>
+      <p>Broadcast storms can create havoc on a Layer 2 network, quickly bringing the network to an unusable state. Software solutions to storm control are inefficient, because by the time the software has identified the storm, the hardware resources are at max utilization and there is no resources available to abate the storm.</p>
 
-<p>Imagine in the above diagram that H1 sends out an ARP request, which is a broadcast frame. SW1 will forward this broadcast frame on ports Fa0/0 and Fa1/0 toward SW2.</p>
+<p>Cisco has a storm control feature built into its switches. It is a hardware based solution that allows us to set a threshold on interfaces to limit the amount of broadcast, multicast, or unknown unicast traffic an interface receives. It also allows us to select a couple of actions to take when that threshold is met.</p>
 
-<p>SW2 will forward the broadcast frame it received on Fa0/0 out Fa1/0 and the interface connected to H2. This cycle will continue and continue. By introducing redundancy, we have created an environment that is friendly to Layer 2 loops. And since Ethernet frames do not have a TTL, they will loop around forever.</p>
+<p>Let’s jump right into a configuration example.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level 30
+</code></pre>
+</div>
 
-<p>Spanning Tree is a Layer 2 protocol that was created to deal with the possible loop creation that is introduced with redundant Layer 2 loops. Spanning Tree takes over the Layer 2 forwarding decisions, and places certain ports in a blocking state to prevent the possibility of these loops occurring.</p>
+<p>The ’30’ in the example above designates the rising threshold. When broadcast traffic exceeds 30% of the interface bandwidth, storm control will kick in and take action. The default action is to drop exceeding traffic.</p>
 
-<p>When Spanning Tree is enabled, switches send out a special frame called a BPDU (Bridge Protocol Data Unit). Included in this BPDU is the Switch’s Priority and MAC Address, which concatenated equals the Bridge Id. Among connected Switch’s, the Switch with the lowest Bridge Id becomes the Root Bridge.</p>
+<p>You can also specify bps as below. Adding k, m, or g identifies the value as Kbps, Mbps, or Gbps respectively. The example below would limit broadcast traffic to 30 Mbps on the Gigabit interface.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level bps 30m
+</code></pre>
+</div>
 
-<p>A Root Bridge marks all of its ports as Designated, which are placed in a forwarding state. Designated ports lead away from the Root bridge.</p>
+<p>You can also designate a falling threshold. The falling threshold sets a value to which the traffic has to fall before that type of traffic is allowed again.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level bps 30m 20m
+</code></pre>
+</div>
+<p>In the example above the broadcast traffic would have to drop below 20 Mbps before any broadcast traffic would be allowed into the port.</p>
 
-<p>For the remaining switches, we have to elect one root port on each switch. The root port will be the port whose path has the lowest cost to the root bridge</p>
+<p>We can also control the action. <code class="highlighter-rouge">storm-control action shutdown</code> shuts the interface down in case the level is exceeded. <code class="highlighter-rouge">storm-control action trap</code> sends an SNMP trap if the level is exceeded.</p>
 
+<p><code class="highlighter-rouge">show storm-control [unicast | multicast | broadcast]</code> is used to see the configuration as well as the current amount of traffic passing through the port.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/30/Storm-Control/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/08/Spanning-Tree-Intro/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/30/Storm-Control/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/30/Static-MAC-Address/">
+        Static MAC Address Entries
+      </a>
+    </h1>
+
+    <span class="post-date">30 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Sometimes you may need to add static MAC address entries to the CAM table. This is easily achieved with the following global configuration command:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(cone)# mac address-table static 0022.5627.1fc1 vlan 10 interface GigabitEthernet0/1
+</code></pre>
+</div>
+<p>You can also force traffic to a particular MAC address to be dropped, by either specifying an unused interface or with the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# mac address-table static 0022.5627.1fc1 vlan 10 drop
+</code></pre>
+</div>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/30/Static-MAC-Address/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/30/Static-MAC-Address/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

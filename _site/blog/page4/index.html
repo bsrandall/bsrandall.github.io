@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/">
-        PPP Multilink
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/">
+        Policy Routing Order of Operation
       </a>
     </h1>
 
-    <span class="post-date">01 Apr 2017</span>
+    <span class="post-date">09 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,53 +177,35 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Multilink PPP is a method used to aggregate multiple single PPP links and utilize them as one. It is not that dissimilar from EtherChannel used with Ethernet. PPP frames can be fragmented, sent down different links, and then reassembled in order on the far side of the link. Multilink PPP uses a 2 or 4 byte sequencing header in each packet, and the remote MLPPP recover is tasked with reconstructing the frames in the correct order. The configuration is pretty straightforward.</p>
+      <p>A route-map can have multiple set operations on a single match clause. The list below shows the order of operations, regardless of the sequence number we use or the order we input them.</p>
+<ul>
+  <li><code class="highlighter-rouge">set ip next-hop verify-availability track</code> - first when used with object tracking</li>
+  <li><code class="highlighter-rouge">set ip next-hop</code> - alone or with the CDP (but without default) version of <code class="highlighter-rouge">verify-availability</code></li>
+  <li><code class="highlighter-rouge">set ip next-hop recursive</code></li>
+  <li>set interface</li>
+  <li>Route table</li>
+  <li>set ip default next-hop</li>
+  <li>set default interface</li>
+</ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>interface Serial0/1
-  description Link to R1
-  no ip address
-  encapsulation ppp
-  ppp multilink
-  ppp multilink group 1
-  serial restart-delay 0
-end
-
-interface Serial1/1
-  description Link to R1
-  no ip address
-  encapsulation ppp
-  ppp multilink
-  ppp multilink group 1
-  serial restart-delay 0
-end
-
-interface Multilink 1
-  ip address 192.168.12.2 255.255.255.0
-  ppp multilink
-  ppp multilink group 1
-end
-</code></pre>
-</div>
-
-<p>Some optional parameters include <code class="highlighter-rouge">ppp multilink interleave</code>. Interleaving allows large packets to be multilink encapsulated and fragmented into a small enough size to satisfy the delay requirements of real-time traffic. The interleaving feature also provides a special transmit queue for the smaller, delay-sensitive packets, enabling them to be sent earlier than other flows. <code class="highlighter-rouge">ppp multilink fragement delay 10</code> is the command that determines the maximum delay - MLPPP will then chose a fragment size based on the configured delay.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202%20wan/2017/04/01/HDLC/">
-        HDLC
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/">
+        Policy Routing using next-hop, default, and recursive
       </a>
     </h1>
 
-    <span class="post-date">01 Apr 2017</span>
+    <span class="post-date">09 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -231,33 +213,29 @@ end
     
 
     <article>
-      <p>HDLC is a Layer 2 protocol - the Cisco version is a slight tweak from the original ISO version, so Cisco HDLC will not operate with HDLC implementations from other vendors. It is used on serial interfaces to make direct connections between routers. It is actually the default point-to-point serial protocol for Cisco routers, but PPP is more commonly used.</p>
+      <p>When using policy routing and the <code class="highlighter-rouge">ip next-hop</code> set option in a route map, you can optionally use the <em>default</em> keyword. The difference is simple.</p>
 
-<p>You must always remember when connecting two serial interfaces, the DCE side must set a clock rate.</p>
+<p>When you do not use the default keyword, routing utilizes PBR first and consults the routing table if there is no match or non reachability. If you use the default keyword, then routing uses the routing table first and if no route can be found then attempts to use the Policy Based Routing process.</p>
 
-<p>If you are changing back from PPP to HDLC, the following shows how you would accomplish it.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# interface serial0/0
-R1(config-if)# encapsulation hdlc
-</code></pre>
-</div>
+<p>Both the <code class="highlighter-rouge">set ip next-hop</code> and the <code class="highlighter-rouge">set ip default next-hop</code> commands require that the next-hop be found on a directly-connected subnet, otherwise PBR will fail and normal forwarding will be used. However, we can use <code class="highlighter-rouge">set ip next-hop recursive</code> to use an address off a subnet that <em>is not</em> directly connected.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202%20wan/2017/04/01/HDLC/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202%20wan/2017/04/01/HDLC/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Voice-VLAN/">
-        Voice VLAN
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Verify-Availability/">
+        PBR - verify-availability
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">09 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -265,35 +243,46 @@ R1(config-if)# encapsulation hdlc
     
 
     <article>
-      <p>On Cisco switch’s, you can configure a particular VLAN known as the voice VLAN. It is a special VLAN that Cisco developed that is meant to lead from the switch the the 3 port switch on the back of an IP Phone. The traffic from the computer will be sent untagged, regardless of whether the access VLAN for that port is the default VLAN. All traffic from the phone gets tagged to its assigned voice VLAN. It behaves in many way like a trunk, but from an operational perspective it is still a port in access mode. The configuration looks like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# switchport mode access
-SW1(config-if)# switchport access vlan 100
-SW1(config-if)# switchport voice vlan 101
+      <p>Within the route-map statement, there is an option when using <code class="highlighter-rouge">ip next-hop</code> of <code class="highlighter-rouge">verify-availability</code>. This article will describe what it does and the two flavors of utilization.</p>
+
+<p>If used solely by itself, <code class="highlighter-rouge">verify-availabilty</code> uses CDP to establish that the next-hop IP address is reachable. If the IP address used is in the CDP neighbor table, then the next-hop is deemed accessible, otherwise it is not.</p>
+
+<p><code class="highlighter-rouge">verify-availability</code> can be extended to also use a tracking object. Here is an example of that configuration.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R2(config)#route-map PBR permit 10
+R2(config-route-map)#match ip address HTTP-SERVER
+R2(config-route-map)#set ip next-hop verify-availability 192.168.24.4 1 track 1
 </code></pre>
 </div>
-<p>If you you show commands, you will not find the interface to be in trunk operational mode, but remember it works like a rudimentary trunk.</p>
+<p><code class="highlighter-rouge">
+If using either of these methods to implement </code>verify-reachability`, if the next-hop IP address is not reachable then routing is not performed based on the policy but is routed according to the the routing table.</p>
 
-<p>As soon as you apply the <code class="highlighter-rouge">switchport voice vlan</code> command, Portfast is enabled on the interface, though you will not see it in the running-config.</p>
-
+<p>We can use a combination of commands to route a different way if our <code class="highlighter-rouge">verify-reachability</code> fails.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map RM1
+R1(config-route-map)# match ip address AL1
+R1(config-route-map)# set ip next-hop 155.1.0.5
+R1(config-route-map)# set ip next-hop verify reachability
+R1(config-route-map)# set ip default next-hop 155.1.13.3
+</code></pre>
+</div>
+<p>`In this example, if we match to AL1 AND 155.1.0.5 is reachable (CDP check), then we route to 155.1.0.5. However if we match AL1 and 155.1.0.5 is not in the CDP neighbor table, then we route to 155.1.13.3.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Voice-VLAN/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Verify-Availability/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Voice-VLAN/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Verify-Availability/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Storm-Control/">
-        Storm Control
+      <a href="/general%20routing/2017/04/08/Local-Policy-Routing/">
+        Local Policy Routing
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">08 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -301,52 +290,49 @@ SW1(config-if)# switchport voice vlan 101
     
 
     <article>
-      <p>Broadcast storms can create havoc on a Layer 2 network, quickly bringing the network to an unusable state. Software solutions to storm control are inefficient, because by the time the software has identified the storm, the hardware resources are at max utilization and there is no resources available to abate the storm.</p>
+      <p>In a previous post, we saw how policy based routing can be used to change the next hop IP address for traffic matching certain criteria that is passing through the router. But what about traffic that originates on the router?</p>
 
-<p>Cisco has a storm control feature built into its switches. It is a hardware based solution that allows us to set a threshold on interfaces to limit the amount of broadcast, multicast, or unknown unicast traffic an interface receives. It also allows us to select a couple of actions to take when that threshold is met.</p>
+<p>It is very similar but we use a different source on our access-lists (obviously) and we use a different command (global instead of sub-interface) to activate it.</p>
 
-<p>Let’s jump right into a configuration example.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level 30
+<p>Let’s assume our router has interfaces on the 192.168.12.0/24 and 192.168.13.0/24 subnets. Let’s set up Local Policy Routing to ensure that traffic originated on these interfaces and destined for 4.4.4.4 is sent to a next-hop IP address of 192.168.13.3. First, we set up our access lists.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# ip access-list extended ICMP-R1
+R1(config-ext-nacl)# permit imp host 192.168.12.1 host 4.4.4.4
+R1(config-ext-nacl)# permit imp host 192.168.13.1 host 4.4.4.4
+R1(config)# end
 </code></pre>
 </div>
-
-<p>The ’30’ in the example above designates the rising threshold. When broadcast traffic exceeds 30% of the interface bandwidth, storm control will kick in and take action. The default action is to drop exceeding traffic.</p>
-
-<p>You can also specify bps as below. Adding k, m, or g identifies the value as Kbps, Mbps, or Gbps respectively. The example below would limit broadcast traffic to 30 Mbps on the Gigabit interface.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level bps 30m
+<p>`Now the next step would be to use a route map to set the next hop IP when we have a match.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map PBR-R1 permit 10
+R1(config-route-map)# match ip address ICMP-R1
+R1(config-route-map)# set ip next-hop 192.168.13.3
+R1(config)# end
 </code></pre>
 </div>
-
-<p>You can also designate a falling threshold. The falling threshold sets a value to which the traffic has to fall before that type of traffic is allowed again.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level bps 30m 20m
+<p>`Now, we must make sure we activate it. Unlike with policy based routing, for local policy routing we enable it globally.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(conf)# ip local policy route-map PBR-R1
+R1(conf)# end
 </code></pre>
 </div>
-<p>In the example above the broadcast traffic would have to drop below 20 Mbps before any broadcast traffic would be allowed into the port.</p>
-
-<p>We can also control the action. <code class="highlighter-rouge">storm-control action shutdown</code> shuts the interface down in case the level is exceeded. <code class="highlighter-rouge">storm-control action trap</code> sends an SNMP trap if the level is exceeded.</p>
-
-<p><code class="highlighter-rouge">show storm-control [unicast | multicast | broadcast]</code> is used to see the configuration as well as the current amount of traffic passing through the port.</p>
+<p>`
+That is all!</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Storm-Control/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/08/Local-Policy-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Storm-Control/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/08/Local-Policy-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/">
-        Static MAC Address Entries
+      <a href="/general%20routing/2017/04/07/Policy-Routing/">
+        Policy Based Routing
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">07 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -354,21 +340,72 @@ SW1(config-if)# storm-control broadcast level bps 30m 20m
     
 
     <article>
-      <p>Sometimes you may need to add static MAC address entries to the CAM table. This is easily achieved with the following global configuration command:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(cone)# mac address-table static 0022.5627.1fc1 vlan 10 interface GigabitEthernet0/1
+      <p>Policy-based routing can be used to change the next-hop IP address for traffic matching certain criteria. This can be useful to overrule the routing table for certain types of traffic. For example you may want to force all traffic from a certain host to use an alternate link. The key to making this work is an access-list and a route map.</p>
+
+<p>For example, let’s assume that we want all ICMP traffic from host 192.168.1.100 to traverse a link whose next hop is 192.168.13.3 if the destination IP address is 4.4.4.4. We can use an extended access list to classify the traffic.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# ip access-list extended ICMP-H1
+R1(config-ext-nacl)# permit imp host 192.168.1.100 host 4.4.4.4
+R1(config)# end
 </code></pre>
 </div>
-<p>You can also force traffic to a particular MAC address to be dropped, by either specifying an unused interface or with the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# mac address-table static 0022.5627.1fc1 vlan 10 drop
+<p>`Now the next step would be to use a route map to set the next hop IP when we have a match.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map PBR-H1 permit 10
+R1(config-route-map)# match ip address ICMP-H1
+R1(config-route-map)# set ip next-hop 192.168.13.3
+R1(config)# end
 </code></pre>
 </div>
+<p>`Now, we must make sure we activate it on the ingress interface.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface GigabitEthernet0/1
+R1(config-if)# ip policy route-map PBR-H1
+R1(config)# end
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">
+</code>debug ip policy` will turn debugging on for policy routing.</p>
+
+<p>This configuration is for traffic passing <em>through</em> the router. To apply policy based routing for traffic that is 8originated8 by the router, see the next post “Local Policy Routing”.</p>
+
+<p>One thing to remember is that there can only be one ip policy on the interface, so if you need to perform multiple actions, you may have to use a route map with multiple sections like this.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map RM-R4-R6 permit 20
+R1(config-route-map)# match ip address FROM-R4
+R1(config-route-map)# set ip next-hop 155.146.13.1
+R1(config-route-map)# route-map RM-R4-R6 permit 20
+R1(config-route-map)# match ip address FROM-R6
+R1(config-route-map)# set ip next-hop 155.1.0.5
+R1(config-route-map)# exit
+</code></pre>
+</div>
+<p>`
+Some important show commands are listed below:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1#sh ip policy
+Interface      Route map
+Gi0/1.146      RM-R4-R6
+R1\#
+</code></pre>
+</div>
+<pre><code class="language-`">`R1#show route-map
+route-map RM-R4-R6, permit, sequence 10
+  Match clauses:
+ip address (access-lists): FROM_R4
+  Set clauses:
+ip next-hop 155.1.13.3
+  Policy routing matches: 18 packets, 1116 bytes
+route-map RM-R4-R6, permit, sequence 20
+  Match clauses:
+ip address (access-lists): FROM_R6
+  Set clauses:
+ip next-hop 155.1.0.5
+  Policy routing matches: 9 packets, 564 bytes
+</code></pre>
+<p>`</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/07/Policy-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/07/Policy-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

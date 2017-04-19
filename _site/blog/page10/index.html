@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/">
-        MultiChassis EtherChannel
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/">
+        Spanning Tree BPDU Guard
       </a>
     </h1>
 
-    <span class="post-date">27 Feb 2017</span>
+    <span class="post-date">28 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,196 +177,40 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>A LAG bundle to the same access switch results in Fate Sharing for the links in the bundle. The alternative is to break the links out of the LAG, and have the NICs of a server connect to two different access switches. But by breaking the LAG, we now have half the available bandwidth for the server.</p>
+      <p>BPDU Guard is a STP PortFast safety enhancement. It works by disabling a port any time the interface hears a BPDU. PortFast by itself will not do that, so if you have PortFast enabled on an interface, and an end user plugs a switch into that link, all kinds of events can happen (including the plugged in switch becoming the Root Bridge!). BPDU Guard ensures that unauthorized switches cannot be plugged into the network. A sample configuration is below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>interface gig0/1
+  spanning-tree bpduguard enable
 
-<p>With MultiChassis EtherChannel, we trick the server into running LAG between two different access switches. There are multiple ways to do this using different protocols made by different vendors. We generically call it MLAG.</p>
-
-<p>The protocol must take a physical triangle as seen below, and make it into a logical point-to-point. Many problems arise that the protocol must deal with. If NIC A sends traffic to Switch A, Switch A must know not to send that to Switch B, or else a loop might form.
-<img src="http://www.cisco.com/c/dam/en/us/td/i/200001-300000/220001-230000/226001-227000/226936.eps/_jcr_content/renditions/226936.jpg" alt="" />
-The protocols are so customized, that different platforms from the same vendor cannot even run MLAG. The control place has to be identical. Cisco therefore has a couple of implementations.</p>
-
-<p><em>Stackwise Cross-Stack EtherChannel</em> has control plane over dedicated stacking cables. These stack cables create a bidirectional closed loop as seen below. One control plane is shared amongst members as well as one management plane. So if you were to log into one switch, you are actually viewing the configuration for the stack. This is used on the Access Platforms such as Catalyst 3750/3850. StackWise can have more than 2 members, up to the stack limit
-<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRguQ7GRPRoSYAmPfJ4MCMN2r160qFDougT6yyluxFXu6n42Foxgg" alt="" /></p>
-
-<p><em>Virtual Switching System (VSS)</em> is used on the aggregation platforms such as Catalyst 4500/6500/6800. VSS is similar to Stackwise as there is one management plane and one control plane shared between connected switches. Typically with VSL, the links are going to be 2x10G LAG. VSS switches are udeployed in pairs and will usually have 1 active supervisor and 3 standby supervisors.</p>
-
-<p><em>Virtual Port Channel (vPC)</em> is very similar to VSS but it runs on the Data Center platforms such as Nexus 5000/7000/9000. The control plane is synchronized over a vPC Peer Link, which are typically 2x10GigE LAG. The biggest difference between vPC and VSS, is that vPC has <em>2</em> independent control planes and <em>2</em> independent management planes. vPC like VSS is deployed in pairs.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/27/EtherChannel-MultiChassis/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/">
-        EtherChannel PaGP
-      </a>
-    </h1>
-
-    <span class="post-date">26 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Port Aggregation Protocol (PAgP) is a Cisco proprietary protocol that is only supported on Cisco switches.</p>
-
-<p>The two modes of PAgP are:</p>
-<ul>
-  <li>auto: places a port into a passive negotiating state</li>
-  <li>desirable: places a port into active negotiating state</li>
-</ul>
-
-<p>For Layer 2 EtherChannels, the first port that comes up lends its MAC address to the EtherChannel.</p>
-
-<p>PAgP supports up to 8 Ethernet ports of the same type.</p>
-
-<p>For all EtherChannels (including on and PAgP), when a group is first created, all ports follow the parameters set for the first port to be added to the group. If you change the configuration of any of these parameters, you must also make changes to all ports in the group:</p>
-<ul>
-  <li>Allowed-VLAN list</li>
-  <li>Spanning-tree path cost for each VLAN</li>
-  <li>Spanning-tree port priority for each VLAN</li>
-  <li>Spanning-tree Port Fast setting</li>
-</ul>
-
-<p>For all Layer 2 EtherChannels, if the ports are access ports they must all be in the same VLAN.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-PAgP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/">
-        EtherChannel Load-Balancing
-      </a>
-    </h1>
-
-    <span class="post-date">26 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>The balancing method is locally significant and outbound. So it is OK for one side of a LAG to be src-MAC and the other side to be dest-IP.</p>
-
-<p>To configure the load-balancing method by using the<code class="highlighter-rouge">port-channel load-balance</code> global configuration command. EtherChannel load-balancing can use MAC Address or IP address, source or destination address, or both source and destination address.</p>
-
-<p>The selected load balancing mode applies to all ether channels on a switch.</p>
-
-<p>With source-MAC address forwarding, packets are distributed across the ports based on the source-MAC of the <em>incoming</em> packet. So packets from the same host use the same port in the channel.</p>
-
-<p>With destination-MAC address forwarding, packets are distributed across the ports of the channel based on the destination-MAC of the incoming packet. So packets destined to the same host use the same port in the channel.</p>
-
-<p>With source-and-destination MAC address forwarding, packets are distributed across the ports in a channel based on both the source and the destination MAC address. This is often used if it is not clear whether source-MAC or destination-MAC would be more appropriate.</p>
-
-<p>IP based forwarding has the same principles as the MAC based forwarding outlined above.</p>
-
-<p>To chose the appropriate load-balancing method, you must analyze the position of the EtherChannel in the network. For example, if you have 4 hosts going towards one router, you would be much better load-balancing based on source-MAC  than destination-MAC from the switch. On the router, you will be better off using destination-MAC.</p>
-
-<p>To configure EtherChannel load-balancing, in global config use the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`port-channel load-balance {dst-ip | dst-mac | src-dst-ip | src-dst-mac | src-ip | src-mac}
-</code></pre>
-</div>
-<p>`
-The default is src-mac.</p>
-
-<p>One negative of EtherChannel is that flows cannot exceed the bandwidth of an individual link. EtherChannel adds lanes to the highway but it doesn’t increase the speed limit.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/etherchannel/2017/02/26/EtherChannel-Load-Balancing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/">
-        EtherChannel LACP
-      </a>
-    </h1>
-
-    <span class="post-date">24 Feb 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>LACP is the IEEE standard for establishing a single logical channel out of several physical ports. It is popular as it can be used in mixed-vendor switch environments. LACP ensures that when an EtherChannel is created, all physical members all have the same speed, duplex, link-type, and VLAN information. LACP is a control protocol for LAG. The official name is IEEE 802.3ad Link Aggregation (LAG).</p>
-
-<p>LACP supports up to 16 Ethernet ports of the same type. Up to eight ports can be active, and up to eight ports can be in standby mode.</p>
-
-<p>LACP assigns system priority, port priority, and and an administrative key.</p>
-
-<p><em>System priority</em> and the MAC address form the System ID. Between two LACP neighbors, the switch with the lowest System ID will be the decision maker using the LACP Port Priority</p>
-
-<p><em>Port priority</em> and the port number form the port identifier. The switch uses the port identifier to decide which ports to put in standby mode when a hardware limitation prevents all ports from aggregating. Port priority is also used when more than 8 physical ports are put into a channel group. Port priority will decide which 8 ports will be the active ports in the etherchannel.</p>
-
-<p><em>Administrative key</em> defines the capabilities of a port to aggregate with other ports, based on the port’s physical characteristics.</p>
-
-<p>Sample Configuration:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# interface range GigabitEthernet0/1-2
-SW1# channel-group 1 mode active
-SW1# exit
-SW1# interface port-channel 1
-SW1# switchport trunk encapsulation dot1q
-SW1# switchport mode trunk
+errdisable recovery cause bpduguard
+errdisable recovery interval 120
 </code></pre>
 </div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2# interface range GigabitEthernet0/1-2
-SW2# channel-group 1 mode active
-SW2# exit
-SW2# interface port-channel 1
-SW2# switchport trunk encapsulation dot1q
-SW2# switchport mode trunk
+<p>The errdisable section enables the port after 120 seconds, in case the port is placed into err disabled state to due BPDU Guard.</p>
+
+<p>Optionally, you can set BPDU Guard as the default configuration on all interfaces with the following global commands:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>spanning-tree portfast bpduguard default
+spanning-tree portfast default
 </code></pre>
 </div>
-
-<p>You can also start with the <code class="highlighter-rouge">interface port-channel 1</code> command and then define the channel group. For Layer 3 ether channel, you would want to define the port-channel first and then issue the <code class="highlighter-rouge">no switchport</code> interface command.</p>
-
-<p>The <code class="highlighter-rouge">interface port-channel 1</code> is the logical interface. The channel-group command binds the logical interface to a physical port. The port-channel interface (numbered 1 - 48) correspond to the one specified with the channel-group interface configuration command.</p>
-
-<p>A successful Layer 2 EtherChannel will show SU with the command <code class="highlighter-rouge">show etherchannel summary</code>. An unsuccessful layer 2 will show SD.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/etherchannel/2017/02/24/EtherChannel-LACP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/mst/2017/02/23/MST-IST-CIST/">
-        MST IST-CIST
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/">
+        Spanning Tree BPDU Filter
       </a>
     </h1>
 
-    <span class="post-date">23 Feb 2017</span>
+    <span class="post-date">28 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -374,43 +218,120 @@ SW2# switchport mode trunk
     
 
     <article>
-      <p>IST is the Internal Spanning Tree, also known as instance 0. This instance is designated to carry all STP information, including information from other instances. MSTP does not send BPDUs for ever instance separately - these are all contained within the IST BPDU.</p>
+      <p>BPDU Filter is another optional feature of STP. It is similar to BPDU Guard, in that it is used to terminate the STP domain. Like BPDU Guard, it can be enabled globally or per interface, but unlike BPDU Guard, BGPU filter behaves differently depending on how it is enabled.</p>
 
-<p>To accommodate, the other instances information is carried within the IST BPDU using special M-Record fields - one for every active MSTI. These fields carry carry MSTP information such as bridge priority, root path cost, and port priority.</p>
+<p>If BPDU Filter is enabled at the interface level, it silently drops all received inbound BPDUs and does not send outbound BPDUs. Unlike BPDU Guard, there is no err-disabled option for BPDU Filter. Here is an example of BPDU Filter enabled at the interface level:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config-if)# switchport mode access
+SW1(config-if)# switchport access vlan 10
+SW1(config-if)# spanning-tree bpdufilter enable
+</code></pre>
+</div>
 
-<p>IST also plays a huge role in multiple MSTP region configurations. When a switch receives a BPDU from another region, it marks the corresponding port as MSTP <em>boundary</em>. The interconnected, different region switches then form a CIST spanning across the regions.</p>
+<p>When BPDU Filter is enabled globally, it will only affect PortFast enabled ports. The switch will send out exactly 11 BPDUs, and inbound BPDUs are not filtered. The reason 11 BPDUs are sent is the default Hello timer is 2 seconds and the default Max Age timer is 20 seconds. If the switch receives inbound BPDUs, the port loses its PortFast status and STP is negotiated normally on that port. For this reason, you can say that BPDU Filter enabled globally is a safer option than BPDU enabled at the interface level, as STP loops cannot form.</p>
 
-<p><img src="http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-physical-topology.png" alt="" /></p>
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/">
+        Spanning Tree BackboneFast
+      </a>
+    </h1>
 
-<p>Remember, an IST is internal to a region while a CIST is the IST spanning across multiple regions.</p>
+    <span class="post-date">27 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
 
-<p>Here is a sample MST BPDU:</p>
+    <article>
+      <p>BackboneFast enables fast reconvergence due to indirect link failures. The key operation happens when a switch begins receiving inferior BPDUs.  When a switch loses the link off its Root Port, it immediately starts sending BPDUs announcing itself as the new Root. Usually, when a switch receives inferior BPDUs, it will wait for its Max Age timer to expire before beginning STP convergence. Once its Max Age timer expires, the inferior BPDU ages out and the switch will then forward its superior BPDU to the neighbor switch who was sending the inferior BPDU.</p>
 
-<p><img src="http://blog.ine.com/wp-content/uploads/2010/02/mstp-3-multi-region-cst-mstp-packet-format.png" alt="" /></p>
+<p>When BackboneFast is enabled, as soon as a switch receives an inferior BPDU, it will send RLQ (Root Link Query) messages out all it’s non-designated ports. The RLQ asks other switches if the current Root Bridge is accessible via that switch. Note it doesn’t wait for its Max Age timer to expire - it begins sending RLQ messages immediately. The RLQ is a new type of PDU defined within the BackboneFast specification. The RLQ is essentially a proactive way to age out ports compared to just waiting on the Max Age timer to expire.</p>
 
-<p>The CIST Root is elected among all regions while the CIST Regional Root is elected in every region. The IST Root = CIST Regional Root in cases where multiple MST regions interoperate. The CIST Root is the bridge that has the lowest Bridge Id among all regions - the CIST Root could be a bridge inside a region or a boundary switch in a region. The CIST Regional Root is a <em>boundary switch</em> elected for every region based on the shortest external path cost to reach the CIST Root. As mentioned above, it is important to remember that the CIST Regional Root becomes the root of the IST for the given region as well - the region changes its IST election process to make the CIST Regional Root the IST root.</p>
+<p>Based on the received RLQ responses, the switch will update its root ports and designated ports accordingly.. However all ports still transition through the regular IEEE 802.1D STP port states - listening, learning, and forwarding/blocking.</p>
 
-<p>When an MST switch boots up, it declares itself the CIST Root and CIST Regional Root and announce that it its outgoing BPDUs on all internal ports. On boundary ports (those that have received BPDUs from another region), the switch will only advertise its CIST Root Bridge ID and CIST External Root Path Cost, hiding the details of the region’s inner topology.</p>
+<p>To enable BackboneFast use the command <code class="highlighter-rouge">spanning-tree backbonefast</code> on all switches in the Layer 2 domain. The easiest way to verify that BackboneFast is enabled is to use the <code class="highlighter-rouge">show spanning-tree summary</code> command.</p>
 
-<p>The region that contains the CIST Root automatically places all of its boundary ports in an unblocked state.</p>
-
-<p>The <em>CIST External Root Path Cost</em> is the cost to reach the CIST Root across the links connecting the boundary ports. When a BPDU is received on an internal link, this cost is not changed.</p>
-
-<p>Only a boundary switch can be elected as the CIST Regional Root, and this is the switch with the lowest cost to reach the CIST Root. If a boundary switch receives a BPDU with a lower CIST External Root Path cost on one of its internal ports, it will stop announcing itself as the CIST Regional Root and start announcing the new metric out of its boundary ports.</p>
-
-<p>If a switch is a CIST Regional Root, it elects one of its boundary ports as the CIST Root port and blocks all other boundary ports. If a boundary switch is not the CIST Regional Root, it will mark its boundary ports as Designated or Alternate, Designate only if it has a better External Root Path cost or in case of a tie, lower CIST Regional Root Bridge ID.</p>
-
-<p>The regional MSTIs are constructed independently at every region, but they have to be mapped to the CIST at the boundary ports. This equates to the inability to load-balance VLAN traffic on the boundary links by mapping VLANs to different instances.</p>
-
-<p>A topology change in the CST could change all paths in the topology thus requiring massive MAC address relearning.</p>
+<p>This is a great Cisco article describing the operation: <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/12014-18.html">BackboneFast</a>.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/mst/2017/02/23/MST-IST-CIST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/mst/2017/02/23/MST-IST-CIST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/27/STP-BackboneFast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/">
+        STP UplinkFast
+      </a>
+    </h1>
+
+    <span class="post-date">27 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>UplinkFast provides fast convergence in case the link on which the root port is connected suffers a failure. It does this with the use of an uplink group. An uplink group is a set of Layer 2 interfaces, of which only one is forwarding at a particular time. If the root port (forwarding port) goes down, then a successor root port is chosen which immediately goes into Forwarding state, bypassing the Listening and Learning phases.</p>
+
+<p>UplinkFast functionality is built into RSTP, so UplinkFast is only applicable with legacy IEEE 802.1D.</p>
+
+<p>When UplinkFast is enabled on a switch, that switch’s bridge priority will automatically be increased to 49152 and its port cost will be increased to 3000. This is to ensure that the switch does not become a transit switch.</p>
+
+<p>To enable UplinkFast, go to the switch on which you want it to run and run <code class="highlighter-rouge">spanning-tree uplinkfast</code> in global configuration mode.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/27/STP-UplinkFast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/">
+        STP PortFast
+      </a>
+    </h1>
+
+    <span class="post-date">27 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>PortFast is used in Spanning Tree to avoid the lengthy delay of the Listening and Learning phases during STP convergence. When PortFast is enabled on an interface, the interface skips the Listening and Learning phases and goes straight into the Forwarding state. PortFast should be used on access switches on ports where you know end devices will be plugged in.</p>
+
+<p>To enable PortFast on an interface, in interface sub configuration mode use <code class="highlighter-rouge">spanning-tree portfast</code>. If it is a trunk you must append the <code class="highlighter-rouge">trunk</code> keyword after the command, and if it is an access port you should use the <code class="highlighter-rouge">edge</code> keyword.</p>
+
+<p>Another way to enable PortFast for access ports is to use <code class="highlighter-rouge">spanning-tree portfast default</code> in global configuration mode. Once enabled, all access ports will automatically have PortFast enabled.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/27/STP-Portfast/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

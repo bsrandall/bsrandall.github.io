@@ -3,6 +3,7 @@ layout: post
 title: Static Routing
 category: General Routing
 tag: knowledge
+date: 2017-04-03 14:40:45
 ---
 Static routes do have some advantages over dynamic routing:
 - static routes are not advertised over the network by default, resulting in better security

@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/05/IP-SLA-Overview/">
-        IP SLA Overview
+      <a href="/rip/2017/04/19/RIP-Messages/">
+        RIP Messages
       </a>
     </h1>
 
-    <span class="post-date">05 Apr 2017</span>
+    <span class="post-date">19 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,74 +177,29 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Cisco IP SLA uses active traffic monitoring for measuring traffic performance. It performs this by generating traffic in a continuous, reliable, and predictable manner and then analyzing the results. The information collected includes response time, one-way latency, jitter, packet loss, voice quality scoring, network resource availability, application performance, and server response time.</p>
+      <p><a href="http://www.tcpipguide.com/free/diagrams/ripformatv1.png">link</a>
+Each RIP Message that contains a single command and a version number can contain up to 25 routes. The command is either 1 for a Request Message or 2 for a Response Message. The Version will be 1 for RIPv1.</p>
 
-<p>If configuring simple IP SLA Operations such as ICMP echo, the operation only has to be configured on the local router. But for the more advanced Operations, you must set up the remote router or device to <em>respond</em> to your IP SLA traffic. The IP SLA Responder is a component embedded in the destination Cisco device that allows the system to anticipate and respond to IP SLA request packets. Only a Cisco device can be a source for a destination IP SLA Responder.</p>
+<p>The <em>Address Family Identifier</em></p>
 
-<p>To see the IP SLA Operation types, enter IP SLA configuration mode as follows:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)#ip sla 1
-R1(config-ip-sla)#?
-IP SLAs entry configuration commands:
-  dhcp         DHCP Operation
-  dns          DNS Query Operation
-  ethernet     Ethernet Operations
-  exit         Exit Operation Configuration
-  ftp          FTP Operation
-  http         HTTP Operation
-  icmp-echo    ICMP Echo Operation
-  icmp-jitter  ICMP Jitter Operation
-  mpls         MPLS Operation
-  path-echo    Path Discovered ICMP Echo Operation
-  path-jitter  Path Discovered ICMP Jitter Operation
-  tcp-connect  TCP Connect Operation
-  udp-echo     UDP Echo Operation
-  udp-jitter   UDP Jitter Operation
-  voip         Voice Over IP Operation
-</code></pre>
-</div>
-
-<p>To set up a Cisco routing device as an SLA responder, you would use the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# ip sla responder
-</code></pre>
-</div>
-
-<p>After an IP SLA Operation has been configured, you must schedule the operation to run:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# ip sla schedule 1 start-time now life forever
-</code></pre>
-</div>
-
-<p>To then see the results of the IP SLA configuration, use the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1# show ip sla statistics
-</code></pre>
-</div>
-
-<p>So starting from the top, a real quick example of an IP SLA configuration to ping an IP address every 30 seconds for 3 hours would look like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# ip sla 1
-R1(config-ip-sla)# icmp-echo 150.1.3.3
-R1(config-ip-sla-echo)# frequency 30
-R1(config-ip-sla-echo)# exit
-R1(config)# ip spa schedule 1 start-time now life 10800
-R1(config)# exit
-</code></pre>
-</div>
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/05/IP-SLA-Overview/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/rip/2017/04/19/RIP-Messages/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/05/IP-SLA-Overview/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/rip/2017/04/19/RIP-Messages/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/">
-        Floating Static Routes
+      <a href="/rip/2017/04/19/RIP-Timers/">
+        RIP Timers
       </a>
     </h1>
 
-    <span class="post-date">05 Apr 2017</span>
+    <span class="post-date">19 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -252,121 +207,139 @@ R1(config)# exit
     
 
     <article>
-      <p>A Floating Static route is a static route whose administrative distance has been increased in order to make the route function as a backup route. The global command would look like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>ip route 192.168.23.0 255.255.255.0 192.168.13.3 121
+      <p>There are several timers related to RIP. The <strong>update timer</strong> on Cisco routers varies between 25.5 and 30 seconds (to prevent synchronization). This is the interval a router waits before sending new periodic Response messages.</p>
+
+<p>Cisco calls the expiration timer (or timeout) the <strong>invalid timer</strong>. This is the amount of time a route can stay in the route table without being updated. The default Cisco invalid timer for RIP is 180 seconds (6 Update periods). If an updated route is not heard within the invalid timer, the hop count for the route is changed to 16, the equivalent of making the route unreachable. In IOS, the route in the routing table will say “possibly down” when viewed via <code class="highlighter-rouge">show ip route</code>.</p>
+
+<p>The <strong>garbage timer</strong> (or flush timer) is the amount of time the route that was made unreachable by the invalid timer will continue to be advertised.. Once the garbage timer expires, the route will be completely removed from the routing table. With Cisco IOS it is set to 240 seconds by default, 60 seconds longer than the invalid timer.</p>
+
+<p>RFC 1058 for RIP does not call for the use of <strong>holddown timers</strong>, but Cisco’s implementation implements it. We saw this earlier - the timer starts when a route is received that is already in the route table, but the new route has a higher hop count than the stored route. It is 180 seconds by default.</p>
+
+<p>The four timers can be manipulated with the command:
+<strong>timers basic</strong> <em>update invalid holddown flush</em></p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/rip/2017/04/19/RIP-Timers/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/rip/2017/04/19/RIP-Timers/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/rip/2017/04/18/RIP-General/">
+        RIP General
+      </a>
+    </h1>
+
+    <span class="post-date">18 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>RIP exchanges UDP encapsulated packets over UDP port 520. RIP has two message types:</p>
+<ul>
+  <li><strong>Request messages</strong> are used to ask neighboring routers to send an update</li>
+  <li><strong>Response message</strong> carries the actual update</li>
+</ul>
+
+<p>When a RIP router process starts, it broadcasts a Request message out <em>each</em> RIP-enabled interface. The begins the state machine with neighbors receiving a RIP request and responding with a RIP Response.</p>
+
+<p>When the requesting router receives the Response message, it processes the enclosed information and responds in one of 3 ways, depending on the information in the RIP Response.</p>
+<ol>
+  <li>If a route in the Response is new, it is entered into the route table along with the address of the advertising router.</li>
+  <li>If there is a route for a network that RIP has already entered into the table and the new route has a lower metric (hop count), then the new route will replace the old route.</li>
+  <li>If there is a route for a network that RIP has already entered into the table and the new route has a higher hop count and the update was originated by the recorded next-hop router, the router will be marked as unreachable for a specified holddown period. If the same neighbor is still advertising the higher hop count at the end of the holddown timer, the routing table is updated with the new metric.</li>
+</ol>
+
+<p>RIP does not store information received in a Topology table, nor do routers have a picture of the entire topology. They receive routes in Response messages, process the information in those messages, and then move on. The RIP Response messages contain that router’s full routing table, with the exception of routes that are stressed by the split-horizon rule.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/rip/2017/04/18/RIP-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/rip/2017/04/18/RIP-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/">
+        IPv6 Stateless Address AUtoconfiguration
+      </a>
+    </h1>
+
+    <span class="post-date">17 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Stateless Address Autoconfiguration is a mechanism that allows a host to generate its own unicast address using a combination of locally available information and information advertised by routers. Here are the 4 steps:</p>
+<ol>
+  <li>The host creates its own link-local unicast address by appending a randomly generated or EUI-64 created Interface ID to FE80::/10.</li>
+  <li>The host performs Duplicate Address Detection on its newly created link-local address.</li>
+  <li>The host (if it hasn’t already received one), sends a Router Solicitation message. The Router Advertisement includes the prefix, prefix length, and link MTU. The host uses this information along with its self created Interface ID to create its global unicast address. The default gateway is the Router’s link-local address.</li>
+  <li>The host performs Duplicate Address Detection on its global unicast address before using.</li>
+</ol>
+
+<p>In addition to SLAAC, there is also DHCPv6, which is a stateful process. Whether a host that is configured to obtain its addressing information automatically uses SLAAC or DHCPv6 depends upon the configuration of the router’s Router Advertisement message.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/">
+        IPv6 EUI-64 Addressing
+      </a>
+    </h1>
+
+    <span class="post-date">17 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>EUI-64 is an IEEE defined process where EUI stands for Extended Unique Identifier. The EUI-64 process enables automatic Interface ID (host portion) creation. It uses the interface’s Ethernet MAC address to generate a 64-bit interface ID. The idea behind it is that a MAC address is globally unique, so combined with Router Advertisements providing prefix and prefix length, a device can self assign its IP address. The steps of EUI-64 address creation are outlined below.</p>
+<ol>
+  <li>The MAC address is split in the middle with 24 bits on the left and 24 bits on the right.</li>
+  <li>FFFE is inserted between the 24 bits.</li>
+  <li>The seventh bit is inverted (if it is 0 it becomes 1 and vice versa). The hexadecimal value (since it is the 7th bit or 2nd bit from the right) will go from 0 to 2.</li>
+</ol>
+
+<p>Here is an example of how to configure an EUI-64 address on an interface.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface gig0/1
+R1(config-if)# ipv6 address ipv6-prefix/prefix-length **eui-64**
+R1(config-if)# end
 </code></pre>
 </div>
-<p>This would set the administrative distance to this route as 121, which would make it’s AD higher than a RIP, OSPF, or EIGRP learned route.</p>
+<p>`
+There are some privacy concerns relating to using a device’s MAC address to generate its Layer 3 address. Because of this, many vendors have replaced the EUI-64 process with a random process to generate the Interface ID.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/05/CEF/">
-        CEF
-      </a>
-    </h1>
-
-    <span class="post-date">05 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Routing is the process by which the router finds the interface to send outgoing packets out of. Switching is the actual process of physically transferring this packets from the ingress interface to the degree interface,</p>
-
-<p>Process Switching is the oldest of the switching methods available in Cisco devices. When a packet arrives, the switching process relies on the CPU to do start at the top of the RIB and for each route do a binary AND against the destination to determine the longest match. It has to do this for every packet as it arrives. The time it may take for a lookup is dependent on where the route sits in the forwarding table, so your worst case scenario is the router would have to do 100,000 lookups.</p>
-
-<p>Fast Switching is an improvement on Process Switching where a lookup only has to be done on the first inbound packet. The rest of the “flow” knows the switching path and utilizes what was learned from the lookup on the first packet.</p>
-
-<p>Cisco Express Forwarding is the modern switching process found in Cisco devices. Once the router builds the RIB, the router pre calculates the routes and then stores these calculations in working memory, or in the case of devices that perform hardware acceleration, in port based ASICs.</p>
-
-<p>To see the CEF calculated for a given route, use <code class="highlighter-rouge">show ip cef 192.168.1.10</code>, for example.</p>
-
-<p>One thing to remember is that the switching process is responsible for load balancing. This is done on a flow basis, not on a per packet basis as that would be too inefficient and packets would almost always arrive out of order on the other end.</p>
-
-<p><code class="highlighter-rouge">show ip interface</code> will tell you if CEF has been enabled. A key indicator of a router that does not have CEF enabled is one that has high CPU usage. It is also important to remember that packets that are logged do not get CEF switched, so any logging requires a lot of available CPU.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/05/CEF/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/05/CEF/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/05/Backup-Interface/">
-        Backup Interface
-      </a>
-    </h1>
-
-    <span class="post-date">05 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Backup Interface is a Cisco feature that can be used in place of floating static routes on point-to-point interfaces.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>interface Serial0/0/0
-  backup interface Serial0/0/1
-  backup delay 10 30
-</code></pre>
-</div>
-<p>In the example above interface Serial0/0/1 is the backup for interface Serial0/0/0. If Serial0/0/0 is down for 10 seconds, then Serial0/0/1 will take over as the primary interface. After Serial 0/0/0 has been up for 30 seconds, it will resume its role as the primary interface.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/05/Backup-Interface/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/05/Backup-Interface/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/">
-        Egress Interface vs Next Hop Static Routing
-      </a>
-    </h1>
-
-    <span class="post-date">04 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>There are some difference on router behavior depending on if you use a Next Hop IP address or an Egress Interface as the destination in your static route. This article will describe some of this e differences.</p>
-
-<p>If you use the Next Hop IP address, the router will have to find the interface leading towards the destination address before the route will be installed in the forwarding table. When the router finds the egress interface it will then check to see if the interface is point-to-point or multipoint. If it is multipoint, then the router will need the MAC address of the Next Hop address. If it doesn’t have it, then it will need to use ARP.</p>
-
-<p>If you use the outgoing interface the router does not have to do the recursive lookup to find the correct outgoing interface. But the problem is the router doesn’t know which layer 2 neighbor routers exist on that link. So the only choice the router has is to ARP for the final destination address (rather than next hop as above). Where this can get outrageous is that the router will need to have MAC addresses resolved for <em>all hosts</em> in the subnet and you will need proxy ARP enabled on all routers in the segment. The example gets even more outrageous if you define a default route that points to a multipoint interface. So it should be clear this should only be used on point-to-point interfaces.</p>
-
-<p>Point-to-point interfaces do not have the same problem as the router knows there is only one host to receive the traffic on the other end. In other words, recursion will not be required nor will Layer 2 resolution be required.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

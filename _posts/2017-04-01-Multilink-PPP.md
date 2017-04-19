@@ -3,6 +3,7 @@ layout: post
 title: PPP Multilink
 category: Layer 2 WAN
 tag: knowledge
+date: 2017-04-01 17:40:45
 ---
 Multilink PPP is a method used to aggregate multiple single PPP links and utilize them as one. It is not that dissimilar from EtherChannel used with Ethernet. PPP frames can be fragmented, sent down different links, and then reassembled in order on the far side of the link. Multilink PPP uses a 2 or 4 byte sequencing header in each packet, and the remote MLPPP recover is tasked with reconstructing the frames in the correct order. The configuration is pretty straightforward.
 

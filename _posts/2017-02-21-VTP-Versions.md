@@ -3,6 +3,7 @@ layout: post
 title: VTP Versions
 category: VTP
 tag: knowledge
+date: 2017-02-21 19:40:45
 ---
 VTP is a Cisco proprietary protocol that allows VLAN administration to be shared across switches. It gives an administrator the capability to centrally administer VLAN creation across one or two switches, and have those VLANs propagate across a VTP domain made up of any number of switches.
 
@@ -18,6 +19,6 @@ Version 3 introduced the following enhancements:
 
 With version 3, there are two types of VTP servers - primary and secondary. There is only one primary server, and the rest of the secondary servers act as backups to the primary. To declare a server as primary, use the following:
 ```
-`SW1# vtp primary vlan
+SW1# vtp primary vlan
 ```
 Notice the command is done in privileged mode, not configure mode!

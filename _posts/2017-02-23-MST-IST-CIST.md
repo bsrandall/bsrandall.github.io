@@ -3,6 +3,7 @@ layout: post
 title: MST IST-CIST
 category: MST
 tag: knowledge
+date: 2017-02-23 12:40:45
 ---
 
 IST is the Internal Spanning Tree, also known as instance 0. This instance is designated to carry all STP information, including information from other instances. MSTP does not send BPDUs for ever instance separately - these are all contained within the IST BPDU.

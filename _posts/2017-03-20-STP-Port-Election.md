@@ -1,8 +1,9 @@
 ---
 layout: post
-title: STP Root Bridge Election
+title: STP Port Election
 category: Spanning Tree
 tag: knowledge
+date: 2017-03-20 15:40:45
 ---
 After the election of the STP Root Bridge, all ports in the Layer 2 Switch topology will need to be assigned a state. The steps can be listed as follows:
 - All ports on the Root Bridge become Designated Ports

@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/08/CST/">
-        Common Spanning Tree
+      <a href="/layer%202/2017/03/30/Smartport-Macros/">
+        Smartport Macros
       </a>
     </h1>
 
-    <span class="post-date">08 Mar 2017</span>
+    <span class="post-date">30 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,153 +177,53 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Common Spanning-Tree (CST) assumes one spanning-tree instance for the entire bridged network, regardless of the number of VLANs. Running only one instance reduces CPU load. All CST BPDUs are sent over trunks using the native VLAN with untagged frames.</p>
+      <p>Smartport Macros are used to define a well-known template of configuration onto multiple interfaces. Several Smartport Macros come predefined in the switch. To see them, use <code class="highlighter-rouge">show parser macro</code>. To expand one of the macros use <code class="highlighter-rouge">show parser macro name ___________</code>.</p>
 
-    <article>
-    <div class="post-more">
-      
-      <a href="/spanning%20tree/2017/03/08/CST/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/spanning%20tree/2017/03/08/CST/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202/2017/03/07/UDLD/">
-        UDLD
-      </a>
-    </h1>
-
-    <span class="post-date">07 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>UDLD, or Unidirectional Link Detection, is a Cisco proprietary, Layer 2 protocol that helps detects if either the transmit or the receive fails on a link. It’s purpose is similar to LoopGuard, but it is completely independent of Spanning Tree. The operation of UDLD is fairly simple. A switch sends UDLD Hellos and if it receives echoes of those Hellos back it knows the link is an active two way link. As soon as it quits receiving the UDLD Hellos, it knows there must be a unidirectional link failure. UDLD operates at the physical port level, compared to say STP LoopGuard which works at the logical port level (EtherChannel). Also UDLD functions at linkup, while LoopGuard does not. It is recommended to enable both UDLD and LoopGuard.</p>
-
-<p>UDLD is mainly used on fiber connections, but it can also be useful on Ethernet connections that have dumb devices in the middle such as media converters.</p>
-
-<p>The default advertisement timer is 15 seconds and the hold time is 5 seconds. Upon detecting the loss of a UDLD neighbor, UDLD will send seven additional advertisements (one per second). If no reply is received, the link’s bidirectional status transitions to unknown.</p>
-
-<p>To set up UDLD globally, use <code class="highlighter-rouge">SW1(config)# udld enable</code> and use the <code class="highlighter-rouge">SW1(config-if)# udld port enable</code> command to enable per interface. Use <code class="highlighter-rouge">SW1(config)# udld enable aggressive</code> if you want the ports to be shut down upon UDLD neighbor failure.</p>
-
-<p>In order to reset an interface that was shut down by UDLD, use <code class="highlighter-rouge">SW1# udld reset</code>, or the typical shut / no shut commands.</p>
-
-<p>You could also enable auto recovery of the interface if desired. It would look like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# errdisable recovery cause idled
-SW1(config)# errdisable recovery interval 30
+<p>This is the old style of configuring switchport macros:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# macro name VLAN146
+Enter macro commands one per line. End with the character '@'.
+switchport mode access
+switchport access vlan 146
+spanning-tree bpdufilter enable
+@
+SW1(conf)\#
+</code></pre>
+</div>
+<p>The # symbol can be used at the beginning of a line to designate comments. Then to apply the macro to an interface or interface range:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# interface range gig0/1-2
+SW1(conf-if-range)# macro apply VLAN146
+SW1(conf-if-range)# exit
 </code></pre>
 </div>
 
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/layer%202/2017/03/07/UDLD/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/layer%202/2017/03/07/UDLD/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202/2017/03/06/LLDP/">
-        LLDP
-      </a>
-    </h1>
-
-    <span class="post-date">06 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>LLDP is the IEEE equivalent of CDP. It’s development was due to Cisco’s deployment of CDP, so the IEEE sought to make a universal version. It is very similar to CDP and many of the Cisco commands for LLDP are the same commands as those for CDP, just substituting lldp for cdp. Like CDP, LLDP is a link layer protocol, but unlike CDP it is specifically for Ethernet networks. LLDP is described under IEEE 802.1AB LLDP.</p>
-
-<p>LLDP, like CDP, also uses TLVs to describe neighbor devices and capabilities.</p>
-
-<p>One additional feature LLDP includes is that LLDP has a TLV for an interface description, so if you set a description with <code class="highlighter-rouge">SW1#(config-if) description LINK_SW1_SW2</code>, that description would show up under Switch 2 LLDP like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW2# show lldp neighbors detail
-
-Chasis id: 0019.569d.571a
-Port id: Fa0/24
-Port Description: LINK_SW1_SW2
-System Name: SW1.cisco.com
+<p>The modern style to define a switchport macro is here:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# define interface-range VLAN146 gig0/1-2
+SW1(conf)# interface range macro VLAN146
+SW1(conf-if-range)# switchport mode access
+SW1(conf-if-range)# switchport access vlan 146
+SW1(conf-if-range)# spanning-tree bpdufilter enable
+SW1(conf-if-range)# exit
+SW1(conf)# 
 </code></pre>
 </div>
 
-<p>An enhancement was made to LLDP that allows you to use LLDP for VLAN assignment or POE requirements. This enhanced version is known as LLDP-MED (Media Endpoint Discovery).</p>
-
-<p>One difference between CDP and LLDP is that with LLDP the Hello timer is set to 30 seconds by default and the hold time is set to 4 times the Hello time. CDP is 60 seconds and the hold timer is 3 times the Hello time, as a reminder. Another difference is that LLDP has a reinitialization delay (default 2 seconds).  This is the time that an LLDP port waits before reinitializing LLDP transmission. The command to set the reinitialization period is <code class="highlighter-rouge">SW1#(config) lldp reinit</code>.</p>
-
-<p>You can also set LLDP up to only transmit and not receive LLDP packets. This is done by using the <code class="highlighter-rouge">SW1#(config) no lldp receive</code> command. You can also do this on a per-interface basis. Likewise, you can also disallow sending LLDP packets with the <code class="highlighter-rouge">SW1#(config) no lldp transmit</code> command, which can also be done at the interface level.</p>
-
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/06/LLDP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/30/Smartport-Macros/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/06/LLDP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/30/Smartport-Macros/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/06/CDP-Configuration/">
-        CDP Configuration
+      <a href="/layer%202/2017/03/30/Private-VLANs/">
+        Private VLANs
       </a>
     </h1>
 
-    <span class="post-date">06 Mar 2017</span>
-     | 
-    
-    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
-    
-    
-
-    <article>
-      <p>To enable CDP globally we use <code class="highlighter-rouge">cdp run</code>. To enable CDP on a per-interface basis, use <code class="highlighter-rouge">cdp enable</code>.</p>
-
-<p><code class="highlighter-rouge">R1#(config) cdp timer seconds</code>  specifies the frequency of CDP update transmissions.</p>
-
-<p><code class="highlighter-rouge">R1#(config) cdp holdtime seconds</code> specifies the amount of time a receiving device should hold the information sent by your device before discarding it.</p>
-
-<p><code class="highlighter-rouge">R1#(config) no cdp adertise-v2</code> disables the advertisement of CDPv2 advertisements if for some crazy reason you need to.</p>
-
-<p><code class="highlighter-rouge">R1#(config) clear cdp counters</code> resets the traffic counters to zero.</p>
-
-<p><code class="highlighter-rouge">R1#(config) clear cdp table</code> deletes the CDP table of information about neighbors</p>
-
-<p><code class="highlighter-rouge">R1#(config) show cdp</code> displays the interval between CDP transmissions, the number of seconds a CDP advertisement is valid for a given port, and the version of the advertisement</p>
-
-<p><code class="highlighter-rouge">R1#(config) show cdp interface [type number]</code> displays information about interfaces on which CDP is enabled</p>
-
-<p><code class="highlighter-rouge">R1#(config) show cdp entry device-name</code> displays information about a specific neighbor</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/layer%202/2017/03/06/CDP-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/layer%202/2017/03/06/CDP-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202/2017/03/06/CDP-Basics/">
-        CDP Basics
-      </a>
-    </h1>
-
-    <span class="post-date">06 Mar 2017</span>
+    <span class="post-date">30 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -331,60 +231,190 @@ System Name: SW1.cisco.com
     
 
     <article>
-      <p>CDP is a layer 2, Cisco proprietary device discovery protocol. Even though it is a Layer 2 protocol, it provides information about Layer 3 protocols (such as IP address). CDP operates by its member devices sending multicasts to the link-local multicast address 01:00:0c:cc:cc:cc (same as VTP). The member devices listen for multicasts at that address, process them accordingly, and store the information in a local table. The announcements are sent out every 60 seconds by default.</p>
+      <p>Protect Ports (discussed earlier) are a nice security feature of Cisco switches. When two ports are protected, they are not allowed to have direct communication with each other. But one limitation of protected ports is that they are only locally significant, so there is no way for protected ports to exist on different switches and follow the protection rules.</p>
 
-<p>SNAP (Subnetwork Access Protocol) is required to run CDP, so effectively CDP can run on any data-link protocol that supports SNAP. Ethernet, Frame Relay, and ATM are example medias that support SNAP and thus CDP.</p>
+<p>The Private VLAN feature was created to solve this limitation. Private VLANs are more complex and can span multiple physical switches. Private VLANs split what would normally be a single broadcast domain defined by a single VLAN into multiple isolated broadcast subdomains, that are defined by a primary VLAN and its secondary VLANs. In essence it allows us to create VLANs inside VLANs, and is not un-similar to the concept of Confederations in BGP.</p>
 
-<p>CDP relays the information about devices by Type-Length-Value (TLV) fields in the CDP packets. The <em>Length</em> is the length (in bytes) of the Type-Value-Length fields. The Type and Value fields are described below.</p>
+<p>Private VLANs are used to increase security. We most often see them in a shared color facility. This allows the color provider to have the customers exist on the same VLAN (and thus the same subnet), without allowing the different customers to communicate directly with each other.</p>
 
-<h4 id="type">Type</h4>
+<p>One pitfall you have to remember with Private VLANs is that it requires VTP to either be in Transparent mode or to be off.</p>
+
+<p>There is some terminology to remember when dealing with Private VLANs:</p>
 <ul>
-  <li>Device ID - 0x0001</li>
-  <li>Address - 0x0002</li>
-  <li>Port ID - 0x0003</li>
-  <li>Capabilities - 0x0004</li>
-  <li>Version - 0x0005</li>
-  <li>Platform - 0x0006</li>
-  <li>IP Prefix - 0x0007</li>
-  <li>VTP Management Domain - 0x0009 {: .red}</li>
-  <li>Native VLAN - 0x000a {: .red}</li>
-  <li>Duplex Status - 0x000b {: .red}</li>
-  <li>Appliance ID - 0x000c {: .red}</li>
-  <li>Power consumption - 0x0010 {: .red}</li>
+  <li><em>Promiscuous ports</em> are allowed to talk to all other ports within the primary VLAN</li>
+  <li><em>Isolated ports</em> are only allowed to talk with promiscuous ports</li>
+  <li><em>Community ports</em> are allowed to talk with other ports in their own community as well as any promiscuous ports,  but they are not allowed to talk to ports in other communities</li>
 </ul>
 
-<h4 id="value">Value</h4>
-<ul>
-  <li>Device ID - MAC address in ASCII or the FQDN</li>
-  <li>Address</li>
-  <li>Port ID - ASCII string that names the port from which the message was sent</li>
-  <li>Capabilities - has a value describing the device capabilities:
-    <ul>
-      <li>0x01 - level 3 routing</li>
-      <li>0x02 - level 2 transparent bridging</li>
-      <li>0x04 - level 2 source-route bridging</li>
-      <li>0x08 - level 2 switching not running Spanning Tree</li>
-      <li>0x10 - sends and receives packets for a network layer protocol</li>
-      <li>0x20 - the device does not forward IGMP reports</li>
-      <li>0x40 - level 1 function</li>
-    </ul>
-  </li>
-  <li>Version - software version running the device</li>
-  <li>Platform - ASCII string describing the device (e.g. Cisco 7000)</li>
-  <li>IP Prefix - a set of 0 or more IP Prefixes</li>
-</ul>
+<p>The configuration steps are a little unnatural as well. The port roles are defined by the interface’s association to a primary VLAN and one or more secondary VLANs. First the secondary VLANs are created and defined as either community or isolated. Then the primary VLAN is defined, and the secondary VLANs are associated with the primary VLAN.</p>
 
-<p>Switches see the MAC multicast address used by CDP as a special address and will not forward it out of other interfaces on a switch. Routers do not forward layer 2 frames out of their interfaces ever, so therefore only directly connected neighbors receive the CDP advertisement.</p>
+<p>Here is an example configuration with VLAN 500 as the primary VLAN, 501 a secondary community VLAN, and VLAN 502 a secondary isolated VLAN. Ports FastEthernet0/1 and FastEthernet0/2 are associated to VLAN 501, while FastEthernet03 and FastEthernet0/4 are associated with the secondary isolated VLAN 502.</p>
 
-<p>The beauty of CDP is that if you walk into a network and you do not know the topology, you can use CDP to quickly learn the entire layout of the network (as long as all the devices are Cisco!).</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vtp mode transparent
+SW1(config)# vlan 501
+SW1(config-vlan)# private-vlan community
+SW1(config-vlan)# vlan 500
+SW1(config-vlan)# private-vlan primary
+SW1(config-vlan)# private-vlan association add 501
+</code></pre>
+</div>
+
+<p>Next, let’s go ahead and associate FastEthernet0/1 and FastEthernet0/2 to the 501 Secondary Community we just created:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface range fa0/1-2
+SW1(config-if-range)# switchport mode private-vlan host
+SW1(config-if-range)# switchport private-vlan host-association 500 501
+</code></pre>
+</div>
+
+<p>Now, we can go ahead and configure FastEthernet0/24 as a promiscuous port.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface fa0/24
+SW1(config-if)# switchport mode private-vlan promiscuous
+SW1(config-if)# switchport private-vlan mapping 500 501
+</code></pre>
+</div>
+
+<p>Now we turn our attention to the creation of the isolated VLAN, VLAN 502.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# vlan 502
+SW1(config-vlan)# private-vlan isolated
+SW1(config-vlan)# vlan 500
+SW1(config-vlan)# private-vlan primary
+SW1(config-vlan)# private-vlan association add 502
+</code></pre>
+</div>
+
+<p>Now we must associate our interfaces:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface range fa0/3-4
+SW1(config-if-range)# switchport mode private-vlan host
+SW1(config-if-range)# switchport private-vlan host-association 500 502
+</code></pre>
+</div>
+
+<p>And finally, we must add another association for our promiscuous port:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface fa0/24
+SW1(config-if)# switchport mode private-vlan promiscuous
+SW1(config-if)# switchport private-vlan mapping 500 502
+</code></pre>
+</div>
+
+<p>One great way to test your Private VLAN setup is to send a single ping to the broadcast address with <code class="highlighter-rouge">ping 255.255.255.255 repeat 1</code>.  The replies will only be from the hosts in your broadcast domain.</p>
+
+<p>One other thing to note. If you are configuring a Primary VLAN SVI to operate with secondary private VLANs, you need to map the secondary VLANs onto the SVI as in the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# interface Vlan 100
+SW1(config-if)# private-vlan mapping 1000,2000
+</code></pre>
+</div>
+<p>`</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/30/Private-VLANs/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/30/Private-VLANs/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/layer%202/2017/03/29/Protected-Port/">
+        Protected Port (PVLAN)
+      </a>
+    </h1>
+
+    <span class="post-date">29 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>The protected port, also known as PVLAN edge, is a security feature used to prevent traffic from being directly exchanged at Layer 2 between two or more hosts that are within the same VLAN. Protected ports only have local switch significance. A protected port does not forward any traffic (unicast, multicast, or broadcast) to any other protected port in the same switch. If you need to pass traffic between protected ports, the only possible way is through a L3 device.</p>
+
+<p>By default, all switch ports are unprotected. The configuration is as simple as below:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
+SW1(config-if)# switchport protected
+</code></pre>
+</div>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/layer%202/2017/03/29/Protected-Port/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/layer%202/2017/03/29/Protected-Port/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/">
+        Spanning Tree Loop Guard
+      </a>
+    </h1>
+
+    <span class="post-date">29 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Loop Guard is a Spanning Tree feature that was added to prevent loops from forming due to hardware issues or STP software problems. A Spanning Tree loop occurs when a port that was previously in the blocking state is erroneously  transitioned to the Forwarding state.</p>
+
+<p>When a non-designated port stops receiving BPDUs, it will eventually transition itself to a designated port and begin forwarding BPDUs. Loop Guard works by preventing that non-designated port from transitioning to a forwarding state. Instead, it transitions the port to STP loop-inconsistent blocking state. So Loop Guard prevents a non-designated port from becoming a designated port, while Root Guard prevents a designated port from transitioning to a Root Port.</p>
+
+<p>Loop Guard is very similar to UDLD, but Loop Guard uses STP BPDUs to determine if there is a loop.</p>
+
+<p>Loop Guard is enabled on a per-port basis with the interface subcommand <code class="highlighter-rouge">spanning-tree guard loop</code>. To be completely effective, Loop Guard should be enabled on <em>all</em> non-designated ports, including root ports and alternate ports. Loop Guard can also be enabled globally with the <code class="highlighter-rouge">spanning-tree loopguard default</code> global configuration command. You can then disable Loop Guard on a per-port basis with <code class="highlighter-rouge">no spanning-tree guard loop</code>.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/06/CDP-Basics/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/06/CDP-Basics/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/">
+        Spanning Tree Root Guard
+      </a>
+    </h1>
+
+    <span class="post-date">28 Mar 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.</p>
+
+<p>Root Guard is enabled on a per port basis. Root Guard ensures that the port on which it is configured remains a designated port. If the bridge receives superior BPDUs on that designated port, Root Guard moves the port to root-inconsistent state, which is effectively equivalent to the STP listening state so no frames are forwarded.</p>
+
+<p>The difference between BPDU Guard and Root Guard is that Root Guard allows the port to participate in STP, so long as the port does not receive a <em>superior</em> BPDU. With BPDU Guard, <em>any</em> BPDU will put the port into an err-disabled state.</p>
+
+<p>Again, Root Guard is enabled on a per interface basis as below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
+SW!(config-if)# spanning-tree rootguard
+</code></pre>
+</div>
+
+<p>The Cisco explanation is located <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/10588-74.html">here</a>.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

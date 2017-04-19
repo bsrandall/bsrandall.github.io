@@ -3,6 +3,7 @@ layout: post
 title: Spanning Tree BPDU Filter
 category: Spanning Tree
 tag: knowledge
+date: 2017-03-28 14:40:45
 ---
 BPDU Filter is another optional feature of STP. It is similar to BPDU Guard, in that it is used to terminate the STP domain. Like BPDU Guard, it can be enabled globally or per interface, but unlike BPDU Guard, BGPU filter behaves differently depending on how it is enabled.
 

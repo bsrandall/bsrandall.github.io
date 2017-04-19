@@ -3,6 +3,7 @@ layout: post
 title: IP SLA Overview
 category: General Routing
 tag: knowledge
+date: 2017-02-20 17:40:45
 ---
 Cisco IP SLA uses active traffic monitoring for measuring traffic performance. It performs this by generating traffic in a continuous, reliable, and predictable manner and then analyzing the results. The information collected includes response time, one-way latency, jitter, packet loss, voice quality scoring, network resource availability, application performance, and server response time.
 

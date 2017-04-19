@@ -3,6 +3,7 @@ layout: post
 title: Access Ports
 category: VLAN
 tag: knowledge
+date: 2017-02-21 14:40:45
 ---
 Access ports are those ports that are connected to end devices, not other switches. We define an access port on the command line with 
 SW1# switchport mode access

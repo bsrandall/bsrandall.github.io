@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Blog &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general%20routing/2017/02/20/IP-SLA-Overview/">
+        IP SLA Overview
+      </a>
+    </h1>
+
+    <span class="post-date">20 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Cisco IP SLA uses active traffic monitoring for measuring traffic performance. It performs this by generating traffic in a continuous, reliable, and predictable manner and then analyzing the results. The information collected includes response time, one-way latency, jitter, packet loss, voice quality scoring, network resource availability, application performance, and server response time.</p>
+
+<p>If configuring simple IP SLA Operations such as ICMP echo, the operation only has to be configured on the local router. But for the more advanced Operations, you must set up the remote router or device to <em>respond</em> to your IP SLA traffic. The IP SLA Responder is a component embedded in the destination Cisco device that allows the system to anticipate and respond to IP SLA request packets. Only a Cisco device can be a source for a destination IP SLA Responder.</p>
+
+<p>To see the IP SLA Operation types, enter IP SLA configuration mode as follows:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)#ip sla 1
+R1(config-ip-sla)#?
+IP SLAs entry configuration commands:
+  dhcp         DHCP Operation
+  dns          DNS Query Operation
+  ethernet     Ethernet Operations
+  exit         Exit Operation Configuration
+  ftp          FTP Operation
+  http         HTTP Operation
+  icmp-echo    ICMP Echo Operation
+  icmp-jitter  ICMP Jitter Operation
+  mpls         MPLS Operation
+  path-echo    Path Discovered ICMP Echo Operation
+  path-jitter  Path Discovered ICMP Jitter Operation
+  tcp-connect  TCP Connect Operation
+  udp-echo     UDP Echo Operation
+  udp-jitter   UDP Jitter Operation
+  voip         Voice Over IP Operation
+</code></pre>
+</div>
+
+<p>To set up a Cisco routing device as an SLA responder, you would use the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# ip sla responder
+</code></pre>
+</div>
+
+<p>After an IP SLA Operation has been configured, you must schedule the operation to run:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# ip sla schedule 1 start-time now life forever
+</code></pre>
+</div>
+
+<p>To then see the results of the IP SLA configuration, use the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1# show ip sla statistics
+</code></pre>
+</div>
+
+<p>So starting from the top, a real quick example of an IP SLA configuration to ping an IP address every 30 seconds for 3 hours would look like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# ip sla 1
+R1(config-ip-sla)# icmp-echo 150.1.3.3
+R1(config-ip-sla-echo)# frequency 30
+R1(config-ip-sla-echo)# exit
+R1(config)# ip spa schedule 1 start-time now life 10800
+R1(config)# exit
+</code></pre>
+</div>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general%20routing/2017/02/20/IP-SLA-Overview/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general%20routing/2017/02/20/IP-SLA-Overview/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/vlan/2017/02/20/VLANs/">
+        VLANs
+      </a>
+    </h1>
+
+    <span class="post-date">20 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <h4 id="standard-vlans">Standard VLANs</h4>
+<p>Cisco calls VLANS 1 - 1005 Normal VLANs. Of those, VLAN 1 is the Cisco default. You can use this VLAN, but your are not allowed to delete it. VLANs 1002 - 1005 are the Cisco defaults for FDDI and Token Ring. These also cannot be deleted.</p>
+
+<p>That leaves us VLANs 2 - 1001 as Normal VLANs that we can add or delete as we wish.</p>
+
+<p>VLANs 2 - 1001 are pruning eligible, while VLANs 1006 - 4094 are not.</p>
+
+<p>When you delete a VLAN, any LAN ports configured as access ports for that VLAN become inactive until you assign them to a new VLAN.</p>
+
+<h4 id="extended-vlans">Extended VLANs</h4>
+<p>Extended VLANs are in the range of 1006 - 4094. Extended range VLANs are not controlled by VTP and cannot be pruned. The router must be in VTP transparent mode in order to create extended VLANs.</p>
+
+<p>Extended range VLANs are not stored in vlan.dat</p>
+
+<h4 id="vlan-database">VLAN Database</h4>
+<p>Only applies to standard VLANs.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/vlan/2017/02/20/VLANs/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/vlan/2017/02/20/VLANs/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general/2017/02/20/Git/">
+        Git
+      </a>
+    </h1>
+
+    <span class="post-date">20 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#tools" class="post-tag">tools</a>
+    
+    
+
+    <article>
+      <p>I am not a git master, nor do I strive to become one. But I do need to know some basic details to manage this blog as well as my INE VIRL configurations. There are probably better ways to do this, but for my purposes, these are the commands I am running to push my updates from my MacBook to by GitHub page:</p>
+
+<p><code class="highlighter-rouge">~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git add --all</code>
+<code class="highlighter-rouge"> ~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git commit -m "update notes"</code>
+<code class="highlighter-rouge">~/Dropbox/jekyll.bsrandall.github.io(master) &gt;&gt; git push -u origin master</code></p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general/2017/02/20/Git/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general/2017/02/20/Git/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general/2017/02/20/Hello-World/">
+        Hello World
+      </a>
+    </h1>
+
+    <span class="post-date">20 Feb 2017</span>
+     | 
+    
+    <a href="/blog/tags/#inspiration" class="post-tag">inspiration</a>
+    
+    
+
+    <article>
+      <p>This is my first post in my newly launched blog. I decided to go with Jekyll and a GitHub page for my blog backend. I wanted my content to be in Markdown, as that seems to be the authoring flavor of the day. Jekyll and GitHub just made sense due to their support of Markdown.</p>
+
+<p>Our knowledge is at its pinnacle when we can fluidly explain topics to others. That is my main motivation for this blog. There most likely will not be any ground breaking content, but I hope to explain some of the topics in a way that makes sense.</p>
+
+<p>The other two benefits to my blog is hopefully improving on my Markdown and typing skills. It is sad that I still type as badly as I do, considering how much I type. I will use Markdown highlighting for code samples. TextExpander should make all of this a little easier.</p>
+
+<p>This is some sample IOS commands using Markdown:</p>
+
+<p><code class="highlighter-rouge">SW1# switchport trunk encapsulation dot1q</code>
+<code class="highlighter-rouge">SW1# switchport mode trunk</code></p>
+
+<p>Well I am off to the races. Or as most of those who have gone before me stress, off to start the marathon!</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general/2017/02/20/Hello-World/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general/2017/02/20/Hello-World/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <span class="pagination-item older">Older</span>
+  
+  
+    
+      <a class="pagination-item newer" href="/blog/page16">Newer</a>
+    
+  
+</div>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

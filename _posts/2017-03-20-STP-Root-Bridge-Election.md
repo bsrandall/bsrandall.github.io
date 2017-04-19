@@ -3,6 +3,7 @@ layout: post
 title: STP Root Bridge Election
 category: Spanning Tree
 tag: knowledge
+date: 2017-03-20 14:40:45
 ---
 STP Root Bridge Election is based on the Bridge ID of the switches in the active Layer 2 domain. The Bridge ID is made up of the 4-bit bridge priority, a 12-bit Systems ID, and the 48-bit MAC address. The bridge priority is configurable from 0 to 61440. The default is 32768. The System ID is taken from the VLAN number (IEEE 802.1t).
 
