@@ -4,13 +4,306 @@
  <title>No Excuses CCIE</title>
  <link href="http://bsrandall.github.io/atom.xml" rel="self"/>
  <link href="http://bsrandall.github.io/"/>
- <updated>2017-04-19T09:49:46-04:00</updated>
+ <updated>2017-04-23T21:30:49-04:00</updated>
  <id>http://bsrandall.github.io</id>
  <author>
    <name>Brian Scott Randall</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Ip Routing General</title>
+   <link href="http://bsrandall.github.io/2017/04/21/IP-Routing-General/"/>
+   <updated>2017-04-21T00:00:00-04:00</updated>
+   <id>http://bsrandall.github.io/2017/04/21/IP-Routing-General---</id>
+   <content type="html">&lt;p&gt;layout: post
+title: IP Routing General
+category: General Routing
+tag: knowledge
+date: 2017-04-21 19:56:45
+—
+Static routes that point to an interface are advertised via RIP (and EIGRP) regardless of whether &lt;strong&gt;redistribute static&lt;/strong&gt; router configuration commands are specified for those routing protocols. This is because these routes are considered “connected” routes and lose their static nature. However, if there is no &lt;strong&gt;network&lt;/strong&gt; command defined for that interface, then the default route will not be advertised unless a &lt;strong&gt;redistribute static&lt;/strong&gt; command is configured.&lt;/p&gt;
+
+&lt;p&gt;There are 3 ways (outside of dynamic routing protocols) to generate a default route.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;ip default-gateway&lt;/li&gt;
+  &lt;li&gt;ip default-network&lt;/li&gt;
+  &lt;li&gt;ip route 0.0.0.0 0.0.0.0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;ip default-gateway&lt;/strong&gt; is used to define a default gateway when ip routing &lt;em&gt;is not&lt;/em&gt; enabled on the device. This can be handy to transfer a Cisco software image to a device when the device is in boot mode.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;ip default-network&lt;/strong&gt; is used to define a default gateway when ip routing &lt;em&gt;is&lt;/em&gt; enabled on the router. Default routes configured this way are propagated differently depending on which routing protocol is propagating the default route. For EIGRP to propagate the default route, the network specified by &lt;strong&gt;ip default-network&lt;/strong&gt; must be known to EIGRP. The network must be an EIGRP derived network in the routing table, or the static route used to generate the route to the network must be redistributed into EIGRP.&lt;/p&gt;
+
+&lt;p&gt;RIP advertises a route to network 0.0.0.0 if a gateway of last resort is configured using the &lt;strong&gt;ip default-network&lt;/strong&gt; command.&lt;/p&gt;
+
+&lt;p&gt;When using &lt;strong&gt;ip route 0.0.0.0 0.0.0.0&lt;/strong&gt; to create a default route, EIGRP will propagate a route to network 0.0.0.0, but the static route must be redistributed into the routing protocol. With RIP, on most versions of IOS the default route created by &lt;strong&gt;ip route 0.0.0.0 0.0.0.0&lt;/strong&gt; is automatically advertised by RIP. Not only are these routes not automatically propagated by OSPF, you cannot redistribute a default route into OSPF - you must use the &lt;strong&gt;default-information originate&lt;/strong&gt; command.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIPng Configuration</title>
+   <link href="http://bsrandall.github.io/ripng/2017/04/19/RIPng-Configuration/"/>
+   <updated>2017-04-19T18:06:45-04:00</updated>
+   <id>http://bsrandall.github.io/ripng/2017/04/19/RIPng-Configuration</id>
+   <content type="html">&lt;p&gt;RIPng has an entirely different (and simpler) configuration process. Instead of specifying networks under router rip configuration mode, you simply enable IPv6 routing globally and then enable RIPng on a per interface basis.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`ipv6 unicast-routing
+interface Ethernet0
+ ipv6 address 2001:db8:0:6::1/64
+ ipv6 rip bigMountain enable
+!
+interface Ethernet1
+ ipv6 address 2001:db8:0:4::1/64
+ ipv6 rip bigMountain enable
+!
+interface Ethernet2
+ ipv6 address 2001:db8:0:5::1/64
+ ipv6 rip bigMountain enable
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`The process name is relevant only to the local router. But it is possible to have multiple RIPng routing processes running on the same router, unlike in RIPv1 or RIPv2 where only one RIP routing process was allowed per router. However if multiple RIPng processes are going to run on a single interface, you must change the UDP port to something other than 521 on any extra processes.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`ipv6 router rip smallMountain
+  port 527 multicast ff02::9
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`The fact that process names are only locally significant should also give you a clue that the port numbers would have to be different for multiple processes to be running on the same interface.&lt;/p&gt;
+
+&lt;p&gt;Even though the enabling of RIPng occurs at the interface level, much of the customization is still done at the router configuration mode, just as with RIPv1 and RIPv2.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`ipv6 router rip bigMountain
+  timers 10 30 30 60
+  maximum-paths 8
+  distance 200
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`The default RIPng timer values are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;update: 30 seconds&lt;/li&gt;
+  &lt;li&gt;expire (invalid): 180 seconds&lt;/li&gt;
+  &lt;li&gt;garbage collection: 120 seconds&lt;/li&gt;
+  &lt;li&gt;holddown: 0 seconds&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Metric manipulation is different with RIPng. With RIPv1 and RIPv2, the hop count was adjusted by using an offset. RIPng does not modify the metric of each entry in a list of prefixes. Instead, RIPng modifies the hop count that is associated with an interface. This increments the metric of every prefix that is advertised to the router via their interface by the mount of the hop count configured on the interface. By default, RIPng adds a hop count of one to the prefixes advertised by a neighbor received by an interface. To alter the hop count that is added, us the &lt;strong&gt;metric-offset&lt;/strong&gt; interface subcommand.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`interface Ethernet0/1
+  ipv6 rip smallMountain metric-offset 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIPv2 Configuration</title>
+   <link href="http://bsrandall.github.io/rip/2017/04/19/RIPv2-Configuration/"/>
+   <updated>2017-04-19T16:48:45-04:00</updated>
+   <id>http://bsrandall.github.io/rip/2017/04/19/RIPv2-Configuration</id>
+   <content type="html">&lt;p&gt;Much of the configuration for RIPv2 is the same as for RIPv1. Here we will address some of the differences.&lt;/p&gt;
+
+&lt;p&gt;To specify RIPv2, use the version command under router configuration mode.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`router rip
+  version 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+By default, a RIP process on  a Cisco router sends only RIPv1 messages but listens to both RIPv1 and RIPv2 messages. There are interface-level compatibility commands that should be utilized when working in an environment that uses both versions of RIP.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`interface Ethernet0
+ ip address 192.168.50.129 255.255.255.192
+ ip rip send version 1
+ ip rip receive version 1
+!
+interface Ethernet1
+ ip address 172.25.150.193 255.255.255.240
+ ip rip send version 1 2
+!
+interface Ethernet2
+ ip address 172.25.150.225 255.255.255.240
+!
+router rip
+ version 2
+ network 172.25.0.0
+ network 192.168.50.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+We saw with RIPv1 that discontiguous subnets could be a problem. Classless routing protocols do not have the same issue, as each route update contains a mask, so subnets of one major network can be advertised into another major network. But the default behavior of RIPv2 is to summarize at network boundaries just like RIPv1. To turn off this summarization and allow subnets to be advertised across network boundaries, use the command &lt;strong&gt;no auto-summary&lt;/strong&gt; in the RIP router configuration mode.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;ip rip triggered&lt;/strong&gt; will make the router stop sending periodic updates and will only send updates when there is a change to the routing table.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIPng General</title>
+   <link href="http://bsrandall.github.io/ripng/2017/04/19/RIPng-General/"/>
+   <updated>2017-04-19T16:36:45-04:00</updated>
+   <id>http://bsrandall.github.io/ripng/2017/04/19/RIPng-General</id>
+   <content type="html">&lt;p&gt;RIPng is based on RIPv2, but is not an extension and rather an entirely new protocol. RIPng has no support for IPv4, so in order to run dual stack you must run both RIP and RIPng.&lt;/p&gt;
+
+&lt;p&gt;But RIPng uses the same timers, procedures, and message types as RIPv2. One exception is authentication, which with RIPng is performed via the built-in authentication methods of IPv6.&lt;/p&gt;
+
+&lt;p&gt;Unlike RIPv1 and RIPv2 which run on UDP port 520, RIPng operates on UDP port 521.&lt;/p&gt;
+
+&lt;p&gt;The message format is slightly different. Unlike with RIPv2, each route does not list a next-hop address. Instead, RIPng specifies the next-hop address in a special route entry and then groups all route entries that use the next-hop address after it.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIPv2 General</title>
+   <link href="http://bsrandall.github.io/rip/2017/04/19/RIPv2-General/"/>
+   <updated>2017-04-19T13:56:45-04:00</updated>
+   <id>http://bsrandall.github.io/rip/2017/04/19/RIPv2-General</id>
+   <content type="html">&lt;p&gt;RIPv2 is defined in RFC 1723. It is not a new protocol, but rather just RIPv1 with some extensions bringing it more up to date with modern routing environments. The improvements include:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;subnet masks carried with each route entry&lt;/li&gt;
+  &lt;li&gt;authentication of routing updates&lt;/li&gt;
+  &lt;li&gt;next-hop addresses carried with each route entry&lt;/li&gt;
+  &lt;li&gt;external route tags&lt;/li&gt;
+  &lt;li&gt;multicast route updates&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Operation of RIPv2 is similar to RIPv1, and all the timer mechanisms remain the same. One difference is that updates are sent to the multicast address 224.0.0.9 instead of the broadcast address 255.255.255.255 that RIPv1 used.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/ripv2-message-format.png&quot; alt=&quot;RIPv2 Message Format&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The RIPv2 message format is similar to RIPv1.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Command&lt;/strong&gt; is set to 1 for a request message or 2 for a response message.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Version&lt;/strong&gt; will be 2 for RIPv2. Note that RIPv2 will process valid RIPv1 messages.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Address Family Identifier&lt;/strong&gt; is set to 2 for IPv4. The only exception is a request for a router’s full routing table, in which case it will be 0.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Route tag&lt;/strong&gt; provides a field for tagging external routes or routes that have been distributed into the RIPv2 process. One possible use is to carry the AS number of of routes that have been imported into RIP. This might be needed in case the information is carried across the RIP domain and then shared back with the external routing protocol in another location.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;IP Address&lt;/strong&gt; is the IPv4 address of the destination of the route. It may be a major network address, a subnet, or a host.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Subnet Mask&lt;/strong&gt; is a 32 bit mask that identifies the host and network portions of the IPv4 address.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Next Hop&lt;/strong&gt; identifies a better next-hop address, if one exists, than the address of the advertising router. It will be populated if there is another router on the same subnet that is closer to the destination than the advertising router. If the field is set to 0.0.0.0, then the advertising router is the best next-hop address.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Metric&lt;/strong&gt; is the hop count, between 1 and 16.&lt;/p&gt;
+
+&lt;p&gt;As RIPv2 is a classless routing protocol, when it goes to look up a destination in the routing table, it does not pay attention to the class of the destination address. Instead, it performs a bit-by-bit best match between the destination address and all of its known routes.&lt;/p&gt;
+
+&lt;p&gt;One interesting note in regards to all classless routing protocols - Cisco IOS rejects an attempt to configure an all-zeroes subnet. To override this enter the global configuration command &lt;strong&gt;ip subnet-zero&lt;/strong&gt;&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIPv2 Authentication</title>
+   <link href="http://bsrandall.github.io/rip/2017/04/19/RIPv2-Authentication/"/>
+   <updated>2017-04-19T13:56:45-04:00</updated>
+   <id>http://bsrandall.github.io/rip/2017/04/19/RIPv2-Authentication</id>
+   <content type="html">&lt;p&gt;RFC 1723 for RIPv2 provided for only plain text passwords. This was achieved by reducing the available number of routes in a RIP message from 25 to 24 and including the plain text password in the first route entry. However, there is an Authentication Type field in the RIPv2 message format, and Cisco takes advantage of this to provide better security.&lt;/p&gt;
+
+&lt;p&gt;Cisco decided to offer MD5 authentication by using the first and &lt;em&gt;last&lt;/em&gt; route entries of a RIP message for MD5 authentication. The Authentication Type for this is 3.&lt;/p&gt;
+
+&lt;p&gt;The implementation of RIPv2 authentication requires the use of a key chain. The key chain and mode are then specified under interface configuration mode.
+R1 Configuration:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`key chain Tewa
+ key 1
+ key-string Kachina
+interface Ethernet 0
+ ip rip authentication key-chain Tewa
+ ip rip authentication mode md5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`R2 Configuration:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`key chain Keres
+ key 1
+ key-string Kachina
+interface Ethernet 0
+ ip rip authentication key-chain Keres
+ ip rip authentication mode md5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+Notice that the key chain names are only locally significant - only the key-strings have to match.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIP Configuration</title>
+   <link href="http://bsrandall.github.io/rip/2017/04/19/RIP-Configuration/"/>
+   <updated>2017-04-19T07:06:45-04:00</updated>
+   <id>http://bsrandall.github.io/rip/2017/04/19/RIP-Configuration</id>
+   <content type="html">&lt;p&gt;Only two steps are needed to configure RIP.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Enable RIP with the global configuration command &lt;code class=&quot;highlighter-rouge&quot;&gt;router rip&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Specify each major network on which to run RIP with the &lt;strong&gt;network&lt;/strong&gt; command.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The classful nature of RIP means that we can only specify major class A, B, or C networks with the network command.&lt;/p&gt;
+
+&lt;p&gt;If needed, &lt;strong&gt;debug ip rip&lt;/strong&gt; with show RIP messages and activity.&lt;/p&gt;
+
+&lt;p&gt;To block RIP broadcasts on an interface connected to a subnet of a RIP-enabled network, add the &lt;code class=&quot;highlighter-rouge&quot;&gt;passive-interface gig0/1&lt;/code&gt; command to the RIP process. The &lt;strong&gt;passive-interface&lt;/strong&gt; command is not specific to RIP as it can be used with all routing protocols for this purpose.  This will only get the router to quit &lt;strong&gt;sending&lt;/strong&gt; updates. If you want the router to not learn routes advertised across the interface, you must filter those updates.&lt;/p&gt;
+
+&lt;p&gt;Another configuration option is the &lt;strong&gt;neighbor&lt;/strong&gt;  command. If you specify a neighbor, routing exchanges will be done via unicast packets as compared to the normal RIP multicast method. Often, this is used in combination with the &lt;strong&gt;passive-interface&lt;/strong&gt; command on Ethernet interfaces. The passive-interface disables the multicast advertisements but you can then enable advertisement exchange with a single host on the broadcast network via the &lt;strong&gt;neighbor&lt;/strong&gt; command.&lt;/p&gt;
+
+&lt;p&gt;Another configuration issue is that RIPv1 does not support discontiguous networks. Discontiguous networks arise when a major network is separated by a major network. The problem arises because RIP summarizes at the major network boundary. This summarization is done at the classful boundary. If there is one major network between the two discontiguous networks, the RIP routers will receive a summarized route they already have in their routing table, so they will silently drop it. The result is that only half the of the discontiguous network is reachable. If there are two major networks between, then each major network believes it has a route to the summarized network, so they will install two equal-cost routes to the discontiguous network. This again would result in only half the communication being received by the destination network.&lt;/p&gt;
+
+&lt;p&gt;The workarounds for discontiguous networks with RIP would be to install static routes for the individual networks. The other solution is to apply secondary IPs to the interfaces of the in-between major network. These IPs would be from the summarized discontiguous network in question. The RIP routing process sees secondary addresses as separate data links.&lt;/p&gt;
+
+&lt;p&gt;Sometimes with RIP configuration, it may become necessary to manipulate the metric (hop count). This is done with the combination of an &lt;strong&gt;offset-list&lt;/strong&gt; and an access-list. The offset-list adds the number specified to the metric of the route entry matching an access-list. The access-list matches the route for which to apply the offset-list. You use the keywords &lt;strong&gt;in&lt;/strong&gt; and &lt;strong&gt;out&lt;/strong&gt; with the offset-list to determine if the offset-list should change the metric on inbound Response Messages it receives or outbound Response Messages it sends. Here is an example configuration.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`access-list 1 permit 10.33.0.0 0.0.0.0
+router rip
+  network 192.168.12.0
+  network 10.0.0.0
+  offset-list 1 in 2 Serial0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;This one says examine RIP advertisements coming in interface Serial 0. If they are for the 10.33.0.0 network (from access-list 1), then add 2 hops to the metric.
+&lt;/code&gt;``
+`
+Another configuration option is triggered updates. RIP will normally broadcast its entire routing table every 30 seconds by default. If no routes are changing, this can be very inefficient on slow links. On an interface, by interface basis, you can issue the command &lt;strong&gt;ip rip triggered&lt;/strong&gt; which will force the routers on that interface to only exchange routes and updates when changes in the topology occur.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>RIP Classful Routing</title>
+   <link href="http://bsrandall.github.io/rip/2017/04/19/RIP-Classful-Routing/"/>
+   <updated>2017-04-19T06:06:45-04:00</updated>
+   <id>http://bsrandall.github.io/rip/2017/04/19/RIP-Classful-Routing</id>
+   <content type="html">&lt;p&gt;RIPv1 is a classful routing protocol. This is not quite as black and white as it seems. First, some housekeeping. When we see a route like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`R    10.10.0.0 [120/3]() via 10.5.5.1, 00:00:20, Serial1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+The 120/3 is the administrative distance followed by the metric. With RIP, the metric is hop count, so 3 in this route indicates the network is 3 hops away via the Serial1 interface.&lt;/p&gt;
+
+&lt;p&gt;If more than one route exists for a destination, and both routes have the same hop count, then equal-cost load balancing will be performed.&lt;/p&gt;
+
+&lt;p&gt;RIP performs the route lookup by first performing a classful route table lookup.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;`Gateway of last resort is not set
+10.0.0.0 255.255.0.0 is subnetted, 9 subnets
+R    10.10.0.0 [120/3]() via 10.5.5.1, 00:00:20, Serial1
+   [120/3]() via 10.1.1.1, 00:00:21, Ethernet0
+R    10.11.0.0 [120/3]() via 10.5.5.1, 00:00:21, Serial1
+   [120/3]() via 10.1.1.1, 00:00:21, Ethernet0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;`
+So if a packet destined for 10.12.10.2 came into the router, it would first look for 10.0.0.0. If there were no match, the packet is dropped and an ICMP Destination Unreachable message is sent to the packet’s source. If there is a match for the network portion (as there is in this example), then the subnets are examined. If there is a subnet match, the packet is routed. If there is not subnet match, the packet is dropped and a Destination Unreachable message is sent (as would happen with 10.12.10.2).&lt;/p&gt;
+
+&lt;p&gt;If you look at the routing table and examine RIP entries, you will notice there is no provision for RIP to advertise a subnet mask along with each route entry. The router’s only recourse is to assume that the mask configured on one of its interfaces for that address is used consistently throughout the rest of the network.  If the network is not directly connected, there is a listing only for the major-class network and no associated mask.&lt;/p&gt;
+
+&lt;p&gt;Note that since the destination address of packets being routed by a classful routing protocol are interpreted according to the subnet masks locally configured on the router’s interfaces, all subnet masks within a major, class-level network must be consistent.&lt;/p&gt;
+
+&lt;p&gt;In the case above where there is no directly connected network, RIP summarizes at the classful network boundaries. This is called &lt;em&gt;subnet hiding&lt;/em&gt;. So a router would only send advertisements for 10.0.0.0, 172.16.0.0, and 192.169.17.0 for example.&lt;/p&gt;
+
+&lt;p&gt;A good way to summarize is the following:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;If the destination address is a member of a directly connected major network, the subnet mask configured on the interface attached to that network will be used to determine the subnet of the destination.&lt;/li&gt;
+  &lt;li&gt;If the destination address is not a member of a directly connected major network, the router will try to match only the major class A, B, or C portion of the destination address.&lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>RIP Messages</title>
@@ -20,7 +313,15 @@
    <content type="html">&lt;p&gt;&lt;img src=&quot;/assets/ripformat.png&quot; alt=&quot;RIP Message&quot; /&gt;
 Each RIP Message that contains a single command and a version number can contain up to 25 routes. The command is either 1 for a Request Message or 2 for a Response Message. The Version will be 1 for RIPv1.&lt;/p&gt;
 
-&lt;p&gt;The &lt;em&gt;Address Family Identifier&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;Address Family Identifier&lt;/em&gt; is set to 2 for IP - the only exception to this is if this is a request for the router’s full route table. In this case, the address family identifier will be 0.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;IP Address&lt;/em&gt; is the address of the destination of the route.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Metric&lt;/em&gt; is the hop count, a value between 1 and 16, with 16 meaning unreachable.&lt;/p&gt;
+
+&lt;p&gt;Request Messages can either request a full routing table or information on a specific route. If the Request message is asking for the full routing table, it will have  the address family identifier set to zero, the address set to 0.0.0.0, and the metric set to 16. A router responds to such a request by sending its full routing table, honoring rules such as split horizon and boundary summarization.&lt;/p&gt;
+
+&lt;p&gt;If the Request message is for a specific route or routes, the router responds differently. If it does not have a route to the route in question, the router responds to the Request message with a metric of 16, otherwise, it responds to the Request listing its own metric. Interestingly, when responding to specific routes the router does not suppress routes due to split horizon or boundary summarization.&lt;/p&gt;
 
 </content>
  </entry>
@@ -64,6 +365,18 @@ Each RIP Message that contains a single command and a version number can contain
 &lt;/ol&gt;
 
 &lt;p&gt;RIP does not store information received in a Topology table, nor do routers have a picture of the entire topology. They receive routes in Response messages, process the information in those messages, and then move on. The RIP Response messages contain that router’s full routing table, with the exception of routes that are stressed by the split-horizon rule.&lt;/p&gt;
+
+&lt;p&gt;Route Summarization means there are no routes for child addresses in the RIP routing table, reducing the size of the table and allowing the router to handle more routes. Summary IP address functions more efficiently than multiple individual advertised IP routes for the following reasons:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;The summarized routes in the Rip database are processed first&lt;/li&gt;
+  &lt;li&gt;Any associated child routes that are included in a summarized route are skipped as RIP looks through the routing database, reducing the processing time required.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If auto-summary is enabled, as soon as RIP determines a summary address is required in the RIP database, a summary entry is created in the RIP routing database. As long as there are child routes for a summary address, the address remains in the routing database.&lt;/p&gt;
+
+&lt;p&gt;RIPv2 route summarization requires that the lowest metric of an aggregated entry, or the lowest metric of all child routes, be advertised.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;show ip protocols&lt;/strong&gt; command will verify which routes are summarized for an interface.&lt;/p&gt;
 
 </content>
  </entry>
@@ -109,10 +422,10 @@ There are some privacy concerns relating to using a device’s MAC address to ge
  </entry>
  
  <entry>
-   <title>Neighbor Discovery Protocol</title>
-   <link href="http://bsrandall.github.io/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol/"/>
+   <title>IPv6 Neighbor Discovery Protocol</title>
+   <link href="http://bsrandall.github.io/ipv6%20general/2017/04/17/IPv6-Neighbor-Discovery-Protocol/"/>
    <updated>2017-04-17T12:54:45-04:00</updated>
-   <id>http://bsrandall.github.io/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol</id>
+   <id>http://bsrandall.github.io/ipv6%20general/2017/04/17/IPv6-Neighbor-Discovery-Protocol</id>
    <content type="html">&lt;p&gt;Neighbor Discovery Protocol (NDP) is used by IPv6 hosts and routers for the following purposes:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;Stateless Address Autoconfiguration (SLAAC)&lt;/li&gt;

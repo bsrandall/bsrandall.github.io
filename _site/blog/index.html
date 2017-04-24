@@ -164,119 +164,58 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/rip/2017/04/19/RIP-Messages/">
-        RIP Messages
+      <a href="/2017/04/21/IP-Routing-General/">
+        Ip Routing General
       </a>
     </h1>
 
-    <span class="post-date">19 Apr 2017</span>
+    <span class="post-date">21 Apr 2017</span>
      | 
     
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
     
 
     <article>
-      <p><img src="/assets/ripformat.png" alt="RIP Message" />
-Each RIP Message that contains a single command and a version number can contain up to 25 routes. The command is either 1 for a Request Message or 2 for a Response Message. The Version will be 1 for RIPv1.</p>
+      <p>layout: post
+title: IP Routing General
+category: General Routing
+tag: knowledge
+date: 2017-04-21 19:56:45
+—
+Static routes that point to an interface are advertised via RIP (and EIGRP) regardless of whether <strong>redistribute static</strong> router configuration commands are specified for those routing protocols. This is because these routes are considered “connected” routes and lose their static nature. However, if there is no <strong>network</strong> command defined for that interface, then the default route will not be advertised unless a <strong>redistribute static</strong> command is configured.</p>
 
-<p>The <em>Address Family Identifier</em></p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/rip/2017/04/19/RIP-Messages/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/rip/2017/04/19/RIP-Messages/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/rip/2017/04/19/RIP-Timers/">
-        RIP Timers
-      </a>
-    </h1>
-
-    <span class="post-date">19 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>There are several timers related to RIP. The <strong>update timer</strong> on Cisco routers varies between 25.5 and 30 seconds (to prevent synchronization). This is the interval a router waits before sending new periodic Response messages.</p>
-
-<p>Cisco calls the expiration timer (or timeout) the <strong>invalid timer</strong>. This is the amount of time a route can stay in the route table without being updated. The default Cisco invalid timer for RIP is 180 seconds (6 Update periods). If an updated route is not heard within the invalid timer, the hop count for the route is changed to 16, the equivalent of making the route unreachable. In IOS, the route in the routing table will say “possibly down” when viewed via <code class="highlighter-rouge">show ip route</code>.</p>
-
-<p>The <strong>garbage timer</strong> (or flush timer) is the amount of time the route that was made unreachable by the invalid timer will continue to be advertised.. Once the garbage timer expires, the route will be completely removed from the routing table. With Cisco IOS it is set to 240 seconds by default, 60 seconds longer than the invalid timer.</p>
-
-<p>RFC 1058 for RIP does not call for the use of <strong>holddown timers</strong>, but Cisco’s implementation implements it. We saw this earlier - the timer starts when a route is received that is already in the route table, but the new route has a higher hop count than the stored route. It is 180 seconds by default.</p>
-
-<p>The four timers can be manipulated with the command:
-<strong>timers basic</strong> <em>update invalid holddown flush</em></p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/rip/2017/04/19/RIP-Timers/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/rip/2017/04/19/RIP-Timers/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/rip/2017/04/18/RIP-General/">
-        RIP General
-      </a>
-    </h1>
-
-    <span class="post-date">18 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>RIP exchanges UDP encapsulated packets over UDP port 520. RIP has two message types:</p>
+<p>There are 3 ways (outside of dynamic routing protocols) to generate a default route.</p>
 <ul>
-  <li><strong>Request messages</strong> are used to ask neighboring routers to send an update</li>
-  <li><strong>Response message</strong> carries the actual update</li>
+  <li>ip default-gateway</li>
+  <li>ip default-network</li>
+  <li>ip route 0.0.0.0 0.0.0.0</li>
 </ul>
 
-<p>When a RIP router process starts, it broadcasts a Request message out <em>each</em> RIP-enabled interface. The begins the state machine with neighbors receiving a RIP request and responding with a RIP Response.</p>
+<p><strong>ip default-gateway</strong> is used to define a default gateway when ip routing <em>is not</em> enabled on the device. This can be handy to transfer a Cisco software image to a device when the device is in boot mode.</p>
 
-<p>When the requesting router receives the Response message, it processes the enclosed information and responds in one of 3 ways, depending on the information in the RIP Response.</p>
-<ol>
-  <li>If a route in the Response is new, it is entered into the route table along with the address of the advertising router.</li>
-  <li>If there is a route for a network that RIP has already entered into the table and the new route has a lower metric (hop count), then the new route will replace the old route.</li>
-  <li>If there is a route for a network that RIP has already entered into the table and the new route has a higher hop count and the update was originated by the recorded next-hop router, the router will be marked as unreachable for a specified holddown period. If the same neighbor is still advertising the higher hop count at the end of the holddown timer, the routing table is updated with the new metric.</li>
-</ol>
+<p><strong>ip default-network</strong> is used to define a default gateway when ip routing <em>is</em> enabled on the router. Default routes configured this way are propagated differently depending on which routing protocol is propagating the default route. For EIGRP to propagate the default route, the network specified by <strong>ip default-network</strong> must be known to EIGRP. The network must be an EIGRP derived network in the routing table, or the static route used to generate the route to the network must be redistributed into EIGRP.</p>
 
-<p>RIP does not store information received in a Topology table, nor do routers have a picture of the entire topology. They receive routes in Response messages, process the information in those messages, and then move on. The RIP Response messages contain that router’s full routing table, with the exception of routes that are stressed by the split-horizon rule.</p>
+<p>RIP advertises a route to network 0.0.0.0 if a gateway of last resort is configured using the <strong>ip default-network</strong> command.</p>
+
+<p>When using <strong>ip route 0.0.0.0 0.0.0.0</strong> to create a default route, EIGRP will propagate a route to network 0.0.0.0, but the static route must be redistributed into the routing protocol. With RIP, on most versions of IOS the default route created by <strong>ip route 0.0.0.0 0.0.0.0</strong> is automatically advertised by RIP. Not only are these routes not automatically propagated by OSPF, you cannot redistribute a default route into OSPF - you must use the <strong>default-information originate</strong> command.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/rip/2017/04/18/RIP-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/2017/04/21/IP-Routing-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/rip/2017/04/18/RIP-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/2017/04/21/IP-Routing-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/">
-        IPv6 Stateless Address AUtoconfiguration
+      <a href="/ripng/2017/04/19/RIPng-Configuration/">
+        RIPng Configuration
       </a>
     </h1>
 
-    <span class="post-date">17 Apr 2017</span>
+    <span class="post-date">19 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -284,62 +223,204 @@ Each RIP Message that contains a single command and a version number can contain
     
 
     <article>
-      <p>Stateless Address Autoconfiguration is a mechanism that allows a host to generate its own unicast address using a combination of locally available information and information advertised by routers. Here are the 4 steps:</p>
-<ol>
-  <li>The host creates its own link-local unicast address by appending a randomly generated or EUI-64 created Interface ID to FE80::/10.</li>
-  <li>The host performs Duplicate Address Detection on its newly created link-local address.</li>
-  <li>The host (if it hasn’t already received one), sends a Router Solicitation message. The Router Advertisement includes the prefix, prefix length, and link MTU. The host uses this information along with its self created Interface ID to create its global unicast address. The default gateway is the Router’s link-local address.</li>
-  <li>The host performs Duplicate Address Detection on its global unicast address before using.</li>
-</ol>
+      <p>RIPng has an entirely different (and simpler) configuration process. Instead of specifying networks under router rip configuration mode, you simply enable IPv6 routing globally and then enable RIPng on a per interface basis.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`ipv6 unicast-routing
+interface Ethernet0
+ ipv6 address 2001:db8:0:6::1/64
+ ipv6 rip bigMountain enable
+!
+interface Ethernet1
+ ipv6 address 2001:db8:0:4::1/64
+ ipv6 rip bigMountain enable
+!
+interface Ethernet2
+ ipv6 address 2001:db8:0:5::1/64
+ ipv6 rip bigMountain enable
+</code></pre>
+</div>
+<p>`The process name is relevant only to the local router. But it is possible to have multiple RIPng routing processes running on the same router, unlike in RIPv1 or RIPv2 where only one RIP routing process was allowed per router. However if multiple RIPng processes are going to run on a single interface, you must change the UDP port to something other than 521 on any extra processes.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`ipv6 router rip smallMountain
+  port 527 multicast ff02::9
+</code></pre>
+</div>
+<p>`The fact that process names are only locally significant should also give you a clue that the port numbers would have to be different for multiple processes to be running on the same interface.</p>
 
-<p>In addition to SLAAC, there is also DHCPv6, which is a stateful process. Whether a host that is configured to obtain its addressing information automatically uses SLAAC or DHCPv6 depends upon the configuration of the router’s Router Advertisement message.</p>
+<p>Even though the enabling of RIPng occurs at the interface level, much of the customization is still done at the router configuration mode, just as with RIPv1 and RIPv2.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`ipv6 router rip bigMountain
+  timers 10 30 30 60
+  maximum-paths 8
+  distance 200
+</code></pre>
+</div>
+<p>`The default RIPng timer values are:</p>
+<ul>
+  <li>update: 30 seconds</li>
+  <li>expire (invalid): 180 seconds</li>
+  <li>garbage collection: 120 seconds</li>
+  <li>holddown: 0 seconds</li>
+</ul>
+
+<p>Metric manipulation is different with RIPng. With RIPv1 and RIPv2, the hop count was adjusted by using an offset. RIPng does not modify the metric of each entry in a list of prefixes. Instead, RIPng modifies the hop count that is associated with an interface. This increments the metric of every prefix that is advertised to the router via their interface by the mount of the hop count configured on the interface. By default, RIPng adds a hop count of one to the prefixes advertised by a neighbor received by an interface. To alter the hop count that is added, us the <strong>metric-offset</strong> interface subcommand.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`interface Ethernet0/1
+  ipv6 rip smallMountain metric-offset 3
+</code></pre>
+</div>
+<p>`</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/ripng/2017/04/19/RIPng-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/ripng/2017/04/19/RIPng-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/">
-        IPv6 EUI-64 Addressing
+      <a href="/rip/2017/04/19/RIPv2-Configuration/">
+        RIPv2 Configuration
       </a>
     </h1>
 
-    <span class="post-date">17 Apr 2017</span>
+    <span class="post-date">19 Apr 2017</span>
      | 
     
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
     
     
 
     <article>
-      <p>EUI-64 is an IEEE defined process where EUI stands for Extended Unique Identifier. The EUI-64 process enables automatic Interface ID (host portion) creation. It uses the interface’s Ethernet MAC address to generate a 64-bit interface ID. The idea behind it is that a MAC address is globally unique, so combined with Router Advertisements providing prefix and prefix length, a device can self assign its IP address. The steps of EUI-64 address creation are outlined below.</p>
-<ol>
-  <li>The MAC address is split in the middle with 24 bits on the left and 24 bits on the right.</li>
-  <li>FFFE is inserted between the 24 bits.</li>
-  <li>The seventh bit is inverted (if it is 0 it becomes 1 and vice versa). The hexadecimal value (since it is the 7th bit or 2nd bit from the right) will go from 0 to 2.</li>
-</ol>
+      <p>Much of the configuration for RIPv2 is the same as for RIPv1. Here we will address some of the differences.</p>
 
-<p>Here is an example of how to configure an EUI-64 address on an interface.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface gig0/1
-R1(config-if)# ipv6 address ipv6-prefix/prefix-length **eui-64**
-R1(config-if)# end
+<p>To specify RIPv2, use the version command under router configuration mode.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`router rip
+  version 2
 </code></pre>
 </div>
 <p>`
-There are some privacy concerns relating to using a device’s MAC address to generate its Layer 3 address. Because of this, many vendors have replaced the EUI-64 process with a random process to generate the Interface ID.</p>
+By default, a RIP process on  a Cisco router sends only RIPv1 messages but listens to both RIPv1 and RIPv2 messages. There are interface-level compatibility commands that should be utilized when working in an environment that uses both versions of RIP.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`interface Ethernet0
+ ip address 192.168.50.129 255.255.255.192
+ ip rip send version 1
+ ip rip receive version 1
+!
+interface Ethernet1
+ ip address 172.25.150.193 255.255.255.240
+ ip rip send version 1 2
+!
+interface Ethernet2
+ ip address 172.25.150.225 255.255.255.240
+!
+router rip
+ version 2
+ network 172.25.0.0
+ network 192.168.50.0
+</code></pre>
+</div>
+<p>`
+We saw with RIPv1 that discontiguous subnets could be a problem. Classless routing protocols do not have the same issue, as each route update contains a mask, so subnets of one major network can be advertised into another major network. But the default behavior of RIPv2 is to summarize at network boundaries just like RIPv1. To turn off this summarization and allow subnets to be advertised across network boundaries, use the command <strong>no auto-summary</strong> in the RIP router configuration mode.</p>
+
+<p><strong>ip rip triggered</strong> will make the router stop sending periodic updates and will only send updates when there is a change to the routing table.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/rip/2017/04/19/RIPv2-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/rip/2017/04/19/RIPv2-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/ripng/2017/04/19/RIPng-General/">
+        RIPng General
+      </a>
+    </h1>
+
+    <span class="post-date">19 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>RIPng is based on RIPv2, but is not an extension and rather an entirely new protocol. RIPng has no support for IPv4, so in order to run dual stack you must run both RIP and RIPng.</p>
+
+<p>But RIPng uses the same timers, procedures, and message types as RIPv2. One exception is authentication, which with RIPng is performed via the built-in authentication methods of IPv6.</p>
+
+<p>Unlike RIPv1 and RIPv2 which run on UDP port 520, RIPng operates on UDP port 521.</p>
+
+<p>The message format is slightly different. Unlike with RIPv2, each route does not list a next-hop address. Instead, RIPng specifies the next-hop address in a special route entry and then groups all route entries that use the next-hop address after it.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/ripng/2017/04/19/RIPng-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/ripng/2017/04/19/RIPng-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/rip/2017/04/19/RIPv2-General/">
+        RIPv2 General
+      </a>
+    </h1>
+
+    <span class="post-date">19 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>RIPv2 is defined in RFC 1723. It is not a new protocol, but rather just RIPv1 with some extensions bringing it more up to date with modern routing environments. The improvements include:</p>
+<ul>
+  <li>subnet masks carried with each route entry</li>
+  <li>authentication of routing updates</li>
+  <li>next-hop addresses carried with each route entry</li>
+  <li>external route tags</li>
+  <li>multicast route updates</li>
+</ul>
+
+<p>Operation of RIPv2 is similar to RIPv1, and all the timer mechanisms remain the same. One difference is that updates are sent to the multicast address 224.0.0.9 instead of the broadcast address 255.255.255.255 that RIPv1 used.</p>
+
+<p><img src="/assets/ripv2-message-format.png" alt="RIPv2 Message Format" /></p>
+
+<p>The RIPv2 message format is similar to RIPv1.</p>
+
+<p><strong>Command</strong> is set to 1 for a request message or 2 for a response message.</p>
+
+<p><strong>Version</strong> will be 2 for RIPv2. Note that RIPv2 will process valid RIPv1 messages.</p>
+
+<p><strong>Address Family Identifier</strong> is set to 2 for IPv4. The only exception is a request for a router’s full routing table, in which case it will be 0.</p>
+
+<p><strong>Route tag</strong> provides a field for tagging external routes or routes that have been distributed into the RIPv2 process. One possible use is to carry the AS number of of routes that have been imported into RIP. This might be needed in case the information is carried across the RIP domain and then shared back with the external routing protocol in another location.</p>
+
+<p><strong>IP Address</strong> is the IPv4 address of the destination of the route. It may be a major network address, a subnet, or a host.</p>
+
+<p><strong>Subnet Mask</strong> is a 32 bit mask that identifies the host and network portions of the IPv4 address.</p>
+
+<p><strong>Next Hop</strong> identifies a better next-hop address, if one exists, than the address of the advertising router. It will be populated if there is another router on the same subnet that is closer to the destination than the advertising router. If the field is set to 0.0.0.0, then the advertising router is the best next-hop address.</p>
+
+<p><strong>Metric</strong> is the hop count, between 1 and 16.</p>
+
+<p>As RIPv2 is a classless routing protocol, when it goes to look up a destination in the routing table, it does not pay attention to the class of the destination address. Instead, it performs a bit-by-bit best match between the destination address and all of its known routes.</p>
+
+<p>One interesting note in regards to all classless routing protocols - Cisco IOS rejects an attempt to configure an all-zeroes subnet. To override this enter the global configuration command <strong>ip subnet-zero</strong></p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/rip/2017/04/19/RIPv2-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/rip/2017/04/19/RIPv2-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

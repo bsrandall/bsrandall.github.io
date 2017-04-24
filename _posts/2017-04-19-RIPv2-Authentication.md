@@ -1,0 +1,32 @@
+---
+layout: post
+title: RIPv2 Authentication
+category: RIP
+tag: knowledge
+date: 2017-04-19 17:56:45
+---
+RFC 1723 for RIPv2 provided for only plain text passwords. This was achieved by reducing the available number of routes in a RIP message from 25 to 24 and including the plain text password in the first route entry. However, there is an Authentication Type field in the RIPv2 message format, and Cisco takes advantage of this to provide better security.
+
+Cisco decided to offer MD5 authentication by using the first and *last* route entries of a RIP message for MD5 authentication. The Authentication Type for this is 3.
+
+The implementation of RIPv2 authentication requires the use of a key chain. The key chain and mode are then specified under interface configuration mode.
+R1 Configuration:
+```
+`key chain Tewa
+ key 1
+ key-string Kachina
+interface Ethernet 0
+ ip rip authentication key-chain Tewa
+ ip rip authentication mode md5
+```
+`R2 Configuration:
+```
+`key chain Keres
+ key 1
+ key-string Kachina
+interface Ethernet 0
+ ip rip authentication key-chain Keres
+ ip rip authentication mode md5
+```
+`
+Notice that the key chain names are only locally significant - only the key-strings have to match.

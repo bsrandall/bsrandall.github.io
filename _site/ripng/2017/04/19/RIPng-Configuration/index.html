@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      RIPng Configuration &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">RIPng Configuration</h1>
+  <span class="post-date">19 Apr 2017</span>
+   | 
+  
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+  
+  
+  <article>
+    <p>RIPng has an entirely different (and simpler) configuration process. Instead of specifying networks under router rip configuration mode, you simply enable IPv6 routing globally and then enable RIPng on a per interface basis.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`ipv6 unicast-routing
+interface Ethernet0
+ ipv6 address 2001:db8:0:6::1/64
+ ipv6 rip bigMountain enable
+!
+interface Ethernet1
+ ipv6 address 2001:db8:0:4::1/64
+ ipv6 rip bigMountain enable
+!
+interface Ethernet2
+ ipv6 address 2001:db8:0:5::1/64
+ ipv6 rip bigMountain enable
+</code></pre>
+</div>
+<p>`The process name is relevant only to the local router. But it is possible to have multiple RIPng routing processes running on the same router, unlike in RIPv1 or RIPv2 where only one RIP routing process was allowed per router. However if multiple RIPng processes are going to run on a single interface, you must change the UDP port to something other than 521 on any extra processes.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`ipv6 router rip smallMountain
+  port 527 multicast ff02::9
+</code></pre>
+</div>
+<p>`The fact that process names are only locally significant should also give you a clue that the port numbers would have to be different for multiple processes to be running on the same interface.</p>
+
+<p>Even though the enabling of RIPng occurs at the interface level, much of the customization is still done at the router configuration mode, just as with RIPv1 and RIPv2.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`ipv6 router rip bigMountain
+  timers 10 30 30 60
+  maximum-paths 8
+  distance 200
+</code></pre>
+</div>
+<p>`The default RIPng timer values are:</p>
+<ul>
+  <li>update: 30 seconds</li>
+  <li>expire (invalid): 180 seconds</li>
+  <li>garbage collection: 120 seconds</li>
+  <li>holddown: 0 seconds</li>
+</ul>
+
+<p>Metric manipulation is different with RIPng. With RIPv1 and RIPv2, the hop count was adjusted by using an offset. RIPng does not modify the metric of each entry in a list of prefixes. Instead, RIPng modifies the hop count that is associated with an interface. This increments the metric of every prefix that is advertised to the router via their interface by the mount of the hop count configured on the interface. By default, RIPng adds a hop count of one to the prefixes advertised by a neighbor received by an interface. To alter the hop count that is added, us the <strong>metric-offset</strong> interface subcommand.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`interface Ethernet0/1
+  ipv6 rip smallMountain metric-offset 3
+</code></pre>
+</div>
+<p>`</p>
+
+  </article>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2017/04/21/IP-Routing-General/">
+            Ip Routing General
+            <small>21 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/rip/2017/04/19/RIPv2-Configuration/">
+            RIPv2 Configuration
+            <small>19 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/ripng/2017/04/19/RIPng-General/">
+            RIPng General
+            <small>19 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+<div class="comments">
+  <h2>Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'http://bsrandall.github.io/ripng/2017/04/19/RIPng-Configuration/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/ripng/2017/04/19/RIPng-Configuration'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = '//your_short_name.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

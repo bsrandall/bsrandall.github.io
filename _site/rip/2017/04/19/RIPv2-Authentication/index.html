@@ -11,7 +11,7 @@
 
   <title>
     
-      Neighbor Discovery Protocol &middot; No Excuses CCIE
+      RIPv2 Authentication &middot; No Excuses CCIE
     
   </title>
 
@@ -161,49 +161,39 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">Neighbor Discovery Protocol</h1>
-  <span class="post-date">17 Apr 2017</span>
+  <h1 class="post-title">RIPv2 Authentication</h1>
+  <span class="post-date">19 Apr 2017</span>
    | 
   
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
   
   
   <article>
-    <p>Neighbor Discovery Protocol (NDP) is used by IPv6 hosts and routers for the following purposes:</p>
-<ul>
-  <li>Stateless Address Autoconfiguration (SLAAC)</li>
-  <li>Duplicate Address Detection</li>
-  <li>for Layer-2 Data-Link address resolution (similar to IPv4 ARP)</li>
-  <li>to determine if neighbors are reachable (Neighbor Unreachability Detection)</li>
-  <li>when a router fails, a host actively searches for functioning alternates.</li>
-</ul>
+    <p>RFC 1723 for RIPv2 provided for only plain text passwords. This was achieved by reducing the available number of routes in a RIP message from 25 to 24 and including the plain text password in the first route entry. However, there is an Authentication Type field in the RIPv2 message format, and Cisco takes advantage of this to provide better security.</p>
 
-<p>Neighbor Discovery uses 5 ICMPv6 messages:</p>
-<ol>
-  <li>Router Solicitation message</li>
-  <li>Router Advertisement message</li>
-  <li>Neighbor Solicitation message</li>
-  <li>Neighbor Advertisement message</li>
-  <li>Redirect message</li>
-</ol>
+<p>Cisco decided to offer MD5 authentication by using the first and <em>last</em> route entries of a RIP message for MD5 authentication. The Authentication Type for this is 3.</p>
 
-<p>Router Solicitation messages are used by hosts when it needs prefix, prefix length, default gateway, and other information for Stateless Address Autoconfiguration (SLAAC). Router Advertisement messages are the messages used by Routers to convey that information to hosts.</p>
-
-<p>Neighbor Solicitation and Neighbor Advertisement messages are two more protocols that use ICMPv6 Neighbor Discovery. These messages are used by a device to request Layer 2 link layer address information from another device on the same network or to provide this information to the requesting device. Neighbor Solicitation and Neighbor Advertisement messages are part of three important processes:</p>
-<ol>
-  <li>Address resolution</li>
-  <li>Duplicate Address Detection (DAD)</li>
-  <li>Neighbor Unreachability Detection (DUD)</li>
-</ol>
-
-<p>An IPv6 host will maintain two tables for each interface:</p>
-<ul>
-  <li>Neighbor cache</li>
-  <li>Destination Cache</li>
-</ul>
-
-<p>The Neighbor cache is equivalent to an ARP table in IPv4. The neighbor cache contains mappings of hosts on the same network, while the destination cache contains layer-2 to layer-3 resolutions for devices on other links or networks.  To see the Neighbor table, issue <code class="highlighter-rouge">show ipv6 neighbors</code> command.</p>
-
+<p>The implementation of RIPv2 authentication requires the use of a key chain. The key chain and mode are then specified under interface configuration mode.
+R1 Configuration:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`key chain Tewa
+ key 1
+ key-string Kachina
+interface Ethernet 0
+ ip rip authentication key-chain Tewa
+ ip rip authentication mode md5
+</code></pre>
+</div>
+<p>`R2 Configuration:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`key chain Keres
+ key 1
+ key-string Kachina
+interface Ethernet 0
+ ip rip authentication key-chain Keres
+ ip rip authentication mode md5
+</code></pre>
+</div>
+<p>`
+Notice that the key chain names are only locally significant - only the key-strings have to match.</p>
 
   </article>
 </div>
@@ -214,8 +204,17 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/rip/2017/04/19/RIP-Messages/">
-            RIP Messages
+          <a href="/2017/04/21/IP-Routing-General/">
+            Ip Routing General
+            <small>21 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/ripng/2017/04/19/RIPng-Configuration/">
+            RIPng Configuration
             <small>19 Apr 2017</small>
           </a>
         </h3>
@@ -223,18 +222,9 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/rip/2017/04/19/RIP-Timers/">
-            RIP Timers
+          <a href="/rip/2017/04/19/RIPv2-Configuration/">
+            RIPv2 Configuration
             <small>19 Apr 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/rip/2017/04/18/RIP-General/">
-            RIP General
-            <small>18 Apr 2017</small>
           </a>
         </h3>
       </li>
@@ -248,8 +238,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <div id="disqus_thread"></div>
   <script>
 var disqus_config = function () {
-  this.page.url = 'http://bsrandall.github.io/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol/'; // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = '/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+  this.page.url = 'http://bsrandall.github.io/rip/2017/04/19/RIPv2-Authentication/'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/rip/2017/04/19/RIPv2-Authentication'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 };
 (function() {
   var d = document, s = d.createElement('script');

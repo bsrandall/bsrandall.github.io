@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/02/ARP/">
-        IPv4 ARP
+      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/">
+        Floating Static Routes
       </a>
     </h1>
 
-    <span class="post-date">02 Apr 2017</span>
+    <span class="post-date">05 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,36 +177,29 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Address Resolution Protocol (ARP) is used to determine the data-link identifier (MAC address) of a host with a known IPv4 address. The ARP request packet contains the IPV4 address of the device in question (the target), as well as the IPv4 and MAC address of the device making the request (the sender). The ARP packet is then encapsulated in a frame with the sender’s MAC address as the source and a broadcast address for the destination. The target will send an ARP Reply to the source address, supplying its MAC address. The ARP reply will lest the target as the original sender.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>R1# show arp
+      <p>A Floating Static route is a static route whose administrative distance has been increased in order to make the route function as a backup route. The global command would look like this:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ip route 192.168.23.0 255.255.255.0 192.168.13.3 121
 </code></pre>
 </div>
-<p>The command above will display the ARP table on a Cisco router.</p>
-
-<p>Cisco routers hold ARP entries for 4 hours by default. It can be changed on a per-interface basis with the <code class="highlighter-rouge">arp timeout seconds</code> interface subcommand.</p>
-
-<p><code class="highlighter-rouge">clear arp-cache</code> can be used to delete all dynamic entries from the ARP table. It will also clear the fast-switching cache as well as the IP route cache.</p>
-
-<p>Proxy ARP is a variation of ARP that is sometimes called promiscuous ARP. This is the method of how router’s will replay to an ARP request if they have a route to a host on another subnet. The router will send it’s own MAC address as a reply to the ARP request to trick the host into thinking it is the actual host in question. Proxy ARP is enabled by default in Cisco IOS and can be disabled on a per-interface basis with the command <code class="highlighter-rouge">no ip proxy-arp</code>.</p>
+<p>This would set the administrative distance to this route as 121, which would make it’s AD higher than a RIP, OSPF, or EIGRP learned route.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/02/ARP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/02/ARP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/02/IPv4-Addressing/">
-        IPv4 Addressing
+      <a href="/general%20routing/2017/04/05/CEF/">
+        CEF
       </a>
     </h1>
 
-    <span class="post-date">02 Apr 2017</span>
+    <span class="post-date">05 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -214,29 +207,37 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>IP is a logical addressing method as compared to MAC layer physical addresses. It operates at the Network Layer (Layer 3) of the OSI model.</p>
+      <p>Routing is the process by which the router finds the interface to send outgoing packets out of. Switching is the actual process of physically transferring this packets from the ingress interface to the degree interface,</p>
 
-<p>An address mask is used to identify the network and host portions of the address.  It is 32-bits long, the same length as an IPv4 address. In general, an address mask is assigned to a network or an organization. The organization then subnets that address mask into per data-link subnet masks for assignment.</p>
+<p>Process Switching is the oldest of the switching methods available in Cisco devices. When a packet arrives, the switching process relies on the CPU to do start at the top of the RIB and for each route do a binary AND against the destination to determine the longest match. It has to do this for every packet as it arrives. The time it may take for a lookup is dependent on where the route sits in the forwarding table, so your worst case scenario is the router would have to do 100,000 lookups.</p>
 
-<p>The number of available subnets under a major address mask and the number of hosts on each subnet are both calculated with the same formula 2^n-2.</p>
+<p>Fast Switching is an improvement on Process Switching where a lookup only has to be done on the first inbound packet. The rest of the “flow” knows the switching path and utilizes what was learned from the lookup on the first packet.</p>
+
+<p>Cisco Express Forwarding is the modern switching process found in Cisco devices. Once the router builds the RIB, the router pre calculates the routes and then stores these calculations in working memory, or in the case of devices that perform hardware acceleration, in port based ASICs.</p>
+
+<p>To see the CEF calculated for a given route, use <code class="highlighter-rouge">show ip cef 192.168.1.10</code>, for example.</p>
+
+<p>One thing to remember is that the switching process is responsible for load balancing. This is done on a flow basis, not on a per packet basis as that would be too inefficient and packets would almost always arrive out of order on the other end.</p>
+
+<p><code class="highlighter-rouge">show ip interface</code> will tell you if CEF has been enabled. A key indicator of a router that does not have CEF enabled is one that has high CPU usage. It is also important to remember that packets that are logged do not get CEF switched, so any logging requires a lot of available CPU.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/02/IPv4-Addressing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/05/CEF/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/02/IPv4-Addressing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/05/CEF/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202%20wan/2017/04/01/PPPoE/">
-        PPPoE
+      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/">
+        Egress Interface vs Next Hop Static Routing
       </a>
     </h1>
 
-    <span class="post-date">01 Apr 2017</span>
+    <span class="post-date">04 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -244,62 +245,31 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>PPPoE allows us to establish a PPP link over an Ethernet connection. ISPs were the main ones to use this as it gave them authentication capabilities over Ethernet, in a manner that was familiar to them from their dial-up days. There are two sides to the configuration, both a client and a server. We will start with the server side first.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# bba-group pope global
-Server(config-bba-group)# virtual-template 1
-</code></pre>
-</div>
-<p>The BBA group (Broadband Access) above is only needed if you want to run more than one PPPoE session.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# interface virtual-template 1
-Server(config-if)# ip address 192.168.12.2 255.255.255.0
-Server(config-if)# mtu 1492
-Server(config-if)# peer default address pool CLIENT
-</code></pre>
-</div>
-<p>Notice we have to reduce the MTU by 8 bytes due to the PPPoe overhead. Next we create the CLIENT IP address pool:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# ip local pool CLIENT 192.168.12.1
-</code></pre>
-</div>
-<p>Finally, we just need to activate the BBA group on the interface.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>Server(config)# interface FastEthernet0/0
-Server(config-if)# pppoe enable group global
-Server(config-if)# exit
-</code></pre>
-</div>
+      <p>There are some difference on router behavior depending on if you use a Next Hop IP address or an Egress Interface as the destination in your static route. This article will describe some of this e differences.</p>
 
-<p>Now we move on to the Client:</p>
+<p>If you use the Next Hop IP address, the router will have to find the interface leading towards the destination address before the route will be installed in the forwarding table. When the router finds the egress interface it will then check to see if the interface is point-to-point or multipoint. If it is multipoint, then the router will need the MAC address of the Next Hop address. If it doesn’t have it, then it will need to use ARP.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Client(config)# interface dialer 1
-Client(config-if)# mtu 1492
-Client(config-if)# encapsulation ppp
-Client(config-if)# ip address negotiated
-Client(config-if)# dialer persistent
-Client(config-if)# dialer pool 1
+<p>If you use the outgoing interface the router does not have to do the recursive lookup to find the correct outgoing interface. But the problem is the router doesn’t know which layer 2 neighbor routers exist on that link. So the only choice the router has is to ARP for the final destination address (rather than next hop as above). Where this can get outrageous is that the router will need to have MAC addresses resolved for <em>all hosts</em> in the subnet and you will need proxy ARP enabled on all routers in the segment. The example gets even more outrageous if you define a default route that points to a multipoint interface. So it should be clear this should only be used on point-to-point interfaces.</p>
 
-Client(config)# interface FastEthernet0/0
-Client(config-if)# pppoe-client dial-pool-number 1
-Client(config-if)# exit
-</code></pre>
-</div>
-<p>The dialer persistent command nails the connection up.</p>
+<p>Point-to-point interfaces do not have the same problem as the router knows there is only one host to receive the traffic on the other end. In other words, recursion will not be required nor will Layer 2 resolution be required.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202%20wan/2017/04/01/PPPoE/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202%20wan/2017/04/01/PPPoE/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/">
-        PPP Multilink
+      <a href="/general%20routing/2017/04/04/Default-Routing/">
+        Default Routing
       </a>
     </h1>
 
-    <span class="post-date">01 Apr 2017</span>
+    <span class="post-date">04 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -307,109 +277,48 @@ Client(config-if)# exit
     
 
     <article>
-      <p>Multilink PPP is a method used to aggregate multiple single PPP links and utilize them as one. It is not that dissimilar from EtherChannel used with Ethernet. PPP frames can be fragmented, sent down different links, and then reassembled in order on the far side of the link. Multilink PPP uses a 2 or 4 byte sequencing header in each packet, and the remote MLPPP recover is tasked with reconstructing the frames in the correct order. The configuration is pretty straightforward.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>interface Serial0/1
-  description Link to R1
-  no ip address
-  encapsulation ppp
-  ppp multilink
-  ppp multilink group 1
-  serial restart-delay 0
-end
-
-interface Serial1/1
-  description Link to R1
-  no ip address
-  encapsulation ppp
-  ppp multilink
-  ppp multilink group 1
-  serial restart-delay 0
-end
-
-interface Multilink 1
-  ip address 192.168.12.2 255.255.255.0
-  ppp multilink
-  ppp multilink group 1
-end
-</code></pre>
-</div>
-
-<p>Some optional parameters include <code class="highlighter-rouge">ppp multilink interleave</code>. Interleaving allows large packets to be multilink encapsulated and fragmented into a small enough size to satisfy the delay requirements of real-time traffic. The interleaving feature also provides a special transmit queue for the smaller, delay-sensitive packets, enabling them to be sent earlier than other flows. <code class="highlighter-rouge">ppp multilink fragement delay 10</code> is the command that determines the maximum delay - MLPPP will then chose a fragment size based on the configured delay.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/layer%202%20wan/2017/04/01/Multilink-PPP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/">
-        PPP Authentication
-      </a>
-    </h1>
-
-    <span class="post-date">01 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>There are two forms of authentication available for PPP, PAP and CHAP. It is important to remember that these technologies are one way in nature, and therefore do not need to be configured bidirectionally. You really should think of this as a Client / Server model.</p>
-
-<p>With PAP authentication, a two-way handshake is used to establish identity. After the PPP link establishment is complete, a username and password pair is repeatedly sent by the remote node (in clear text) until authentication is acknowledged, or the connection is terminated. PPP is not secure as passwords are sent across the link in clear text.</p>
-
-<p>PAP supports either unidirectional or bidirectional authentication. This is the configuration for unidirectional, where R1 is the called device and R2 is the calling device:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# username ROUTER2 password cisco
-R1(config)# interface serial0/0
-R1(config-if)# encapsulation ppp
-R1(config-if)# ppp authentication pap
-R1(config-if)# end
-</code></pre>
-</div>
-<p>And here is the configuration for R2, the client:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R2(config)# interface serial0/0
-R2(config-if)# encapsulation ppp
-R2(config-if)# ppp pap sent-username ROUTER2 password cisco
-R2(config-if)# end
-</code></pre>
-</div>
-
-<p>CHAP identifies peers by use of a three-way handshake. The general steps are:</p>
+      <p>Because of route recursion and the need for Layer 2 lookups on multipoint interfaces, default routing should be set up in one of two ways:</p>
 <ul>
-  <li>After the LCP phase is complete, and CHAP is established as the authentication protocol between devices, the authenticator sends a challenge message to the peer</li>
-  <li>The peer responds with a value calculated through a one-way hash function (MD5)</li>
-  <li>The authenticator checks the response against its own calculation of the expected hash value. If the values match, the authentication is successful, otherwise the connection is terminated.</li>
+  <li>to a next hop IP address if the interface is multipoint or point-to-point</li>
+  <li>to an interface ONLY if the interface is point-to-point.</li>
 </ul>
 
-<p>Like PAP, authentication is one-way but can be configured bidirectionally. In this example, R1 is the CHAP server and R2 is the CHAP client.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# username ROUTER2 password cisco
-R1(config)# interface serial0/0
-R1(config-if)# encapsulation ppp
-R1(config-if)# ppp authenticate chap
-R1(config-if)# end
-</code></pre>
-</div>
-<p>And now,  R2 (the client) configuration:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R2(config)# username ROUTER1 password cisco
-R2(config)# interface serial0/0
-R2(config-if)# encapsulation ppp
-R2(config-if)# end
-</code></pre>
-</div>
+<p>One issue with default routes is that you lose a lot of the routing detail. One way this shows itself is the fact that sites with default routes will have no idea if the end destination network is available. Another issue with the loss of detail has to do with having multiple default routes. With only having default routes, there is no routing details to show which is the better path to reach the end destination.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/04/Default-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202%20wan/2017/04/01/PPP-Authentication/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/04/Default-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general%20routing/2017/04/03/Route-Recursion/">
+        Route Recursion
+      </a>
+    </h1>
+
+    <span class="post-date">03 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Every time a router has to do a router lookup, a recursive lookup will be performed, unless the destination is directly connected. When a route lists an IP address as the next hop, unless that next hop is directly connected the router must find the path to that route. It may have to work through multiple recursions in order to eventually find the correct interface to route out of.</p>
+
+<p>When a particular interface goes down, all routes depending on that interface are removed from the RIB. One important thing to remember here is that the route is only removed if the next hop IP address is not reachable - if there is a secondary path via another interface, then that route will remain valid. However, if you use the interface as the destination for the static route, then the route will fail.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general%20routing/2017/04/03/Route-Recursion/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general%20routing/2017/04/03/Route-Recursion/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

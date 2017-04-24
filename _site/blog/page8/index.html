@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202%20wan/2017/04/01/PPP/">
-        PPP
+      <a href="/general%20routing/2017/04/03/Static-Routing/">
+        Static Routing
       </a>
     </h1>
 
-    <span class="post-date">01 Apr 2017</span>
+    <span class="post-date">03 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,29 +177,52 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>PPP stands for point-to-point protocol - it is  a very popular method for establishing a serial connection over which to pass IP traffic. PPP is composed of Link Control Protocol (LCP) as well as a family of NCPs used to establish network-layer links for various protocols (such as IPv4) after LCP has established the basic link. The steps to enable PPP on a Cisco router are shown below.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# interface serial0/0
-R1(config-if)# encapsulation ppp
+      <p>Static routes do have some advantages over dynamic routing:</p>
+<ul>
+  <li>static routes are not advertised over the network by default, resulting in better security</li>
+  <li>static routes use less bandwidth than dynamic routing protocols, as there is no exchange of routes</li>
+  <li>no CPU cycles are used to calculate and communicate routes</li>
+</ul>
+
+<p>Static routes have some disadvantages as well:</p>
+<ul>
+  <li>initial configuration and maintenance is time consuming</li>
+  <li>does not scale well</li>
+  <li>requires complete knowledge of the whole network for proper implementation.</li>
+  <li>can interfere with the use of backup routes</li>
+</ul>
+
+<p>With backup routes, if the outage occurs downstream in the network, a router with a static route to a destination will never utilize the backup route, because it still sees a path to the destination from the backup route. To get around this, use an outbound interface as well as the destination IP in the static route as in <code class="highlighter-rouge">R1(config)# ip route 10.0.0.0 255.255.255.0 FastEthernet0/1 192.168.10.1</code>. The other option is to of course use a dynamic routing protocol and then the route will be removed</p>
+
+<p>To set up a static route, use the following syntax:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ip route 192.168.18.0 255.255.255.0 192.168.17.1
 </code></pre>
 </div>
+<p>This would route any traffic destined for 192.168.18.0/24 to 192.168.17.1.</p>
+
+<p>To set up a default route, use the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ip route 0.0.0.0 0.0.0.0 192.168.17.1
+</code></pre>
+</div>
+<p>You could also specify an interface, but the better way is to use an IP address so no lookups are required.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202%20wan/2017/04/01/PPP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/03/Static-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202%20wan/2017/04/01/PPP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/03/Static-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202%20wan/2017/04/01/HDLC/">
-        HDLC
+      <a href="/general%20routing/2017/04/02/Administrative-Distance/">
+        Administrative Distance
       </a>
     </h1>
 
-    <span class="post-date">01 Apr 2017</span>
+    <span class="post-date">02 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -207,33 +230,88 @@ R1(config-if)# encapsulation ppp
     
 
     <article>
-      <p>HDLC is a Layer 2 protocol - the Cisco version is a slight tweak from the original ISO version, so Cisco HDLC will not operate with HDLC implementations from other vendors. It is used on serial interfaces to make direct connections between routers. It is actually the default point-to-point serial protocol for Cisco routers, but PPP is more commonly used.</p>
+      <p>Administrative Distance is used to determine which route should be installed into the IP routing table when there is a tie between different sources for the route (static vs EIGRP vs OSPF, etc). Administrative Distance is sometimes called the trustworthiness of the source. When a decision has to be made, the table containing Administrative Distance is consulted to choose the best route, with lower being better. Administrative Distance is only local and can be different for each router.</p>
 
-<p>You must always remember when connecting two serial interfaces, the DCE side must set a clock rate.</p>
+<p>The <code class="highlighter-rouge">distance</code> command is used with the different routing protocols to change its Administrative Distance. Here is a list</p>
 
-<p>If you are changing back from PPP to HDLC, the following shows how you would accomplish it.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# interface serial0/0
-R1(config-if)# encapsulation hdlc
-</code></pre>
-</div>
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Routing Protocol</strong></td>
+      <td><strong>AD</strong></td>
+    </tr>
+    <tr>
+      <td>Directly connected</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Static route</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>EIGRP Summary</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>External BGP</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>EIGRP</td>
+      <td>90</td>
+    </tr>
+    <tr>
+      <td>IGRP</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td>OSPF</td>
+      <td>110</td>
+    </tr>
+    <tr>
+      <td>IS-IS</td>
+      <td>115</td>
+    </tr>
+    <tr>
+      <td>RIP</td>
+      <td>120</td>
+    </tr>
+    <tr>
+      <td>ODR</td>
+      <td>160</td>
+    </tr>
+    <tr>
+      <td>External EIGRP</td>
+      <td>170</td>
+    </tr>
+    <tr>
+      <td>Internal BGP</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <td>Unknown</td>
+      <td>255</td>
+    </tr>
+  </tbody>
+</table>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202%20wan/2017/04/01/HDLC/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/02/Administrative-Distance/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202%20wan/2017/04/01/HDLC/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/02/Administrative-Distance/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Voice-VLAN/">
-        Voice VLAN
+      <a href="/general%20routing/2017/04/02/Longest-Match-Routing/">
+        Longest Match Routing
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">02 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -241,35 +319,25 @@ R1(config-if)# encapsulation hdlc
     
 
     <article>
-      <p>On Cisco switch’s, you can configure a particular VLAN known as the voice VLAN. It is a special VLAN that Cisco developed that is meant to lead from the switch the the 3 port switch on the back of an IP Phone. The traffic from the computer will be sent untagged, regardless of whether the access VLAN for that port is the default VLAN. All traffic from the phone gets tagged to its assigned voice VLAN. It behaves in many way like a trunk, but from an operational perspective it is still a port in access mode. The configuration looks like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# switchport mode access
-SW1(config-if)# switchport access vlan 100
-SW1(config-if)# switchport voice vlan 101
-</code></pre>
-</div>
-<p>If you you show commands, you will not find the interface to be in trunk operational mode, but remember it works like a rudimentary trunk.</p>
-
-<p>As soon as you apply the <code class="highlighter-rouge">switchport voice vlan</code> command, Portfast is enabled on the interface, though you will not see it in the running-config.</p>
-
+      <p>Longest Match Routing is the idea that a packet will follow the most specific route entry that it matches. So if there was a host route (/32) that existed for the destination, the host route would have precedence over any shorter prefix such as a /24.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Voice-VLAN/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/02/Longest-Match-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Voice-VLAN/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/02/Longest-Match-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Storm-Control/">
-        Storm Control
+      <a href="/general%20routing/2017/04/02/ARP/">
+        IPv4 ARP
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">02 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -277,52 +345,36 @@ SW1(config-if)# switchport voice vlan 101
     
 
     <article>
-      <p>Broadcast storms can create havoc on a Layer 2 network, quickly bringing the network to an unusable state. Software solutions to storm control are inefficient, because by the time the software has identified the storm, the hardware resources are at max utilization and there is no resources available to abate the storm.</p>
+      <p>Address Resolution Protocol (ARP) is used to determine the data-link identifier (MAC address) of a host with a known IPv4 address. The ARP request packet contains the IPV4 address of the device in question (the target), as well as the IPv4 and MAC address of the device making the request (the sender). The ARP packet is then encapsulated in a frame with the sender’s MAC address as the source and a broadcast address for the destination. The target will send an ARP Reply to the source address, supplying its MAC address. The ARP reply will lest the target as the original sender.</p>
 
-<p>Cisco has a storm control feature built into its switches. It is a hardware based solution that allows us to set a threshold on interfaces to limit the amount of broadcast, multicast, or unknown unicast traffic an interface receives. It also allows us to select a couple of actions to take when that threshold is met.</p>
-
-<p>Let’s jump right into a configuration example.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level 30
+<div class="highlighter-rouge"><pre class="highlight"><code>R1# show arp
 </code></pre>
 </div>
+<p>The command above will display the ARP table on a Cisco router.</p>
 
-<p>The ’30’ in the example above designates the rising threshold. When broadcast traffic exceeds 30% of the interface bandwidth, storm control will kick in and take action. The default action is to drop exceeding traffic.</p>
+<p>Cisco routers hold ARP entries for 4 hours by default. It can be changed on a per-interface basis with the <code class="highlighter-rouge">arp timeout seconds</code> interface subcommand.</p>
 
-<p>You can also specify bps as below. Adding k, m, or g identifies the value as Kbps, Mbps, or Gbps respectively. The example below would limit broadcast traffic to 30 Mbps on the Gigabit interface.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level bps 30m
-</code></pre>
-</div>
+<p><code class="highlighter-rouge">clear arp-cache</code> can be used to delete all dynamic entries from the ARP table. It will also clear the fast-switching cache as well as the IP route cache.</p>
 
-<p>You can also designate a falling threshold. The falling threshold sets a value to which the traffic has to fall before that type of traffic is allowed again.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
-SW1(config-if)# storm-control broadcast level bps 30m 20m
-</code></pre>
-</div>
-<p>In the example above the broadcast traffic would have to drop below 20 Mbps before any broadcast traffic would be allowed into the port.</p>
-
-<p>We can also control the action. <code class="highlighter-rouge">storm-control action shutdown</code> shuts the interface down in case the level is exceeded. <code class="highlighter-rouge">storm-control action trap</code> sends an SNMP trap if the level is exceeded.</p>
-
-<p><code class="highlighter-rouge">show storm-control [unicast | multicast | broadcast]</code> is used to see the configuration as well as the current amount of traffic passing through the port.</p>
+<p>Proxy ARP is a variation of ARP that is sometimes called promiscuous ARP. This is the method of how router’s will replay to an ARP request if they have a route to a host on another subnet. The router will send it’s own MAC address as a reply to the ARP request to trick the host into thinking it is the actual host in question. Proxy ARP is enabled by default in Cisco IOS and can be disabled on a per-interface basis with the command <code class="highlighter-rouge">no ip proxy-arp</code>.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Storm-Control/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/02/ARP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Storm-Control/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/02/ARP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/">
-        Static MAC Address Entries
+      <a href="/general%20routing/2017/04/02/IPv4-Addressing/">
+        IPv4 Addressing
       </a>
     </h1>
 
-    <span class="post-date">30 Mar 2017</span>
+    <span class="post-date">02 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -330,21 +382,18 @@ SW1(config-if)# storm-control broadcast level bps 30m 20m
     
 
     <article>
-      <p>Sometimes you may need to add static MAC address entries to the CAM table. This is easily achieved with the following global configuration command:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(cone)# mac address-table static 0022.5627.1fc1 vlan 10 interface GigabitEthernet0/1
-</code></pre>
-</div>
-<p>You can also force traffic to a particular MAC address to be dropped, by either specifying an unused interface or with the following:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# mac address-table static 0022.5627.1fc1 vlan 10 drop
-</code></pre>
-</div>
+      <p>IP is a logical addressing method as compared to MAC layer physical addresses. It operates at the Network Layer (Layer 3) of the OSI model.</p>
+
+<p>An address mask is used to identify the network and host portions of the address.  It is 32-bits long, the same length as an IPv4 address. In general, an address mask is assigned to a network or an organization. The organization then subnets that address mask into per data-link subnet masks for assignment.</p>
+
+<p>The number of available subnets under a major address mask and the number of hosts on each subnet are both calculated with the same formula 2^n-2.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/02/IPv4-Addressing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/layer%202/2017/03/30/Static-MAC-Address/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/02/IPv4-Addressing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

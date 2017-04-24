@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol/">
-        Neighbor Discovery Protocol
+      <a href="/rip/2017/04/19/RIPv2-Authentication/">
+        RIPv2 Authentication
       </a>
     </h1>
 
-    <span class="post-date">17 Apr 2017</span>
+    <span class="post-date">19 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,270 +177,226 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Neighbor Discovery Protocol (NDP) is used by IPv6 hosts and routers for the following purposes:</p>
-<ul>
-  <li>Stateless Address Autoconfiguration (SLAAC)</li>
-  <li>Duplicate Address Detection</li>
-  <li>for Layer-2 Data-Link address resolution (similar to IPv4 ARP)</li>
-  <li>to determine if neighbors are reachable (Neighbor Unreachability Detection)</li>
-  <li>when a router fails, a host actively searches for functioning alternates.</li>
-</ul>
+      <p>RFC 1723 for RIPv2 provided for only plain text passwords. This was achieved by reducing the available number of routes in a RIP message from 25 to 24 and including the plain text password in the first route entry. However, there is an Authentication Type field in the RIPv2 message format, and Cisco takes advantage of this to provide better security.</p>
 
-<p>Neighbor Discovery uses 5 ICMPv6 messages:</p>
-<ol>
-  <li>Router Solicitation message</li>
-  <li>Router Advertisement message</li>
-  <li>Neighbor Solicitation message</li>
-  <li>Neighbor Advertisement message</li>
-  <li>Redirect message</li>
-</ol>
+<p>Cisco decided to offer MD5 authentication by using the first and <em>last</em> route entries of a RIP message for MD5 authentication. The Authentication Type for this is 3.</p>
 
-<p>Router Solicitation messages are used by hosts when it needs prefix, prefix length, default gateway, and other information for Stateless Address Autoconfiguration (SLAAC). Router Advertisement messages are the messages used by Routers to convey that information to hosts.</p>
-
-<p>Neighbor Solicitation and Neighbor Advertisement messages are two more protocols that use ICMPv6 Neighbor Discovery. These messages are used by a device to request Layer 2 link layer address information from another device on the same network or to provide this information to the requesting device. Neighbor Solicitation and Neighbor Advertisement messages are part of three important processes:</p>
-<ol>
-  <li>Address resolution</li>
-  <li>Duplicate Address Detection (DAD)</li>
-  <li>Neighbor Unreachability Detection (DUD)</li>
-</ol>
-
-<p>An IPv6 host will maintain two tables for each interface:</p>
-<ul>
-  <li>Neighbor cache</li>
-  <li>Destination Cache</li>
-</ul>
-
-<p>The Neighbor cache is equivalent to an ARP table in IPv4. The neighbor cache contains mappings of hosts on the same network, while the destination cache contains layer-2 to layer-3 resolutions for devices on other links or networks.  To see the Neighbor table, issue <code class="highlighter-rouge">show ipv6 neighbors</code> command.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/ipv6%20general/2017/04/17/Neighbor-Discovery-Protocol/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/ipv6%20general/2017/04/16/IPv6-Address-Types/">
-        IPv6 Address types
-      </a>
-    </h1>
-
-    <span class="post-date">16 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>There are 3 types of IPv6 addresses:</p>
-<ul>
-  <li>Unicast</li>
-  <li>Anycast</li>
-  <li>Multicast</li>
-</ul>
-
-<p>There is no “broadcast” type as in IPv4, but an “all nodes” multicast address does exist, which essentially serves the same purpose.</p>
-<h4 id="unicast">Unicast</h4>
-<p>A unicast address is an address that identifies a single device. A <em>global</em> unicast address is one that is assigned to a single host and is globally unique. These are the equivalent of a routable IPv4 address.
-<a href="http://www.cisco.com/c/dam/en/us/td/i/300001-400000/330001-340000/330001-331000/330523.tif/_jcr_content/renditions/330523.jpg">link</a>
-The host portion of the address is called the Interface ID. This is a more accurate description as a host can have more than one address (as can an interface, but often not).</p>
-
-<p>IPv6 addresses, unlike IPv4 addresses, have the subnet bits built in as part of the network portion of the address. In IPv4, the subnet bits were borrowed from the host portion. One benefit from this is that the Interface ID can be a consistent length for all IPv6 addresses, simplifying parsing of the address. The Interface ID, with very few exceptions, is 64 bits long. Also, with very few exceptions, the Subnet ID field is 16 bits long, providing for 65,636 separate subnets. This leaves 48 bits for the Global Routing Prefix of the address.</p>
-
-<p>The currently allocated IPv6 global unicast addresses are 2xxx::/4 through 3xxx::/4. The most common allocation is a /48 global routing prefix, a 16-bit subnet ID, and a 64 bit Interface ID.</p>
-
-<p>IPv6 also has <em>link-local</em> unicast address in addition to the global unicast address type. The difference is that a link-local address’ scope is limited to a single link, and its uniqueness in not guaranteed outside of that link. The first 10 bits are always FE80 (1111111010). Link-local addresses have great utility for functions like Neighbor Discovery Protocol and Address Autoconfiguration. They are similar to the 169.254.0.0/16 in IPv4. Link local addresses are never routable. Below is an example configuration in which you will see a subnet is not even declared.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface GigabitEthernet0/1
-R1(config-if)# ipv6 address FE80::1 link-local
-R1config-if)# exit
+<p>The implementation of RIPv2 authentication requires the use of a key chain. The key chain and mode are then specified under interface configuration mode.
+R1 Configuration:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`key chain Tewa
+ key 1
+ key-string Kachina
+interface Ethernet 0
+ ip rip authentication key-chain Tewa
+ ip rip authentication mode md5
 </code></pre>
 </div>
-<p>`Link-local addresses are significant only within a single link. Packets with link-local sources or destinations are mostly used by the router’s control plane protocols, such as IPv6 routing protocols.</p>
-
-<p>There is also <em>unique-local</em> IPv6 addresses. These are equivalent to IPv4 RFC1918 addresses. They are likely unique, but not routable via global BGP. Thee always start with FC00::/7.</p>
-
-<h4 id="anycast">Anycast</h4>
-<p>An any cast address really represents more of a service than an address. An any cast address can reside on multiple hosts. Routers do not know they reside on different hosts but assume that they have multiple routes to the same host, so a single router simply choses the route to which it has the lowest cost route. Anycast also offers reliable backup, for if a single device goes down, routers will just route to the next lowest-cost available server. There are some reserved Anycast addresses, but for most services, an anycast address is just a global unicast address providing the any cast service.</p>
-
-<h4 id="multicast">Multicast</h4>
-<p>A multicast address identifies a set of devices - a <em>multicast group</em>. The first 8 bits of a multicast address are always 1s (FF00). The next 4 bits are the Flags. The following 4 bits are the Scope. Finally, the last 112 bits represent the Group ID.</p>
-
-<h4 id="address-type-identification">Address Type Identification</h4>
-<p>| <strong>Address Type</strong>      | <strong>Binary Prefic</strong> | <strong>IPv6 notation</strong> |
-| Unspecified  | 00…0 (128 bits) | ::/128 |
-| Loopback | 00…1 (128 bits) | ::1/128 |
-| Multicast | 11111111 | FF00::/8 |
-| Link-local Unicast | 1111111010 | FE80::/10 |
-| Unique-local Unicast | 11111100 | FC000::/10 |</p>
-
-<p>Global unicast addresses are everything else.</p>
-
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/ipv6%20general/2017/04/16/IPv6-Address-Types/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/ipv6%20general/2017/04/16/IPv6-Address-Types/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/ipv6%20general/2017/04/16/IPv6-General/">
-        IPv6 Addressing
-      </a>
-    </h1>
-
-    <span class="post-date">16 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>IPv6 is a 128-bit address compared to IPv4 32-bit address. It is represented as 8 16-bit fields separated by colons. Since these 16-bit fields are written in hex, it is 8 four-digit hex values. A couple of rules exist to shorten the address:</p>
-<ul>
-  <li><em>leading</em> 0’s of any 16-bit field can be eliminated :00FF can become :FF</li>
-  <li>any single contiguous string of one or more 16-bit segments consisting of all 0’s can be shortened with a double colon - FE80:0000:0000:0000:0000:0000:0000:0001 becomes FE80::1
-    <ul>
-      <li>however only one double colon is allowed to exist in any address.</li>
-    </ul>
-  </li>
-</ul>
-
-<p>Within an IPv6 address, each hexadecimal number represents 4 bits. For example F represents 1111 and 8 represents 1000. IPv6 address format makes it very clear that an address is not something numerical, it is a bit string versus a numerical number. IPv4 often fools people into thinking the address is something that can be quantified when it cannot.</p>
-
-<p>IPv6 prefixes are always identified with a bitcount. 3ffe:1944:100:a::bc:2500:d0b/64 for example. When you are writing just the prefix, you set the host bits to all 0’s just as you would with an IPv4 address - 3ffe:1944:100:a::/64 would be the prefix of the address above.</p>
-
-<p>On Cisco routers, IPv6 routing has to be specifically enabled using the global configuration command <strong>ipv6 unicast routing</strong>. If a router is configured with IPv6 addresses, but IPv6 is not enabled using the <strong>ipv6 unicast routing</strong> command, then the router is essentially acting as an IPv6 host.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/ipv6%20general/2017/04/16/IPv6-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/ipv6%20general/2017/04/16/IPv6-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/10/BFD/">
-        Bidirectional Forwarding Detection
-      </a>
-    </h1>
-
-    <span class="post-date">10 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Bidirectional Forwarding Detection (BFD) is a protocol that is able to detect link failures within milliseconds or even microseconds between two adjacent routers. Most of the routing protocols have some mechanism to detect down links. OSPF has hello packets and the dead interval, EIGRP uses hello packets and a holddown timer, etc. Unfortunately since these mechanisms depend on the control plane, they are not very fast at determining a failure has occurred. But networks that support real-time traffic such as VoIP require fast convergence times. The closest comparison is reducing timer mechanisms of the routing protocols, but BFD is still faster in every situation.</p>
-
-<p>BFD was designed to be fast. Its packets can be processed by some interface modules or line cards so there isn’t much overhead. BFD runs independent of routing protocols, but once it is up you can configure the routing protocols to use BFD for link failure detection instead of their own mechanisms. BFD operates in the forwarding place as compared to the control plane mechanisms of routing protocols.</p>
-
-<p>BFD has two operating modes, asynchronous and demand modes. The asynchronous mode is similar to the hello and holddown timers where BFD will keep sending hello packets (called BFD control packets) and when you don’t receive some of them, the session is torn down. Right now, no vendors support demand mode which relies on polling. Asynchronous mode requires that BFD be enabled and operational on both sides of the link.</p>
-
-<p>In the Cisco implementation, there is one BFD process that runs, regardless of the number of Layer 3 routing protocols that are dependent upon it. Cisco BED also requires CEF to be enabled.</p>
-
-<p>Both modes support <strong>echo mode</strong>. When a device sends BFD echo packets along the forwarding path, the BFD session at the other end does not participate in the actual forwarding of the echo packets. This reduces the number of control packets that have to be sent out and also may slightly increase the link failure detection time as no processing has to occur at the remote end. BFD echo mode is enabled by default.</p>
-
-<p>You first enable BDF on an interface as below.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(conf)# interface GigabitEthernet0/1
-R1(conf-if)# bfs interval *milliseconds* `min_rx` *milliseconds* multiplier *interval-multiplier*
-R1(conf-if)# end
-</code></pre>
-</div>
-<p>`Really BFD by itself is not useful. You must enable another client or protocol to use BFD for link failure notification for BFD to be of any use. Optional protocols include OSPF, EIGRP, BGP, IS-IS, and HSRP.</p>
-
-<h4 id="bgp">BGP</h4>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# router bgp 2828
-R1(config-router)# neighbor 27.143.12.88 **fall-over bfd**
-R1(config-router)# end
-</code></pre>
-</div>
-<p><code class="highlighter-rouge">#### EIGRP
-R1(config)# router eigrp 100
-R1(config)# log-adjacency-changes
-R1(config-router)# bfd all-interfaces **or**
-R1(config-router)# bfd interface GigabitEthernet0/1
-R1(config-router)# end
-</code>``
-`#### OSPF
-There are two methods for enabling BFD support for OSPF:</p>
-<ul>
-  <li>You can enable BFD for all interfaces for which OSPF is routing by using the <code class="highlighter-rouge">bfd all-interfaces</code> command in router configuration mode. You can then disable BFD support on individual interfaces using the <code class="highlighter-rouge">ip ospf bfd disable</code> command.</li>
-  <li>You can enable BFD on a per interface basis with <code class="highlighter-rouge">ip ospf bfd</code> command in interface configuration mode.
-    <h4 id="hsrp">HSRP</h4>
-    <p>You enable bfd to register with HSRP by issuing the <code class="highlighter-rouge">standby bfd</code> interface command or by issuing the <code class="highlighter-rouge">standby bfd all-interfaces</code> command in global configuration mode.</p>
-  </li>
-</ul>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/10/BFD/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/10/BFD/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/10/VRF-Lite/">
-        VRF Lite
-      </a>
-    </h1>
-
-    <span class="post-date">10 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>By default, a Cisco router will run using one global routing and forwarding table. VRF Lite gives us the ability to virtualize the physical router into logical routers with their own independent IP routing tables. You can designate interfaces or sub interfaces to be associated with a particular VRF.</p>
-
-<p>Here is a simple VRF configuration.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# ip vrf red
-R1(config-vrf)# exit
-R1(config)# ip vrf blue
-R1(config-vrf)# exit
-R1(config)# interface FastEthernet0/0
-R1(config-if)# ip vrf forwarding Blue
-R1(config-if)# exit
-R1(config)# interface FastEthernet0/1
-R1(config-if)# ip vrf forwarding Red
-R1(config-if)# exit
-R1(config)# router ospf 1 vrf Blue
-R1(config-router)# network 192.168.0.0 0.0.0.255 area 0
-R1(config-router)# exit
+<p>`R2 Configuration:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`key chain Keres
+ key 1
+ key-string Kachina
+interface Ethernet 0
+ ip rip authentication key-chain Keres
+ ip rip authentication mode md5
 </code></pre>
 </div>
 <p>`
-To use ping, you will have to remember to specify the VRF or else the router will use the global routing table.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`ping vrf Blue 1.1.1.1
-</code></pre>
-</div>
-<p>`</p>
+Notice that the key chain names are only locally significant - only the key-strings have to match.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/10/VRF-Lite/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/rip/2017/04/19/RIPv2-Authentication/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/10/VRF-Lite/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/rip/2017/04/19/RIPv2-Authentication/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/rip/2017/04/19/RIP-Configuration/">
+        RIP Configuration
+      </a>
+    </h1>
+
+    <span class="post-date">19 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#configuration" class="post-tag">configuration</a>
+    
+    
+
+    <article>
+      <p>Only two steps are needed to configure RIP.</p>
+<ol>
+  <li>Enable RIP with the global configuration command <code class="highlighter-rouge">router rip</code></li>
+  <li>Specify each major network on which to run RIP with the <strong>network</strong> command.</li>
+</ol>
+
+<p>The classful nature of RIP means that we can only specify major class A, B, or C networks with the network command.</p>
+
+<p>If needed, <strong>debug ip rip</strong> with show RIP messages and activity.</p>
+
+<p>To block RIP broadcasts on an interface connected to a subnet of a RIP-enabled network, add the <code class="highlighter-rouge">passive-interface gig0/1</code> command to the RIP process. The <strong>passive-interface</strong> command is not specific to RIP as it can be used with all routing protocols for this purpose.  This will only get the router to quit <strong>sending</strong> updates. If you want the router to not learn routes advertised across the interface, you must filter those updates.</p>
+
+<p>Another configuration option is the <strong>neighbor</strong>  command. If you specify a neighbor, routing exchanges will be done via unicast packets as compared to the normal RIP multicast method. Often, this is used in combination with the <strong>passive-interface</strong> command on Ethernet interfaces. The passive-interface disables the multicast advertisements but you can then enable advertisement exchange with a single host on the broadcast network via the <strong>neighbor</strong> command.</p>
+
+<p>Another configuration issue is that RIPv1 does not support discontiguous networks. Discontiguous networks arise when a major network is separated by a major network. The problem arises because RIP summarizes at the major network boundary. This summarization is done at the classful boundary. If there is one major network between the two discontiguous networks, the RIP routers will receive a summarized route they already have in their routing table, so they will silently drop it. The result is that only half the of the discontiguous network is reachable. If there are two major networks between, then each major network believes it has a route to the summarized network, so they will install two equal-cost routes to the discontiguous network. This again would result in only half the communication being received by the destination network.</p>
+
+<p>The workarounds for discontiguous networks with RIP would be to install static routes for the individual networks. The other solution is to apply secondary IPs to the interfaces of the in-between major network. These IPs would be from the summarized discontiguous network in question. The RIP routing process sees secondary addresses as separate data links.</p>
+
+<p>Sometimes with RIP configuration, it may become necessary to manipulate the metric (hop count). This is done with the combination of an <strong>offset-list</strong> and an access-list. The offset-list adds the number specified to the metric of the route entry matching an access-list. The access-list matches the route for which to apply the offset-list. You use the keywords <strong>in</strong> and <strong>out</strong> with the offset-list to determine if the offset-list should change the metric on inbound Response Messages it receives or outbound Response Messages it sends. Here is an example configuration.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`access-list 1 permit 10.33.0.0 0.0.0.0
+router rip
+  network 192.168.12.0
+  network 10.0.0.0
+  offset-list 1 in 2 Serial0
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">This one says examine RIP advertisements coming in interface Serial 0. If they are for the 10.33.0.0 network (from access-list 1), then add 2 hops to the metric.
+</code>``
+`
+Another configuration option is triggered updates. RIP will normally broadcast its entire routing table every 30 seconds by default. If no routes are changing, this can be very inefficient on slow links. On an interface, by interface basis, you can issue the command <strong>ip rip triggered</strong> which will force the routers on that interface to only exchange routes and updates when changes in the topology occur.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/rip/2017/04/19/RIP-Configuration/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/rip/2017/04/19/RIP-Configuration/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/rip/2017/04/19/RIP-Classful-Routing/">
+        RIP Classful Routing
+      </a>
+    </h1>
+
+    <span class="post-date">19 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>RIPv1 is a classful routing protocol. This is not quite as black and white as it seems. First, some housekeeping. When we see a route like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>`R    10.10.0.0 [120/3]() via 10.5.5.1, 00:00:20, Serial1
+</code></pre>
+</div>
+<p>`
+The 120/3 is the administrative distance followed by the metric. With RIP, the metric is hop count, so 3 in this route indicates the network is 3 hops away via the Serial1 interface.</p>
+
+<p>If more than one route exists for a destination, and both routes have the same hop count, then equal-cost load balancing will be performed.</p>
+
+<p>RIP performs the route lookup by first performing a classful route table lookup.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>`Gateway of last resort is not set
+10.0.0.0 255.255.0.0 is subnetted, 9 subnets
+R    10.10.0.0 [120/3]() via 10.5.5.1, 00:00:20, Serial1
+   [120/3]() via 10.1.1.1, 00:00:21, Ethernet0
+R    10.11.0.0 [120/3]() via 10.5.5.1, 00:00:21, Serial1
+   [120/3]() via 10.1.1.1, 00:00:21, Ethernet0
+</code></pre>
+</div>
+<p>`
+So if a packet destined for 10.12.10.2 came into the router, it would first look for 10.0.0.0. If there were no match, the packet is dropped and an ICMP Destination Unreachable message is sent to the packet’s source. If there is a match for the network portion (as there is in this example), then the subnets are examined. If there is a subnet match, the packet is routed. If there is not subnet match, the packet is dropped and a Destination Unreachable message is sent (as would happen with 10.12.10.2).</p>
+
+<p>If you look at the routing table and examine RIP entries, you will notice there is no provision for RIP to advertise a subnet mask along with each route entry. The router’s only recourse is to assume that the mask configured on one of its interfaces for that address is used consistently throughout the rest of the network.  If the network is not directly connected, there is a listing only for the major-class network and no associated mask.</p>
+
+<p>Note that since the destination address of packets being routed by a classful routing protocol are interpreted according to the subnet masks locally configured on the router’s interfaces, all subnet masks within a major, class-level network must be consistent.</p>
+
+<p>In the case above where there is no directly connected network, RIP summarizes at the classful network boundaries. This is called <em>subnet hiding</em>. So a router would only send advertisements for 10.0.0.0, 172.16.0.0, and 192.169.17.0 for example.</p>
+
+<p>A good way to summarize is the following:</p>
+<ol>
+  <li>If the destination address is a member of a directly connected major network, the subnet mask configured on the interface attached to that network will be used to determine the subnet of the destination.</li>
+  <li>If the destination address is not a member of a directly connected major network, the router will try to match only the major class A, B, or C portion of the destination address.</li>
+</ol>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/rip/2017/04/19/RIP-Classful-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/rip/2017/04/19/RIP-Classful-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/rip/2017/04/19/RIP-Messages/">
+        RIP Messages
+      </a>
+    </h1>
+
+    <span class="post-date">19 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p><img src="/assets/ripformat.png" alt="RIP Message" />
+Each RIP Message that contains a single command and a version number can contain up to 25 routes. The command is either 1 for a Request Message or 2 for a Response Message. The Version will be 1 for RIPv1.</p>
+
+<p>The <em>Address Family Identifier</em> is set to 2 for IP - the only exception to this is if this is a request for the router’s full route table. In this case, the address family identifier will be 0.</p>
+
+<p><em>IP Address</em> is the address of the destination of the route.</p>
+
+<p><em>Metric</em> is the hop count, a value between 1 and 16, with 16 meaning unreachable.</p>
+
+<p>Request Messages can either request a full routing table or information on a specific route. If the Request message is asking for the full routing table, it will have  the address family identifier set to zero, the address set to 0.0.0.0, and the metric set to 16. A router responds to such a request by sending its full routing table, honoring rules such as split horizon and boundary summarization.</p>
+
+<p>If the Request message is for a specific route or routes, the router responds differently. If it does not have a route to the route in question, the router responds to the Request message with a metric of 16, otherwise, it responds to the Request listing its own metric. Interestingly, when responding to specific routes the router does not suppress routes due to split horizon or boundary summarization.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/rip/2017/04/19/RIP-Messages/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/rip/2017/04/19/RIP-Messages/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/rip/2017/04/19/RIP-Timers/">
+        RIP Timers
+      </a>
+    </h1>
+
+    <span class="post-date">19 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>There are several timers related to RIP. The <strong>update timer</strong> on Cisco routers varies between 25.5 and 30 seconds (to prevent synchronization). This is the interval a router waits before sending new periodic Response messages.</p>
+
+<p>Cisco calls the expiration timer (or timeout) the <strong>invalid timer</strong>. This is the amount of time a route can stay in the route table without being updated. The default Cisco invalid timer for RIP is 180 seconds (6 Update periods). If an updated route is not heard within the invalid timer, the hop count for the route is changed to 16, the equivalent of making the route unreachable. In IOS, the route in the routing table will say “possibly down” when viewed via <code class="highlighter-rouge">show ip route</code>.</p>
+
+<p>The <strong>garbage timer</strong> (or flush timer) is the amount of time the route that was made unreachable by the invalid timer will continue to be advertised.. Once the garbage timer expires, the route will be completely removed from the routing table. With Cisco IOS it is set to 240 seconds by default, 60 seconds longer than the invalid timer.</p>
+
+<p>RFC 1058 for RIP does not call for the use of <strong>holddown timers</strong>, but Cisco’s implementation implements it. We saw this earlier - the timer starts when a route is received that is already in the route table, but the new route has a higher hop count than the stored route. It is 180 seconds by default.</p>
+
+<p>The four timers can be manipulated with the command:
+<strong>timers basic</strong> <em>update invalid holddown flush</em></p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/rip/2017/04/19/RIP-Timers/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/rip/2017/04/19/RIP-Timers/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

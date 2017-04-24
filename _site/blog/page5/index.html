@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/06/Enhanced-Object-Tracking/">
-        Enhanced Object Tracking
+      <a href="/general%20routing/2017/04/10/IP-in-IP-Tunneling/">
+        IP in IP Tunnels
       </a>
     </h1>
 
-    <span class="post-date">06 Apr 2017</span>
+    <span class="post-date">10 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,115 +177,135 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Enhanced Object Tracking is a sort of glue that binds the tracking of objects with upper layer protocols such as HSRP. Before Enhanced Object Tracking, HSRP could only look at interface line-protocol state for simple up / down status. Now you can create an advanced object (such as  an IP SLA object) and keep HSRP informed of the state of that object by using Enhanced Object Tracking.</p>
+      <p>With GRE Tunnels, IPv4 (or other protocols) are encapsulated in GRE packets. With IP in IP tunnels, IPv6 or IPv4 packets are encapsulated inside IPv4 or IPv6 packets. In IOS, three combinations are possible:</p>
+<ul>
+  <li>IPv4 in IPv4 (ipip)</li>
+  <li>IPv6 in IPv6 (ipv6)</li>
+  <li>IPv6 in IPv4 (ipv6ip)</li>
+</ul>
 
-<p>Enhanced Object Tracking provides complete separation between the objects to be tracked and the action to be taken by a client when a tracked object changes. The tracking process periodically polls the tracked object and notes any change of value. The changes can be communicated immediately or after a delay to the interested client process.</p>
+<p>So there is no combination for IPv4 in IPv6. GRE adds the extra capability of encapsulating other protocols other than IP. GRE also allows you to enforce packet sequencing, add an additional checksum, and to specify a tunnel key. Of course, all of these features come at the cost of additional overhead.</p>
 
-<p>Enhanced Object Tracking is used with IP SLA to track the output from IP SLA objects and use the provided information to trigger an action. Every IP SLA operation maintains a return-code value. Two aspects of an IP SLA operation can be tracked, state and reachability. The difference between these is the acceptance of the OverThreshold return code. The table below shows the state and reachability aspects of IP SLA operations that can be tracked.</p>
+<p>IP in IP tunnels are created the same way as GRE tunnels, you just select a different tunnel mode.</p>
 
-<table>
-  <tbody>
-    <tr>
-      <td><strong>Tracking</strong></td>
-      <td><strong>Return Code</strong></td>
-      <td><strong>Track State</strong></td>
-    </tr>
-    <tr>
-      <td>State</td>
-      <td>OK</td>
-      <td>Up</td>
-    </tr>
-    <tr>
-      <td>Reachability</td>
-      <td>OK or OverThreshold</td>
-      <td>Up</td>
-    </tr>
-  </tbody>
-</table>
+    <article>
+    <div class="post-more">
+      
+      <a href="/general%20routing/2017/04/10/IP-in-IP-Tunneling/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general%20routing/2017/04/10/IP-in-IP-Tunneling/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general%20routing/2017/04/10/Backup-Interface-Keepalive/">
+        Backup Interface and Keepalives
+      </a>
+    </h1>
 
-<p>For both State and Reachability, all other return codes return down.</p>
+    <span class="post-date">10 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
 
-<h4 id="examples">Examples</h4>
+    <article>
+      <p>By default, the state of a point-to-point GRE interface is determined by routing availability for the tunnel destination, thus as long as the router has a route for the tunnel destination, the tunnel interface state will be UP. However, this does not account for possible transit issues. To fix the problem, GRE keepalives can be enabled on the point-to-point GRE tunnels. The format of the command is <code class="highlighter-rouge">keepalive &lt;interval&gt; &lt;number_of_retries&gt;</code>. The interval defines the frequency in seconds for sending keepalives and the number of retries defines the maximum number of keepalives being sent after the first failed keepalive, before the router changes the tunnel state to DOWN.</p>
 
-<p>The first example is IP-Route Reachability. This tracks the reachability of a particular IP Route. A tracked object is considered up when a routing table entry exists for the route and the route is accessible.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# track timer ip route 20
-R1(config)# track 4 ip route 10.16.0.0/16 reachability
-R1(config-track)# delay up 30
-R1(config)# end
+    <article>
+    <div class="post-more">
+      
+      <a href="/general%20routing/2017/04/10/Backup-Interface-Keepalive/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general%20routing/2017/04/10/Backup-Interface-Keepalive/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general%20routing/2017/04/09/GRE-Tunnels/">
+        GRE Tunnels
+      </a>
+    </h1>
+
+    <span class="post-date">09 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>A GRE Tunnel is an encapsulated tunnel between two devices that makes the connection act like a point-to-point interface. We are essentially putting packets inside packets; in other words, we are encapsulating the IP packets into GRE packets.</p>
+
+<p><a href="https://networklessons.com/wp-content/uploads/2013/04/three-cisco-routers-with-tunnel.png">link</a>
+We will use the above figure to create a sample tunnel between the HQ and Branch routers.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`HQ(config)#interface tunnel 1     
+HQ(config-if)#tunnel source fastEthernet 0/0
+HQ(config-if)#tunnel destination 192.168.23.3
+HQ(config-if)#ip address 192.168.13.1 255.255.255.0
 </code></pre>
 </div>
-<p><code class="highlighter-rouge">In the above example, the </code>track timer` is an optional command that specifies an interval in which the tracking object polls the tracked object. The default for IP-Route Reachability is 15 seconds.</p>
-
-<p>The <code class="highlighter-rouge">delay</code> option specifies a period of time to delay communicating state changes of a tracked object.</p>
-
-<p>The next example is using Tracking to poll an IP SLA operation. First we set up the IP SLA operation.</p>
-
-<p>R1(config)# ip sla 1
-R1(config-ip-sla)# icmp-echo 150.1.3.3
-R1(config-ip-sla-echo)# frequency 30
-R1(config-ip-sla-echo)# exit
-R1(config)# ip spa schedule 1 start-time now life 10800
-R1(config)# exit</p>
-
-<p>Next, we set up the tracking.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# track 1 ip sla 1 state
-R1(config)# delay up 60 down 30
-R1(config)# end
+<pre><code class="language-`">`Branch(config)#interface tunnel 1
+Branch(config-if)#tunnel source fastEthernet 0/0
+Branch(config-if)#tunnel destination 192.168.12.1
+Branch(config-if)#ip address 192.168.13.3 255.255.255.0
 </code></pre>
-</div>
 <p>`
-Now the tracking object can be used by other clients to monitor the IP SLA object we set up earlier. One interesting note here. We could have used state or reachability for our tracking object. The only difference with ICMP echo operation is that reachability also ensures that the latency is less than 5000ms</p>
+The default tunneling mode is GRE so it is not required to set it explicitly in this case.</p>
 
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/06/Enhanced-Object-Tracking/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/06/Enhanced-Object-Tracking/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/05/Backup-Interface/">
-        Backup Interface
-      </a>
-    </h1>
+<p>Notice we are setting the destination address to be the outside interface that is reachable over the un-encapsulated network. You can also use loopback addresses.</p>
 
-    <span class="post-date">05 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
+<p>Some options that GRE tunneling supports are:</p>
+<ul>
+  <li>add an additional checksum</li>
+  <li>specify a tunnel key</li>
+  <li>enforce packet sequencing</li>
+</ul>
 
-    <article>
-      <p>Backup Interface is a Cisco feature that can be used in place of floating static routes on point-to-point interfaces.</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>interface Serial0/0/0
-  backup interface Serial0/0/1
-  backup delay 10 30
+<p>Those options are seen under the <strong>tunnel</strong> subcommand in interface configuration mode.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`Router(config-if)# tunnel ?
+  bandwidth           Set tunnel bandwidth informational parameter
+  **checksum            enable end to end checksumming of packets**
+  destination         destination of tunnel
+  flow                flow options
+  **key                 security or selector key**
+  mode                tunnel encapsulation method
+  mpls                MPLS tunnel commands
+  path-mtu-discovery  Enable Path MTU Discovery on tunnel
+  protection          Enable tunnel protection
+  rbscp               Set tunnel RBSCP parameters
+  route-via           Select subset of routes for tunnel transport
+  **sequence-datagrams  drop datagrams arriving out of order**
+  source              source of tunnel packets
+  tos                 set type of service byte
+  ttl                 set time to live
+  udlr                associate tunnel with unidirectional interface
+  vrf                 set tunnel vrf membership
 </code></pre>
 </div>
-<p>In the example above interface Serial0/0/1 is the backup for interface Serial0/0/0. If Serial0/0/0 is down for 10 seconds, then Serial0/0/1 will take over as the primary interface. After Serial 0/0/0 has been up for 30 seconds, it will resume its role as the primary interface.</p>
+<p>`</p>
+
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/05/Backup-Interface/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/09/GRE-Tunnels/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/05/Backup-Interface/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/09/GRE-Tunnels/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/">
-        Floating Static Routes
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/">
+        Policy Routing Order of Operation
       </a>
     </h1>
 
-    <span class="post-date">05 Apr 2017</span>
+    <span class="post-date">09 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -293,29 +313,35 @@ Now the tracking object can be used by other clients to monitor the IP SLA objec
     
 
     <article>
-      <p>A Floating Static route is a static route whose administrative distance has been increased in order to make the route function as a backup route. The global command would look like this:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>ip route 192.168.23.0 255.255.255.0 192.168.13.3 121
-</code></pre>
-</div>
-<p>This would set the administrative distance to this route as 121, which would make it’s AD higher than a RIP, OSPF, or EIGRP learned route.</p>
+      <p>A route-map can have multiple set operations on a single match clause. The list below shows the order of operations, regardless of the sequence number we use or the order we input them.</p>
+<ul>
+  <li><code class="highlighter-rouge">set ip next-hop verify-availability track</code> - first when used with object tracking</li>
+  <li><code class="highlighter-rouge">set ip next-hop</code> - alone or with the CDP (but without default) version of <code class="highlighter-rouge">verify-availability</code></li>
+  <li><code class="highlighter-rouge">set ip next-hop recursive</code></li>
+  <li>set interface</li>
+  <li>Route table</li>
+  <li>set ip default next-hop</li>
+  <li>set default interface</li>
+</ul>
+
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/05/Floating-Static-Routes/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/05/CEF/">
-        CEF
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/">
+        Policy Routing using next-hop, default, and recursive
       </a>
     </h1>
 
-    <span class="post-date">05 Apr 2017</span>
+    <span class="post-date">09 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -323,58 +349,18 @@ Now the tracking object can be used by other clients to monitor the IP SLA objec
     
 
     <article>
-      <p>Routing is the process by which the router finds the interface to send outgoing packets out of. Switching is the actual process of physically transferring this packets from the ingress interface to the degree interface,</p>
+      <p>When using policy routing and the <code class="highlighter-rouge">ip next-hop</code> set option in a route map, you can optionally use the <em>default</em> keyword. The difference is simple.</p>
 
-<p>Process Switching is the oldest of the switching methods available in Cisco devices. When a packet arrives, the switching process relies on the CPU to do start at the top of the RIB and for each route do a binary AND against the destination to determine the longest match. It has to do this for every packet as it arrives. The time it may take for a lookup is dependent on where the route sits in the forwarding table, so your worst case scenario is the router would have to do 100,000 lookups.</p>
+<p>When you do not use the default keyword, routing utilizes PBR first and consults the routing table if there is no match or non reachability. If you use the default keyword, then routing uses the routing table first and if no route can be found then attempts to use the Policy Based Routing process.</p>
 
-<p>Fast Switching is an improvement on Process Switching where a lookup only has to be done on the first inbound packet. The rest of the “flow” knows the switching path and utilizes what was learned from the lookup on the first packet.</p>
-
-<p>Cisco Express Forwarding is the modern switching process found in Cisco devices. Once the router builds the RIB, the router pre calculates the routes and then stores these calculations in working memory, or in the case of devices that perform hardware acceleration, in port based ASICs.</p>
-
-<p>To see the CEF calculated for a given route, use <code class="highlighter-rouge">show ip cef 192.168.1.10</code>, for example.</p>
-
-<p>One thing to remember is that the switching process is responsible for load balancing. This is done on a flow basis, not on a per packet basis as that would be too inefficient and packets would almost always arrive out of order on the other end.</p>
-
-<p><code class="highlighter-rouge">show ip interface</code> will tell you if CEF has been enabled. A key indicator of a router that does not have CEF enabled is one that has high CPU usage. It is also important to remember that packets that are logged do not get CEF switched, so any logging requires a lot of available CPU.</p>
+<p>Both the <code class="highlighter-rouge">set ip next-hop</code> and the <code class="highlighter-rouge">set ip default next-hop</code> commands require that the next-hop be found on a directly-connected subnet, otherwise PBR will fail and normal forwarding will be used. However, we can use <code class="highlighter-rouge">set ip next-hop recursive</code> to use an address off a subnet that <em>is not</em> directly connected.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/05/CEF/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/05/CEF/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/">
-        Egress Interface vs Next Hop Static Routing
-      </a>
-    </h1>
-
-    <span class="post-date">04 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>There are some difference on router behavior depending on if you use a Next Hop IP address or an Egress Interface as the destination in your static route. This article will describe some of this e differences.</p>
-
-<p>If you use the Next Hop IP address, the router will have to find the interface leading towards the destination address before the route will be installed in the forwarding table. When the router finds the egress interface it will then check to see if the interface is point-to-point or multipoint. If it is multipoint, then the router will need the MAC address of the Next Hop address. If it doesn’t have it, then it will need to use ARP.</p>
-
-<p>If you use the outgoing interface the router does not have to do the recursive lookup to find the correct outgoing interface. But the problem is the router doesn’t know which layer 2 neighbor routers exist on that link. So the only choice the router has is to ARP for the final destination address (rather than next hop as above). Where this can get outrageous is that the router will need to have MAC addresses resolved for <em>all hosts</em> in the subnet and you will need proxy ARP enabled on all routers in the segment. The example gets even more outrageous if you define a default route that points to a multipoint interface. So it should be clear this should only be used on point-to-point interfaces.</p>
-
-<p>Point-to-point interfaces do not have the same problem as the router knows there is only one host to receive the traffic on the other end. In other words, recursion will not be required nor will Layer 2 resolution be required.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/04/Egress-Interface-vs-Next-Hop/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

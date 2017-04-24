@@ -18,4 +18,14 @@ When the requesting router receives the Response message, it processes the enclo
 
 RIP does not store information received in a Topology table, nor do routers have a picture of the entire topology. They receive routes in Response messages, process the information in those messages, and then move on. The RIP Response messages contain that router’s full routing table, with the exception of routes that are stressed by the split-horizon rule.
 
+Route Summarization means there are no routes for child addresses in the RIP routing table, reducing the size of the table and allowing the router to handle more routes. Summary IP address functions more efficiently than multiple individual advertised IP routes for the following reasons:
+- The summarized routes in the Rip database are processed first
+- Any associated child routes that are included in a summarized route are skipped as RIP looks through the routing database, reducing the processing time required.
+
+If auto-summary is enabled, as soon as RIP determines a summary address is required in the RIP database, a summary entry is created in the RIP routing database. As long as there are child routes for a summary address, the address remains in the routing database.
+
+RIPv2 route summarization requires that the lowest metric of an aggregated entry, or the lowest metric of all child routes, be advertised.
+
+**show ip protocols** command will verify which routes are summarized for an interface.
+
  

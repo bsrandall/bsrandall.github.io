@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/">
-        Policy Routing Order of Operation
+      <a href="/ipv6%20general/2017/04/16/IPv6-General/">
+        IPv6 Addressing
       </a>
     </h1>
 
-    <span class="post-date">09 Apr 2017</span>
+    <span class="post-date">16 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,235 +177,215 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>A route-map can have multiple set operations on a single match clause. The list below shows the order of operations, regardless of the sequence number we use or the order we input them.</p>
+      <p>IPv6 is a 128-bit address compared to IPv4 32-bit address. It is represented as 8 16-bit fields separated by colons. Since these 16-bit fields are written in hex, it is 8 four-digit hex values. A couple of rules exist to shorten the address:</p>
 <ul>
-  <li><code class="highlighter-rouge">set ip next-hop verify-availability track</code> - first when used with object tracking</li>
-  <li><code class="highlighter-rouge">set ip next-hop</code> - alone or with the CDP (but without default) version of <code class="highlighter-rouge">verify-availability</code></li>
-  <li><code class="highlighter-rouge">set ip next-hop recursive</code></li>
-  <li>set interface</li>
-  <li>Route table</li>
-  <li>set ip default next-hop</li>
-  <li>set default interface</li>
+  <li><em>leading</em> 0’s of any 16-bit field can be eliminated :00FF can become :FF</li>
+  <li>any single contiguous string of one or more 16-bit segments consisting of all 0’s can be shortened with a double colon - FE80:0000:0000:0000:0000:0000:0000:0001 becomes FE80::1
+    <ul>
+      <li>however only one double colon is allowed to exist in any address.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Within an IPv6 address, each hexadecimal number represents 4 bits. For example F represents 1111 and 8 represents 1000. IPv6 address format makes it very clear that an address is not something numerical, it is a bit string versus a numerical number. IPv4 often fools people into thinking the address is something that can be quantified when it cannot.</p>
+
+<p>IPv6 prefixes are always identified with a bitcount. 3ffe:1944:100:a::bc:2500:d0b/64 for example. When you are writing just the prefix, you set the host bits to all 0’s just as you would with an IPv4 address - 3ffe:1944:100:a::/64 would be the prefix of the address above.</p>
+
+<p>On Cisco routers, IPv6 routing has to be specifically enabled using the global configuration command <strong>ipv6 unicast routing</strong>. If a router is configured with IPv6 addresses, but IPv6 is not enabled using the <strong>ipv6 unicast routing</strong> command, then the router is essentially acting as an IPv6 host.</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/ipv6%20general/2017/04/16/IPv6-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/ipv6%20general/2017/04/16/IPv6-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general%20routing/2017/04/10/BFD/">
+        Bidirectional Forwarding Detection
+      </a>
+    </h1>
+
+    <span class="post-date">10 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Bidirectional Forwarding Detection (BFD) is a protocol that is able to detect link failures within milliseconds or even microseconds between two adjacent routers. Most of the routing protocols have some mechanism to detect down links. OSPF has hello packets and the dead interval, EIGRP uses hello packets and a holddown timer, etc. Unfortunately since these mechanisms depend on the control plane, they are not very fast at determining a failure has occurred. But networks that support real-time traffic such as VoIP require fast convergence times. The closest comparison is reducing timer mechanisms of the routing protocols, but BFD is still faster in every situation.</p>
+
+<p>BFD was designed to be fast. Its packets can be processed by some interface modules or line cards so there isn’t much overhead. BFD runs independent of routing protocols, but once it is up you can configure the routing protocols to use BFD for link failure detection instead of their own mechanisms. BFD operates in the forwarding place as compared to the control plane mechanisms of routing protocols.</p>
+
+<p>BFD has two operating modes, asynchronous and demand modes. The asynchronous mode is similar to the hello and holddown timers where BFD will keep sending hello packets (called BFD control packets) and when you don’t receive some of them, the session is torn down. Right now, no vendors support demand mode which relies on polling. Asynchronous mode requires that BFD be enabled and operational on both sides of the link.</p>
+
+<p>In the Cisco implementation, there is one BFD process that runs, regardless of the number of Layer 3 routing protocols that are dependent upon it. Cisco BED also requires CEF to be enabled.</p>
+
+<p>Both modes support <strong>echo mode</strong>. When a device sends BFD echo packets along the forwarding path, the BFD session at the other end does not participate in the actual forwarding of the echo packets. This reduces the number of control packets that have to be sent out and also may slightly increase the link failure detection time as no processing has to occur at the remote end. BFD echo mode is enabled by default.</p>
+
+<p>You first enable BDF on an interface as below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(conf)# interface GigabitEthernet0/1
+R1(conf-if)# bfs interval *milliseconds* `min_rx` *milliseconds* multiplier *interval-multiplier*
+R1(conf-if)# end
+</code></pre>
+</div>
+<p>`Really BFD by itself is not useful. You must enable another client or protocol to use BFD for link failure notification for BFD to be of any use. Optional protocols include OSPF, EIGRP, BGP, IS-IS, and HSRP.</p>
+
+<h4 id="bgp">BGP</h4>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# router bgp 2828
+R1(config-router)# neighbor 27.143.12.88 **fall-over bfd**
+R1(config-router)# end
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">#### EIGRP
+R1(config)# router eigrp 100
+R1(config)# log-adjacency-changes
+R1(config-router)# bfd all-interfaces **or**
+R1(config-router)# bfd interface GigabitEthernet0/1
+R1(config-router)# end
+</code>``
+`#### OSPF
+There are two methods for enabling BFD support for OSPF:</p>
+<ul>
+  <li>You can enable BFD for all interfaces for which OSPF is routing by using the <code class="highlighter-rouge">bfd all-interfaces</code> command in router configuration mode. You can then disable BFD support on individual interfaces using the <code class="highlighter-rouge">ip ospf bfd disable</code> command.</li>
+  <li>You can enable BFD on a per interface basis with <code class="highlighter-rouge">ip ospf bfd</code> command in interface configuration mode.
+    <h4 id="hsrp">HSRP</h4>
+    <p>You enable bfd to register with HSRP by issuing the <code class="highlighter-rouge">standby bfd</code> interface command or by issuing the <code class="highlighter-rouge">standby bfd all-interfaces</code> command in global configuration mode.</p>
+  </li>
+</ul>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general%20routing/2017/04/10/BFD/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general%20routing/2017/04/10/BFD/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general%20routing/2017/04/10/VRF-Lite/">
+        VRF Lite
+      </a>
+    </h1>
+
+    <span class="post-date">10 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>By default, a Cisco router will run using one global routing and forwarding table. VRF Lite gives us the ability to virtualize the physical router into logical routers with their own independent IP routing tables. You can designate interfaces or sub interfaces to be associated with a particular VRF.</p>
+
+<p>Here is a simple VRF configuration.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# ip vrf red
+R1(config-vrf)# exit
+R1(config)# ip vrf blue
+R1(config-vrf)# exit
+R1(config)# interface FastEthernet0/0
+R1(config-if)# ip vrf forwarding Blue
+R1(config-if)# exit
+R1(config)# interface FastEthernet0/1
+R1(config-if)# ip vrf forwarding Red
+R1(config-if)# exit
+R1(config)# router ospf 1 vrf Blue
+R1(config-router)# network 192.168.0.0 0.0.0.255 area 0
+R1(config-router)# exit
+</code></pre>
+</div>
+<p>`
+To use ping, you will have to remember to specify the VRF or else the router will use the global routing table.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`ping vrf Blue 1.1.1.1
+</code></pre>
+</div>
+<p>`</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general%20routing/2017/04/10/VRF-Lite/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general%20routing/2017/04/10/VRF-Lite/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general%20routing/2017/04/10/On-Demand-Routing/">
+        On Demand Routing
+      </a>
+    </h1>
+
+    <span class="post-date">10 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>ODR allows you to easily install IP stub networks where the hubs dynamically maintain routes to the stub networks. With ODR, this installation is accomplished without requiring the configuration of an IP routing protocol on the stubs.</p>
+
+<p>A stub router supporting ODR advertises IP prefixes corresponding to the IP networks configured on all directly connected interfaces. If the network has multiple logical IP networks configured, only the primary IP network is advertised through ODR. ODR is able to pass VLSM information since it sends prefixes. Once ODR is enabled on a hub router, the hub router begins installing sub network routes in the IP forwarding table. The hub router can also be configured to distribute these routes into any configured dynamic IP routing protocols.</p>
+
+<p>ODR uses Cisco Discovery Protocol (CDP) to carry minimal routing information between the hub and stub routers. The hub router provides default route information to the stubs routers, thereby eliminating the need to configure a default route on each stub router.</p>
+
+<p>To disallow a particular interface from sending its prefix, disable CDP on that interface.</p>
+
+<p>To enable ODR, simply issue the following.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(conf)# router odr
+</code></pre>
+</div>
+<p>`</p>
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/general%20routing/2017/04/10/On-Demand-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/general%20routing/2017/04/10/On-Demand-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/general%20routing/2017/04/10/Tunnels-Recursive-Routing-Errors/">
+        Tunnels and Recursive Routing Errors
+      </a>
+    </h1>
+
+    <span class="post-date">10 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>A recursive routing error occurs when a lookup for prefix X points to prefix Y, and a lookup for prefix Y points to prefix X. This happens with tunnels when the router has learned the destination IP address for the tunnel interface through the tunnel itself. What usually triggers it is enabling the IGP on the tunnel interface. Let’s say the tunnel destination is the loopback of the far end device, and the tunnel IP address is 192.168.13.1. Let there be a router between the two tunnel devices. Normally, the routing table will have a route to reach the loopback via the router in the middle. But once the IGP starts advertising the Tunnel routes, the route for the loopback will be the Tunnel IP address. The route for the Tunnel IP address will be the loopback. This is where our recursion exists.</p>
+
+<p>The easiest solution is to not advertise the tunnel destination interface in the IGP. Either don’t advertise it or use route filtering.</p>
+
+<p>The other options to solve are:</p>
+<ul>
+  <li>Ensure the administrative distance of the tunnel destination IP address through the tunnel is higher than what you have in the routing table now</li>
+  <li>Ensure the metric to the tunnel destination IP address through the tunnel is worse than what you have in the routing table now.</li>
 </ul>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/general%20routing/2017/04/10/Tunnels-Recursive-Routing-Errors/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Order-Of-Operation/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/">
-        Policy Routing using next-hop, default, and recursive
-      </a>
-    </h1>
-
-    <span class="post-date">09 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>When using policy routing and the <code class="highlighter-rouge">ip next-hop</code> set option in a route map, you can optionally use the <em>default</em> keyword. The difference is simple.</p>
-
-<p>When you do not use the default keyword, routing utilizes PBR first and consults the routing table if there is no match or non reachability. If you use the default keyword, then routing uses the routing table first and if no route can be found then attempts to use the Policy Based Routing process.</p>
-
-<p>Both the <code class="highlighter-rouge">set ip next-hop</code> and the <code class="highlighter-rouge">set ip default next-hop</code> commands require that the next-hop be found on a directly-connected subnet, otherwise PBR will fail and normal forwarding will be used. However, we can use <code class="highlighter-rouge">set ip next-hop recursive</code> to use an address off a subnet that <em>is not</em> directly connected.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Default-Next-Hop/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Verify-Availability/">
-        PBR - verify-availability
-      </a>
-    </h1>
-
-    <span class="post-date">09 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Within the route-map statement, there is an option when using <code class="highlighter-rouge">ip next-hop</code> of <code class="highlighter-rouge">verify-availability</code>. This article will describe what it does and the two flavors of utilization.</p>
-
-<p>If used solely by itself, <code class="highlighter-rouge">verify-availabilty</code> uses CDP to establish that the next-hop IP address is reachable. If the IP address used is in the CDP neighbor table, then the next-hop is deemed accessible, otherwise it is not.</p>
-
-<p><code class="highlighter-rouge">verify-availability</code> can be extended to also use a tracking object. Here is an example of that configuration.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R2(config)#route-map PBR permit 10
-R2(config-route-map)#match ip address HTTP-SERVER
-R2(config-route-map)#set ip next-hop verify-availability 192.168.24.4 1 track 1
-</code></pre>
-</div>
-<p><code class="highlighter-rouge">
-If using either of these methods to implement </code>verify-reachability`, if the next-hop IP address is not reachable then routing is not performed based on the policy but is routed according to the the routing table.</p>
-
-<p>We can use a combination of commands to route a different way if our <code class="highlighter-rouge">verify-reachability</code> fails.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map RM1
-R1(config-route-map)# match ip address AL1
-R1(config-route-map)# set ip next-hop 155.1.0.5
-R1(config-route-map)# set ip next-hop verify reachability
-R1(config-route-map)# set ip default next-hop 155.1.13.3
-</code></pre>
-</div>
-<p>`In this example, if we match to AL1 AND 155.1.0.5 is reachable (CDP check), then we route to 155.1.0.5. However if we match AL1 and 155.1.0.5 is not in the CDP neighbor table, then we route to 155.1.13.3.</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Verify-Availability/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/09/Policy-Routing-Verify-Availability/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/08/Local-Policy-Routing/">
-        Local Policy Routing
-      </a>
-    </h1>
-
-    <span class="post-date">08 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>In a previous post, we saw how policy based routing can be used to change the next hop IP address for traffic matching certain criteria that is passing through the router. But what about traffic that originates on the router?</p>
-
-<p>It is very similar but we use a different source on our access-lists (obviously) and we use a different command (global instead of sub-interface) to activate it.</p>
-
-<p>Let’s assume our router has interfaces on the 192.168.12.0/24 and 192.168.13.0/24 subnets. Let’s set up Local Policy Routing to ensure that traffic originated on these interfaces and destined for 4.4.4.4 is sent to a next-hop IP address of 192.168.13.3. First, we set up our access lists.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# ip access-list extended ICMP-R1
-R1(config-ext-nacl)# permit imp host 192.168.12.1 host 4.4.4.4
-R1(config-ext-nacl)# permit imp host 192.168.13.1 host 4.4.4.4
-R1(config)# end
-</code></pre>
-</div>
-<p>`Now the next step would be to use a route map to set the next hop IP when we have a match.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map PBR-R1 permit 10
-R1(config-route-map)# match ip address ICMP-R1
-R1(config-route-map)# set ip next-hop 192.168.13.3
-R1(config)# end
-</code></pre>
-</div>
-<p>`Now, we must make sure we activate it. Unlike with policy based routing, for local policy routing we enable it globally.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(conf)# ip local policy route-map PBR-R1
-R1(conf)# end
-</code></pre>
-</div>
-<p>`
-That is all!</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/08/Local-Policy-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/08/Local-Policy-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/07/Policy-Routing/">
-        Policy Based Routing
-      </a>
-    </h1>
-
-    <span class="post-date">07 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>Policy-based routing can be used to change the next-hop IP address for traffic matching certain criteria. This can be useful to overrule the routing table for certain types of traffic. For example you may want to force all traffic from a certain host to use an alternate link. The key to making this work is an access-list and a route map.</p>
-
-<p>For example, let’s assume that we want all ICMP traffic from host 192.168.1.100 to traverse a link whose next hop is 192.168.13.3 if the destination IP address is 4.4.4.4. We can use an extended access list to classify the traffic.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# ip access-list extended ICMP-H1
-R1(config-ext-nacl)# permit imp host 192.168.1.100 host 4.4.4.4
-R1(config)# end
-</code></pre>
-</div>
-<p>`Now the next step would be to use a route map to set the next hop IP when we have a match.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map PBR-H1 permit 10
-R1(config-route-map)# match ip address ICMP-H1
-R1(config-route-map)# set ip next-hop 192.168.13.3
-R1(config)# end
-</code></pre>
-</div>
-<p>`Now, we must make sure we activate it on the ingress interface.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface GigabitEthernet0/1
-R1(config-if)# ip policy route-map PBR-H1
-R1(config)# end
-</code></pre>
-</div>
-<p><code class="highlighter-rouge">
-</code>debug ip policy` will turn debugging on for policy routing.</p>
-
-<p>This configuration is for traffic passing <em>through</em> the router. To apply policy based routing for traffic that is 8originated8 by the router, see the next post “Local Policy Routing”.</p>
-
-<p>One thing to remember is that there can only be one ip policy on the interface, so if you need to perform multiple actions, you may have to use a route map with multiple sections like this.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map RM-R4-R6 permit 20
-R1(config-route-map)# match ip address FROM-R4
-R1(config-route-map)# set ip next-hop 155.146.13.1
-R1(config-route-map)# route-map RM-R4-R6 permit 20
-R1(config-route-map)# match ip address FROM-R6
-R1(config-route-map)# set ip next-hop 155.1.0.5
-R1(config-route-map)# exit
-</code></pre>
-</div>
-<p>`
-Some important show commands are listed below:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1#sh ip policy
-Interface      Route map
-Gi0/1.146      RM-R4-R6
-R1\#
-</code></pre>
-</div>
-<pre><code class="language-`">`R1#show route-map
-route-map RM-R4-R6, permit, sequence 10
-  Match clauses:
-ip address (access-lists): FROM_R4
-  Set clauses:
-ip next-hop 155.1.13.3
-  Policy routing matches: 18 packets, 1116 bytes
-route-map RM-R4-R6, permit, sequence 20
-  Match clauses:
-ip address (access-lists): FROM_R6
-  Set clauses:
-ip next-hop 155.1.0.5
-  Policy routing matches: 9 packets, 564 bytes
-</code></pre>
-<p>`</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/07/Policy-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/07/Policy-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/general%20routing/2017/04/10/Tunnels-Recursive-Routing-Errors/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

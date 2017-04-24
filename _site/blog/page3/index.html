@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/10/On-Demand-Routing/">
-        On Demand Routing
+      <a href="/rip/2017/04/18/RIP-General/">
+        RIP General
       </a>
     </h1>
 
-    <span class="post-date">10 Apr 2017</span>
+    <span class="post-date">18 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,107 +177,53 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>ODR allows you to easily install IP stub networks where the hubs dynamically maintain routes to the stub networks. With ODR, this installation is accomplished without requiring the configuration of an IP routing protocol on the stubs.</p>
-
-<p>A stub router supporting ODR advertises IP prefixes corresponding to the IP networks configured on all directly connected interfaces. If the network has multiple logical IP networks configured, only the primary IP network is advertised through ODR. ODR is able to pass VLSM information since it sends prefixes. Once ODR is enabled on a hub router, the hub router begins installing sub network routes in the IP forwarding table. The hub router can also be configured to distribute these routes into any configured dynamic IP routing protocols.</p>
-
-<p>ODR uses Cisco Discovery Protocol (CDP) to carry minimal routing information between the hub and stub routers. The hub router provides default route information to the stubs routers, thereby eliminating the need to configure a default route on each stub router.</p>
-
-<p>To disallow a particular interface from sending its prefix, disable CDP on that interface.</p>
-
-<p>To enable ODR, simply issue the following.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(conf)# router odr
-</code></pre>
-</div>
-<p>`</p>
-
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/10/On-Demand-Routing/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/10/On-Demand-Routing/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/10/Tunnels-Recursive-Routing-Errors/">
-        Tunnels and Recursive Routing Errors
-      </a>
-    </h1>
-
-    <span class="post-date">10 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
-
-    <article>
-      <p>A recursive routing error occurs when a lookup for prefix X points to prefix Y, and a lookup for prefix Y points to prefix X. This happens with tunnels when the router has learned the destination IP address for the tunnel interface through the tunnel itself. What usually triggers it is enabling the IGP on the tunnel interface. Let’s say the tunnel destination is the loopback of the far end device, and the tunnel IP address is 192.168.13.1. Let there be a router between the two tunnel devices. Normally, the routing table will have a route to reach the loopback via the router in the middle. But once the IGP starts advertising the Tunnel routes, the route for the loopback will be the Tunnel IP address. The route for the Tunnel IP address will be the loopback. This is where our recursion exists.</p>
-
-<p>The easiest solution is to not advertise the tunnel destination interface in the IGP. Either don’t advertise it or use route filtering.</p>
-
-<p>The other options to solve are:</p>
+      <p>RIP exchanges UDP encapsulated packets over UDP port 520. RIP has two message types:</p>
 <ul>
-  <li>Ensure the administrative distance of the tunnel destination IP address through the tunnel is higher than what you have in the routing table now</li>
-  <li>Ensure the metric to the tunnel destination IP address through the tunnel is worse than what you have in the routing table now.</li>
+  <li><strong>Request messages</strong> are used to ask neighboring routers to send an update</li>
+  <li><strong>Response message</strong> carries the actual update</li>
 </ul>
 
+<p>When a RIP router process starts, it broadcasts a Request message out <em>each</em> RIP-enabled interface. The begins the state machine with neighbors receiving a RIP request and responding with a RIP Response.</p>
 
-    <article>
-    <div class="post-more">
-      
-      <a href="/general%20routing/2017/04/10/Tunnels-Recursive-Routing-Errors/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
-      
-      <a href="/general%20routing/2017/04/10/Tunnels-Recursive-Routing-Errors/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
-    </div>
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/general%20routing/2017/04/10/IP-in-IP-Tunneling/">
-        IP in IP Tunnels
-      </a>
-    </h1>
+<p>When the requesting router receives the Response message, it processes the enclosed information and responds in one of 3 ways, depending on the information in the RIP Response.</p>
+<ol>
+  <li>If a route in the Response is new, it is entered into the route table along with the address of the advertising router.</li>
+  <li>If there is a route for a network that RIP has already entered into the table and the new route has a lower metric (hop count), then the new route will replace the old route.</li>
+  <li>If there is a route for a network that RIP has already entered into the table and the new route has a higher hop count and the update was originated by the recorded next-hop router, the router will be marked as unreachable for a specified holddown period. If the same neighbor is still advertising the higher hop count at the end of the holddown timer, the routing table is updated with the new metric.</li>
+</ol>
 
-    <span class="post-date">10 Apr 2017</span>
-     | 
-    
-    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
-    
-    
+<p>RIP does not store information received in a Topology table, nor do routers have a picture of the entire topology. They receive routes in Response messages, process the information in those messages, and then move on. The RIP Response messages contain that router’s full routing table, with the exception of routes that are stressed by the split-horizon rule.</p>
 
-    <article>
-      <p>With GRE Tunnels, IPv4 (or other protocols) are encapsulated in GRE packets. With IP in IP tunnels, IPv6 or IPv4 packets are encapsulated inside IPv4 or IPv6 packets. In IOS, three combinations are possible:</p>
+<p>Route Summarization means there are no routes for child addresses in the RIP routing table, reducing the size of the table and allowing the router to handle more routes. Summary IP address functions more efficiently than multiple individual advertised IP routes for the following reasons:</p>
 <ul>
-  <li>IPv4 in IPv4 (ipip)</li>
-  <li>IPv6 in IPv6 (ipv6)</li>
-  <li>IPv6 in IPv4 (ipv6ip)</li>
+  <li>The summarized routes in the Rip database are processed first</li>
+  <li>Any associated child routes that are included in a summarized route are skipped as RIP looks through the routing database, reducing the processing time required.</li>
 </ul>
 
-<p>So there is no combination for IPv4 in IPv6. GRE adds the extra capability of encapsulating other protocols other than IP. GRE also allows you to enforce packet sequencing, add an additional checksum, and to specify a tunnel key. Of course, all of these features come at the cost of additional overhead.</p>
+<p>If auto-summary is enabled, as soon as RIP determines a summary address is required in the RIP database, a summary entry is created in the RIP routing database. As long as there are child routes for a summary address, the address remains in the routing database.</p>
 
-<p>IP in IP tunnels are created the same way as GRE tunnels, you just select a different tunnel mode.</p>
+<p>RIPv2 route summarization requires that the lowest metric of an aggregated entry, or the lowest metric of all child routes, be advertised.</p>
+
+<p><strong>show ip protocols</strong> command will verify which routes are summarized for an interface.</p>
+
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/10/IP-in-IP-Tunneling/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/rip/2017/04/18/RIP-General/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/10/IP-in-IP-Tunneling/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/rip/2017/04/18/RIP-General/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/10/Backup-Interface-Keepalive/">
-        Backup Interface and Keepalives
+      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/">
+        IPv6 Stateless Address AUtoconfiguration
       </a>
     </h1>
 
-    <span class="post-date">10 Apr 2017</span>
+    <span class="post-date">17 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -285,25 +231,33 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>By default, the state of a point-to-point GRE interface is determined by routing availability for the tunnel destination, thus as long as the router has a route for the tunnel destination, the tunnel interface state will be UP. However, this does not account for possible transit issues. To fix the problem, GRE keepalives can be enabled on the point-to-point GRE tunnels. The format of the command is <code class="highlighter-rouge">keepalive &lt;interval&gt; &lt;number_of_retries&gt;</code>. The interval defines the frequency in seconds for sending keepalives and the number of retries defines the maximum number of keepalives being sent after the first failed keepalive, before the router changes the tunnel state to DOWN.</p>
+      <p>Stateless Address Autoconfiguration is a mechanism that allows a host to generate its own unicast address using a combination of locally available information and information advertised by routers. Here are the 4 steps:</p>
+<ol>
+  <li>The host creates its own link-local unicast address by appending a randomly generated or EUI-64 created Interface ID to FE80::/10.</li>
+  <li>The host performs Duplicate Address Detection on its newly created link-local address.</li>
+  <li>The host (if it hasn’t already received one), sends a Router Solicitation message. The Router Advertisement includes the prefix, prefix length, and link MTU. The host uses this information along with its self created Interface ID to create its global unicast address. The default gateway is the Router’s link-local address.</li>
+  <li>The host performs Duplicate Address Detection on its global unicast address before using.</li>
+</ol>
+
+<p>In addition to SLAAC, there is also DHCPv6, which is a stateful process. Whether a host that is configured to obtain its addressing information automatically uses SLAAC or DHCPv6 depends upon the configuration of the router’s Router Advertisement message.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/10/Backup-Interface-Keepalive/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/10/Backup-Interface-Keepalive/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/general%20routing/2017/04/09/GRE-Tunnels/">
-        GRE Tunnels
+      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/">
+        IPv6 EUI-64 Addressing
       </a>
     </h1>
 
-    <span class="post-date">09 Apr 2017</span>
+    <span class="post-date">17 Apr 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -311,63 +265,156 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>A GRE Tunnel is an encapsulated tunnel between two devices that makes the connection act like a point-to-point interface. We are essentially putting packets inside packets; in other words, we are encapsulating the IP packets into GRE packets.</p>
+      <p>EUI-64 is an IEEE defined process where EUI stands for Extended Unique Identifier. The EUI-64 process enables automatic Interface ID (host portion) creation. It uses the interface’s Ethernet MAC address to generate a 64-bit interface ID. The idea behind it is that a MAC address is globally unique, so combined with Router Advertisements providing prefix and prefix length, a device can self assign its IP address. The steps of EUI-64 address creation are outlined below.</p>
+<ol>
+  <li>The MAC address is split in the middle with 24 bits on the left and 24 bits on the right.</li>
+  <li>FFFE is inserted between the 24 bits.</li>
+  <li>The seventh bit is inverted (if it is 0 it becomes 1 and vice versa). The hexadecimal value (since it is the 7th bit or 2nd bit from the right) will go from 0 to 2.</li>
+</ol>
 
-<p><a href="https://networklessons.com/wp-content/uploads/2013/04/three-cisco-routers-with-tunnel.png">link</a>
-We will use the above figure to create a sample tunnel between the HQ and Branch routers.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`HQ(config)#interface tunnel 1     
-HQ(config-if)#tunnel source fastEthernet 0/0
-HQ(config-if)#tunnel destination 192.168.23.3
-HQ(config-if)#ip address 192.168.13.1 255.255.255.0
+<p>Here is an example of how to configure an EUI-64 address on an interface.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface gig0/1
+R1(config-if)# ipv6 address ipv6-prefix/prefix-length **eui-64**
+R1(config-if)# end
 </code></pre>
 </div>
-<pre><code class="language-`">`Branch(config)#interface tunnel 1
-Branch(config-if)#tunnel source fastEthernet 0/0
-Branch(config-if)#tunnel destination 192.168.12.1
-Branch(config-if)#ip address 192.168.13.3 255.255.255.0
-</code></pre>
 <p>`
-The default tunneling mode is GRE so it is not required to set it explicitly in this case.</p>
+There are some privacy concerns relating to using a device’s MAC address to generate its Layer 3 address. Because of this, many vendors have replaced the EUI-64 process with a random process to generate the Interface ID.</p>
 
-<p>Notice we are setting the destination address to be the outside interface that is reachable over the un-encapsulated network. You can also use loopback addresses.</p>
+    <article>
+    <div class="post-more">
+      
+      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/ipv6%20general/2017/04/17/IPv6-EUI-64/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/ipv6%20general/2017/04/17/IPv6-Neighbor-Discovery-Protocol/">
+        IPv6 Neighbor Discovery Protocol
+      </a>
+    </h1>
 
-<p>Some options that GRE tunneling supports are:</p>
+    <span class="post-date">17 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>Neighbor Discovery Protocol (NDP) is used by IPv6 hosts and routers for the following purposes:</p>
 <ul>
-  <li>add an additional checksum</li>
-  <li>specify a tunnel key</li>
-  <li>enforce packet sequencing</li>
+  <li>Stateless Address Autoconfiguration (SLAAC)</li>
+  <li>Duplicate Address Detection</li>
+  <li>for Layer-2 Data-Link address resolution (similar to IPv4 ARP)</li>
+  <li>to determine if neighbors are reachable (Neighbor Unreachability Detection)</li>
+  <li>when a router fails, a host actively searches for functioning alternates.</li>
 </ul>
 
-<p>Those options are seen under the <strong>tunnel</strong> subcommand in interface configuration mode.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`Router(config-if)# tunnel ?
-  bandwidth           Set tunnel bandwidth informational parameter
-  **checksum            enable end to end checksumming of packets**
-  destination         destination of tunnel
-  flow                flow options
-  **key                 security or selector key**
-  mode                tunnel encapsulation method
-  mpls                MPLS tunnel commands
-  path-mtu-discovery  Enable Path MTU Discovery on tunnel
-  protection          Enable tunnel protection
-  rbscp               Set tunnel RBSCP parameters
-  route-via           Select subset of routes for tunnel transport
-  **sequence-datagrams  drop datagrams arriving out of order**
-  source              source of tunnel packets
-  tos                 set type of service byte
-  ttl                 set time to live
-  udlr                associate tunnel with unidirectional interface
-  vrf                 set tunnel vrf membership
-</code></pre>
-</div>
-<p>`</p>
+<p>Neighbor Discovery uses 5 ICMPv6 messages:</p>
+<ol>
+  <li>Router Solicitation message</li>
+  <li>Router Advertisement message</li>
+  <li>Neighbor Solicitation message</li>
+  <li>Neighbor Advertisement message</li>
+  <li>Redirect message</li>
+</ol>
+
+<p>Router Solicitation messages are used by hosts when it needs prefix, prefix length, default gateway, and other information for Stateless Address Autoconfiguration (SLAAC). Router Advertisement messages are the messages used by Routers to convey that information to hosts.</p>
+
+<p>Neighbor Solicitation and Neighbor Advertisement messages are two more protocols that use ICMPv6 Neighbor Discovery. These messages are used by a device to request Layer 2 link layer address information from another device on the same network or to provide this information to the requesting device. Neighbor Solicitation and Neighbor Advertisement messages are part of three important processes:</p>
+<ol>
+  <li>Address resolution</li>
+  <li>Duplicate Address Detection (DAD)</li>
+  <li>Neighbor Unreachability Detection (DUD)</li>
+</ol>
+
+<p>An IPv6 host will maintain two tables for each interface:</p>
+<ul>
+  <li>Neighbor cache</li>
+  <li>Destination Cache</li>
+</ul>
+
+<p>The Neighbor cache is equivalent to an ARP table in IPv4. The neighbor cache contains mappings of hosts on the same network, while the destination cache contains layer-2 to layer-3 resolutions for devices on other links or networks.  To see the Neighbor table, issue <code class="highlighter-rouge">show ipv6 neighbors</code> command.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/general%20routing/2017/04/09/GRE-Tunnels/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/ipv6%20general/2017/04/17/IPv6-Neighbor-Discovery-Protocol/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/general%20routing/2017/04/09/GRE-Tunnels/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/ipv6%20general/2017/04/17/IPv6-Neighbor-Discovery-Protocol/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+    </div>
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/ipv6%20general/2017/04/16/IPv6-Address-Types/">
+        IPv6 Address types
+      </a>
+    </h1>
+
+    <span class="post-date">16 Apr 2017</span>
+     | 
+    
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+    
+    
+
+    <article>
+      <p>There are 3 types of IPv6 addresses:</p>
+<ul>
+  <li>Unicast</li>
+  <li>Anycast</li>
+  <li>Multicast</li>
+</ul>
+
+<p>There is no “broadcast” type as in IPv4, but an “all nodes” multicast address does exist, which essentially serves the same purpose.</p>
+<h4 id="unicast">Unicast</h4>
+<p>A unicast address is an address that identifies a single device. A <em>global</em> unicast address is one that is assigned to a single host and is globally unique. These are the equivalent of a routable IPv4 address.
+<a href="http://www.cisco.com/c/dam/en/us/td/i/300001-400000/330001-340000/330001-331000/330523.tif/_jcr_content/renditions/330523.jpg">link</a>
+The host portion of the address is called the Interface ID. This is a more accurate description as a host can have more than one address (as can an interface, but often not).</p>
+
+<p>IPv6 addresses, unlike IPv4 addresses, have the subnet bits built in as part of the network portion of the address. In IPv4, the subnet bits were borrowed from the host portion. One benefit from this is that the Interface ID can be a consistent length for all IPv6 addresses, simplifying parsing of the address. The Interface ID, with very few exceptions, is 64 bits long. Also, with very few exceptions, the Subnet ID field is 16 bits long, providing for 65,636 separate subnets. This leaves 48 bits for the Global Routing Prefix of the address.</p>
+
+<p>The currently allocated IPv6 global unicast addresses are 2xxx::/4 through 3xxx::/4. The most common allocation is a /48 global routing prefix, a 16-bit subnet ID, and a 64 bit Interface ID.</p>
+
+<p>IPv6 also has <em>link-local</em> unicast address in addition to the global unicast address type. The difference is that a link-local address’ scope is limited to a single link, and its uniqueness in not guaranteed outside of that link. The first 10 bits are always FE80 (1111111010). Link-local addresses have great utility for functions like Neighbor Discovery Protocol and Address Autoconfiguration. They are similar to the 169.254.0.0/16 in IPv4. Link local addresses are never routable. Below is an example configuration in which you will see a subnet is not even declared.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface GigabitEthernet0/1
+R1(config-if)# ipv6 address FE80::1 link-local
+R1config-if)# exit
+</code></pre>
+</div>
+<p>`Link-local addresses are significant only within a single link. Packets with link-local sources or destinations are mostly used by the router’s control plane protocols, such as IPv6 routing protocols.</p>
+
+<p>There is also <em>unique-local</em> IPv6 addresses. These are equivalent to IPv4 RFC1918 addresses. They are likely unique, but not routable via global BGP. Thee always start with FC00::/7.</p>
+
+<h4 id="anycast">Anycast</h4>
+<p>An any cast address really represents more of a service than an address. An any cast address can reside on multiple hosts. Routers do not know they reside on different hosts but assume that they have multiple routes to the same host, so a single router simply choses the route to which it has the lowest cost route. Anycast also offers reliable backup, for if a single device goes down, routers will just route to the next lowest-cost available server. There are some reserved Anycast addresses, but for most services, an anycast address is just a global unicast address providing the any cast service.</p>
+
+<h4 id="multicast">Multicast</h4>
+<p>A multicast address identifies a set of devices - a <em>multicast group</em>. The first 8 bits of a multicast address are always 1s (FF00). The next 4 bits are the Flags. The following 4 bits are the Scope. Finally, the last 112 bits represent the Group ID.</p>
+
+<h4 id="address-type-identification">Address Type Identification</h4>
+<p>| <strong>Address Type</strong>      | <strong>Binary Prefic</strong> | <strong>IPv6 notation</strong> |
+| Unspecified  | 00…0 (128 bits) | ::/128 |
+| Loopback | 00…1 (128 bits) | ::1/128 |
+| Multicast | 11111111 | FF00::/8 |
+| Link-local Unicast | 1111111010 | FE80::/10 |
+| Unique-local Unicast | 11111100 | FC000::/10 |</p>
+
+<p>Global unicast addresses are everything else.</p>
+
+
+    <article>
+    <div class="post-more">
+      
+      <a href="/ipv6%20general/2017/04/16/IPv6-Address-Types/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      
+      <a href="/ipv6%20general/2017/04/16/IPv6-Address-Types/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

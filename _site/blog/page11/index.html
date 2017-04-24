@@ -164,12 +164,12 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/27/Debugging-STP/">
-        Debugging Spanning Tree Events
+      <a href="/layer%202/2017/03/29/Protected-Port/">
+        Protected Port (PVLAN)
       </a>
     </h1>
 
-    <span class="post-date">27 Mar 2017</span>
+    <span class="post-date">29 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -177,32 +177,31 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
 
     <article>
-      <p>Here is a configuration for debugging Spanning Tree events:</p>
+      <p>The protected port, also known as PVLAN edge, is a security feature used to prevent traffic from being directly exchanged at Layer 2 between two or more hosts that are within the same VLAN. Protected ports only have local switch significance. A protected port does not forward any traffic (unicast, multicast, or broadcast) to any other protected port in the same switch. If you need to pass traffic between protected ports, the only possible way is through a L3 device.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>SW1# debug spanning-tree events
-SW1# debug condition vlan 2
-SW1# config t
-SW1(config)# service timestamps debug datetime msec
+<p>By default, all switch ports are unprotected. The configuration is as simple as below:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
+SW1(config-if)# switchport protected
 </code></pre>
 </div>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/27/Debugging-STP/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/layer%202/2017/03/29/Protected-Port/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/27/Debugging-STP/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/layer%202/2017/03/29/Protected-Port/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/26/STP-Timers/">
-        STP Convergence Timers
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/">
+        Spanning Tree Loop Guard
       </a>
     </h1>
 
-    <span class="post-date">26 Mar 2017</span>
+    <span class="post-date">29 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -210,36 +209,32 @@ SW1(config)# service timestamps debug datetime msec
     
 
     <article>
-      <p>There are 3 timers we need to be concerned with in Spanning Tree: the Hello Time, the Forward Delay, and the Max-Age Time.</p>
+      <p>Loop Guard is a Spanning Tree feature that was added to prevent loops from forming due to hardware issues or STP software problems. A Spanning Tree loop occurs when a port that was previously in the blocking state is erroneously  transitioned to the Forwarding state.</p>
 
-<p>The Hello Time is the frequency with which BPDUs are transmitted from the root bridge. It can be adjusted with the command <code class="highlighter-rouge">spanning-tree vlan 1-4094 hello-time 3</code> where 3 is in seconds. The default is 2 seconds, but in can be adjusted between 1 and 10 seconds. Non-root bridges will never generate BPDUs, but only relay BPDUs they receive on their root port.</p>
+<p>When a non-designated port stops receiving BPDUs, it will eventually transition itself to a designated port and begin forwarding BPDUs. Loop Guard works by preventing that non-designated port from transitioning to a forwarding state. Instead, it transitions the port to STP loop-inconsistent blocking state. So Loop Guard prevents a non-designated port from becoming a designated port, while Root Guard prevents a designated port from transitioning to a Root Port.</p>
 
-<p>The Forward Delay is the time that is spent in the listening and learning states. Its value is 15 seconds by default, but it can be adjusted to anywhere between 4 and 30 seconds.</p>
+<p>Loop Guard is very similar to UDLD, but Loop Guard uses STP BPDUs to determine if there is a loop.</p>
 
-<p>The Max Age timer controls the maximum length of time that passes before a bridge port saves its configuration BPDU. This time is 20 seconds by default, but it can be tuned to be anytime between 6 and 40 seconds.</p>
-
-<p>There is another item that is not a timer but is related. This is the <em>message age</em>. The root bridge sends all of its BPDUs with a message age of 0. Each downstream switch then adds 1 to this message age value. The actual age out time of the downstream switches is then (max age - message age).</p>
-
-<p>Here is a good article that describes the Max Age timer as it relates to superior BPDUs:  <a href="https://packetmagnifier.wordpress.com/2013/09/09/understanding-stp-max-age/">Max Age</a>. If a switch’s root port goes down, there is no need for it to go through the Max Age timer process - if there are no better BPDUs received, the switch will immediately start announcing itself as root and begin sending BPDUs. In the scenario in the article, the switch that went down is sending inferior BPDUs, but yet the receiving switch goes through the Max Age process before it transforms its non-designated port to a Designated Port and begins sending the superior BPDUs towards the switch that suffered the down link.</p>
+<p>Loop Guard is enabled on a per-port basis with the interface subcommand <code class="highlighter-rouge">spanning-tree guard loop</code>. To be completely effective, Loop Guard should be enabled on <em>all</em> non-designated ports, including root ports and alternate ports. Loop Guard can also be enabled globally with the <code class="highlighter-rouge">spanning-tree loopguard default</code> global configuration command. You can then disable Loop Guard on a per-port basis with <code class="highlighter-rouge">no spanning-tree guard loop</code>.</p>
 
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/26/STP-Timers/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/26/STP-Timers/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/29/STP-Loop-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/">
-        STP Path Selection with Port Cost
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/">
+        Spanning Tree Root Guard
       </a>
     </h1>
 
-    <span class="post-date">21 Mar 2017</span>
+    <span class="post-date">28 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -247,31 +242,38 @@ SW1(config)# service timestamps debug datetime msec
     
 
     <article>
-      <p>There are two ways we can alter STP Path selection. We can alter the cost of a port, or we can change the priority of a port.</p>
+      <p>Root Guard is an enhancement to STP developed by Cisco. One issue with standard STP is that there is no way to ensure root bridge placement within the network. Even if you set a switch’s bridge priority to 0, another switch can come behind it with a priority of 0 and a lower MAC address and immediately take over the Root Bridge role.</p>
 
-<p>When a switch receives a BPDU, that BPDU contains the root path cost from the previous switch. The receiving switch then adds the cost of the link between it and the sending switch from which it received the BPDU. That is very important - it is the receiving switch that adds the cost associated with its interface to the Root Path Cost it received from the sending switch.</p>
+<p>Root Guard is enabled on a per port basis. Root Guard ensures that the port on which it is configured remains a designated port. If the bridge receives superior BPDUs on that designated port, Root Guard moves the port to root-inconsistent state, which is effectively equivalent to the STP listening state so no frames are forwarded.</p>
 
-<p>Cost is used for the selection of the root port to the upstream switch. But cost is carried along the path and accumulated in the root cost, which is the cost that is used to elect root ports. So changing the cost on a port may have implications on ports further downstream than the one you are affecting.</p>
+<p>The difference between BPDU Guard and Root Guard is that Root Guard allows the port to participate in STP, so long as the port does not receive a <em>superior</em> BPDU. With BPDU Guard, <em>any</em> BPDU will put the port into an err-disabled state.</p>
 
-<p>Priority is used for influencing the root port of the downstream switch, and as such, it is set up on a port in Designated state. Cost has a higher precedence than priority. You will see priority on the local switch <code class="highlighter-rouge">show spanning-tree vlan 2</code> but it will actually affect the forwarding decision on the downstream connected switch.</p>
+<p>Again, Root Guard is enabled on a per interface basis as below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface gig0/1
+SW!(config-if)# spanning-tree rootguard
+</code></pre>
+</div>
+
+<p>The Cisco explanation is located <a href="http://www.cisco.com/c/en/us/support/docs/lan-switching/spanning-tree-protocol/10588-74.html">here</a>.</p>
+
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/21/STP-Port-Cost/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/28/STP-Root-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/20/STP-Port-Election/">
-        STP Port Election
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/">
+        Spanning Tree BPDU Guard
       </a>
     </h1>
 
-    <span class="post-date">20 Mar 2017</span>
+    <span class="post-date">28 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -279,48 +281,40 @@ SW1(config)# service timestamps debug datetime msec
     
 
     <article>
-      <p>After the election of the STP Root Bridge, all ports in the Layer 2 Switch topology will need to be assigned a state. The steps can be listed as follows:</p>
-<ul>
-  <li>All ports on the Root Bridge become Designated Ports</li>
-  <li>On each non-root switch, exactly ONE port is elected as the <em>Root Port</em> which is the port having the lowest path-cost to the Root Bridge.</li>
-  <li>Each segment between switches will have one Designated Port which is the port on the segment that has the lowest path-cost to reach the root bridge.</li>
-  <li>The Root and Designated Ports are placed into a Forwarding State.</li>
-  <li>The ports that are not Root ports or Designated Ports will be placed in the Blocking State. These are displayed in show commands with an A for Alternate.</li>
-</ul>
+      <p>BPDU Guard is a STP PortFast safety enhancement. It works by disabling a port any time the interface hears a BPDU. PortFast by itself will not do that, so if you have PortFast enabled on an interface, and an end user plugs a switch into that link, all kinds of events can happen (including the plugged in switch becoming the Root Bridge!). BPDU Guard ensures that unauthorized switches cannot be plugged into the network. A sample configuration is below.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>interface gig0/1
+  spanning-tree bpduguard enable
 
-<p>It is helpful to remember that Designated Ports lead away from the Root Bridge, while Root Ports lead toward the Root Bridge.</p>
+errdisable recovery cause bpduguard
+errdisable recovery interval 120
+</code></pre>
+</div>
 
-<p>What are the tiebreakers for Root Ports and Designated Ports?</p>
+<p>The errdisable section enables the port after 120 seconds, in case the port is placed into err disabled state to due BPDU Guard.</p>
 
-<p>The tiebreaker for Spanning Tree decisions is as follows:</p>
-<ul>
-  <li>Lowest root bridge ID (used for root bridge election)</li>
-  <li>Lowest path cost to root bridge</li>
-  <li>Lowest sender bridge ID (used when a switch is connected to two switches through which it has equal cost to reach the root bridge)</li>
-  <li>Lowest sender port ID (when the switch has two interfaces connecting to the same switch and the cost to reach the root bridge is the same through either interface, it will use the interface with the lowest number as the root port (or designated port).</li>
-</ul>
-
-<p>It is helpful to keep in mind for elections that there is only one bridge that originates BPDUs - the root bridge. Other bridges update some fields (such as Sending Bridge ID, Message Age, etc) when retransmitting out their designated ports.</p>
-
-<p>The access ports will be designated ports typically and will send BPDUs toward the host, unless BPDU Filter is set.</p>
+<p>Optionally, you can set BPDU Guard as the default configuration on all interfaces with the following global commands:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>spanning-tree portfast bpduguard default
+spanning-tree portfast default
+</code></pre>
+</div>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/20/STP-Port-Election/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/20/STP-Port-Election/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Guard/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/">
-        STP Root Bridge Election
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/">
+        Spanning Tree BPDU Filter
       </a>
     </h1>
 
-    <span class="post-date">20 Mar 2017</span>
+    <span class="post-date">28 Mar 2017</span>
      | 
     
     <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
@@ -328,18 +322,23 @@ SW1(config)# service timestamps debug datetime msec
     
 
     <article>
-      <p>STP Root Bridge Election is based on the Bridge ID of the switches in the active Layer 2 domain. The Bridge ID is made up of the 4-bit bridge priority, a 12-bit Systems ID, and the 48-bit MAC address. The bridge priority is configurable from 0 to 61440. The default is 32768. The System ID is taken from the VLAN number (IEEE 802.1t).</p>
+      <p>BPDU Filter is another optional feature of STP. It is similar to BPDU Guard, in that it is used to terminate the STP domain. Like BPDU Guard, it can be enabled globally or per interface, but unlike BPDU Guard, BGPU filter behaves differently depending on how it is enabled.</p>
 
-<p>The election process is very simple. Each bridge starts off assuming it is the Root Bridge and sends BPDUs out advertising itself as such. If it receives a superior BPDU (a BPDU that has a Bridge ID lower than its current root bridge Bridge ID), it ceases advertising that Root Bridge and begins advertising the new Root Bridge with the lower Bridge ID. This process continues until all switches in the domain agree to the same Root Bridge.</p>
+<p>If BPDU Filter is enabled at the interface level, it silently drops all received inbound BPDUs and does not send outbound BPDUs. Unlike BPDU Guard, there is no err-disabled option for BPDU Filter. Here is an example of BPDU Filter enabled at the interface level:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config-if)# switchport mode access
+SW1(config-if)# switchport access vlan 10
+SW1(config-if)# spanning-tree bpdufilter enable
+</code></pre>
+</div>
 
-<p>Note that since MAC addresses are guaranteed to be unique, there will always be 1 Root Bridge elected. If all switches are set to the default priority, then the switch with the lowest MAC Address will become the Root Bridge. this is a bad idea for many reasons. One, you typically want your distribution layer switch to be the Root Bridge. Second, older switches will have lower MAC addresses, so your switch with the least resources ends up having a heavier load along with a higher chance for failure</p>
+<p>When BPDU Filter is enabled globally, it will only affect PortFast enabled ports. The switch will send out exactly 11 BPDUs, and inbound BPDUs are not filtered. The reason 11 BPDUs are sent is the default Hello timer is 2 seconds and the default Max Age timer is 20 seconds. If the switch receives inbound BPDUs, the port loses its PortFast status and STP is negotiated normally on that port. For this reason, you can say that BPDU Filter enabled globally is a safer option than BPDU enabled at the interface level, as STP loops cannot form.</p>
 
     <article>
     <div class="post-more">
       
-      <a href="/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/#disqus_thread"> <i class="fa fa-comments" aria-hidden="true"></i>Comment</a>&nbsp;
       
-      <a href="/spanning%20tree/2017/03/20/STP-Root-Bridge-Election/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
+      <a href="/spanning%20tree/2017/03/28/STP-BPDU-Filter/"><i class="fa fa-plus-circle" aria-hidden="true"></i>Read more</a>
     </div>
   </div>
   

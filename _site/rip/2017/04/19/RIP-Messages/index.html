@@ -172,7 +172,15 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     <p><img src="/assets/ripformat.png" alt="RIP Message" />
 Each RIP Message that contains a single command and a version number can contain up to 25 routes. The command is either 1 for a Request Message or 2 for a Response Message. The Version will be 1 for RIPv1.</p>
 
-<p>The <em>Address Family Identifier</em></p>
+<p>The <em>Address Family Identifier</em> is set to 2 for IP - the only exception to this is if this is a request for the router’s full route table. In this case, the address family identifier will be 0.</p>
+
+<p><em>IP Address</em> is the address of the destination of the route.</p>
+
+<p><em>Metric</em> is the hop count, a value between 1 and 16, with 16 meaning unreachable.</p>
+
+<p>Request Messages can either request a full routing table or information on a specific route. If the Request message is asking for the full routing table, it will have  the address family identifier set to zero, the address set to 0.0.0.0, and the metric set to 16. A router responds to such a request by sending its full routing table, honoring rules such as split horizon and boundary summarization.</p>
+
+<p>If the Request message is for a specific route or routes, the router responds differently. If it does not have a route to the route in question, the router responds to the Request message with a metric of 16, otherwise, it responds to the Request listing its own metric. Interestingly, when responding to specific routes the router does not suppress routes due to split horizon or boundary summarization.</p>
 
 
   </article>
@@ -184,8 +192,17 @@ Each RIP Message that contains a single command and a version number can contain
     
       <li>
         <h3>
-          <a href="/rip/2017/04/19/RIP-Timers/">
-            RIP Timers
+          <a href="/2017/04/21/IP-Routing-General/">
+            Ip Routing General
+            <small>21 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/ripng/2017/04/19/RIPng-Configuration/">
+            RIPng Configuration
             <small>19 Apr 2017</small>
           </a>
         </h3>
@@ -193,18 +210,9 @@ Each RIP Message that contains a single command and a version number can contain
     
       <li>
         <h3>
-          <a href="/rip/2017/04/18/RIP-General/">
-            RIP General
-            <small>18 Apr 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/">
-            IPv6 Stateless Address AUtoconfiguration
-            <small>17 Apr 2017</small>
+          <a href="/rip/2017/04/19/RIPv2-Configuration/">
+            RIPv2 Configuration
+            <small>19 Apr 2017</small>
           </a>
         </h3>
       </li>

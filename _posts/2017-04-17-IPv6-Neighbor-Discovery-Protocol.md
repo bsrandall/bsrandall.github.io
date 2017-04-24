@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Neighbor Discovery Protocol
+title: IPv6 Neighbor Discovery Protocol
 category: IPv6 General
 tag: knowledge
 date: 2017-04-17 16:54:45

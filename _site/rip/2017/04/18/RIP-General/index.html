@@ -186,6 +186,18 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
 <p>RIP does not store information received in a Topology table, nor do routers have a picture of the entire topology. They receive routes in Response messages, process the information in those messages, and then move on. The RIP Response messages contain that router’s full routing table, with the exception of routes that are stressed by the split-horizon rule.</p>
 
+<p>Route Summarization means there are no routes for child addresses in the RIP routing table, reducing the size of the table and allowing the router to handle more routes. Summary IP address functions more efficiently than multiple individual advertised IP routes for the following reasons:</p>
+<ul>
+  <li>The summarized routes in the Rip database are processed first</li>
+  <li>Any associated child routes that are included in a summarized route are skipped as RIP looks through the routing database, reducing the processing time required.</li>
+</ul>
+
+<p>If auto-summary is enabled, as soon as RIP determines a summary address is required in the RIP database, a summary entry is created in the RIP routing database. As long as there are child routes for a summary address, the address remains in the routing database.</p>
+
+<p>RIPv2 route summarization requires that the lowest metric of an aggregated entry, or the lowest metric of all child routes, be advertised.</p>
+
+<p><strong>show ip protocols</strong> command will verify which routes are summarized for an interface.</p>
+
 
   </article>
 </div>
@@ -196,8 +208,17 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/rip/2017/04/19/RIP-Messages/">
-            RIP Messages
+          <a href="/2017/04/21/IP-Routing-General/">
+            Ip Routing General
+            <small>21 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/ripng/2017/04/19/RIPng-Configuration/">
+            RIPng Configuration
             <small>19 Apr 2017</small>
           </a>
         </h3>
@@ -205,18 +226,9 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
     
       <li>
         <h3>
-          <a href="/rip/2017/04/19/RIP-Timers/">
-            RIP Timers
+          <a href="/rip/2017/04/19/RIPv2-Configuration/">
+            RIPv2 Configuration
             <small>19 Apr 2017</small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="/ipv6%20general/2017/04/17/IPv6-SLAAC/">
-            IPv6 Stateless Address AUtoconfiguration
-            <small>17 Apr 2017</small>
           </a>
         </h3>
       </li>
