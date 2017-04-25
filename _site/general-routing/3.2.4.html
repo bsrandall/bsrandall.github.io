@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      3.2.4 - IPv6 EUI-64 Addressing &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">3.2.4 - IPv6 EUI-64 Addressing</h1>
+  <p>EUI-64 is an IEEE defined process where EUI stands for Extended Unique Identifier. The EUI-64 process enables automatic Interface ID (host portion) creation. It uses the interface’s Ethernet MAC address to generate a 64-bit interface ID. The idea behind it is that a MAC address is globally unique, so combined with Router Advertisements providing prefix and prefix length, a device can self assign its IP address. The steps of EUI-64 address creation are outlined below.</p>
+<ol>
+  <li>The MAC address is split in the middle with 24 bits on the left and 24 bits on the right.</li>
+  <li>FFFE is inserted between the 24 bits.</li>
+  <li>The seventh bit is inverted (if it is 0 it becomes 1 and vice versa). The hexadecimal value (since it is the 7th bit or 2nd bit from the right) will go from 0 to 2.</li>
+</ol>
+
+<p>Here is an example of how to configure an EUI-64 address on an interface.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface gig0/1
+R1(config-if)# ipv6 address ipv6-prefix/prefix-length **eui-64**
+R1(config-if)# end
+</code></pre>
+</div>
+<p>`
+There are some privacy concerns relating to using a device’s MAC address to generate its Layer 3 address. Because of this, many vendors have replaced the EUI-64 process with a random process to generate the Interface ID.</p>
+
+</div>
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/general-routing/3.2.3%20-%20TBC" class="prev"><i class="fa fa-angle-left"></i> 3.2.3 - IPv6 Global Aggregate Addressing</a>                    
+        <a href="/general-routing/3.2.5" class="next">3.2.5 - IPv6 Auto-Configuration / SLAAC <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

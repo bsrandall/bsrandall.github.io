@@ -66,3 +66,6 @@ collections:
     general-routing:
         output: true
         permalink: /general-routing/:path
+    layer2:
+        output: true
+        permalink: /layer2/:path

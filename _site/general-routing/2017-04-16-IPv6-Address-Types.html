@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      IPv6 Address types &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">IPv6 Address types</h1>
+  <span class="post-date">16 Apr 2017</span>
+   | 
+  
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+  
+  
+  <article>
+    <p>There are 3 types of IPv6 addresses:</p>
+<ul>
+  <li>Unicast</li>
+  <li>Anycast</li>
+  <li>Multicast</li>
+</ul>
+
+<p>There is no “broadcast” type as in IPv4, but an “all nodes” multicast address does exist, which essentially serves the same purpose.</p>
+<h4 id="unicast">Unicast</h4>
+<p>A unicast address is an address that identifies a single device. A <em>global</em> unicast address is one that is assigned to a single host and is globally unique. These are the equivalent of a routable IPv4 address.
+<a href="http://www.cisco.com/c/dam/en/us/td/i/300001-400000/330001-340000/330001-331000/330523.tif/_jcr_content/renditions/330523.jpg">link</a>
+The host portion of the address is called the Interface ID. This is a more accurate description as a host can have more than one address (as can an interface, but often not).</p>
+
+<p>IPv6 addresses, unlike IPv4 addresses, have the subnet bits built in as part of the network portion of the address. In IPv4, the subnet bits were borrowed from the host portion. One benefit from this is that the Interface ID can be a consistent length for all IPv6 addresses, simplifying parsing of the address. The Interface ID, with very few exceptions, is 64 bits long. Also, with very few exceptions, the Subnet ID field is 16 bits long, providing for 65,636 separate subnets. This leaves 48 bits for the Global Routing Prefix of the address.</p>
+
+<p>The currently allocated IPv6 global unicast addresses are 2xxx::/4 through 3xxx::/4. The most common allocation is a /48 global routing prefix, a 16-bit subnet ID, and a 64 bit Interface ID.</p>
+
+<p>IPv6 also has <em>link-local</em> unicast address in addition to the global unicast address type. The difference is that a link-local address’ scope is limited to a single link, and its uniqueness in not guaranteed outside of that link. The first 10 bits are always FE80 (1111111010). Link-local addresses have great utility for functions like Neighbor Discovery Protocol and Address Autoconfiguration. They are similar to the 169.254.0.0/16 in IPv4. Link local addresses are never routable. Below is an example configuration in which you will see a subnet is not even declared.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface GigabitEthernet0/1
+R1(config-if)# ipv6 address FE80::1 link-local
+R1config-if)# exit
+</code></pre>
+</div>
+<p>`Link-local addresses are significant only within a single link. Packets with link-local sources or destinations are mostly used by the router’s control plane protocols, such as IPv6 routing protocols.</p>
+
+<p>There is also <em>unique-local</em> IPv6 addresses. These are equivalent to IPv4 RFC1918 addresses. They are likely unique, but not routable via global BGP. Thee always start with FC00::/7.</p>
+
+<h4 id="anycast">Anycast</h4>
+<p>An any cast address really represents more of a service than an address. An any cast address can reside on multiple hosts. Routers do not know they reside on different hosts but assume that they have multiple routes to the same host, so a single router simply choses the route to which it has the lowest cost route. Anycast also offers reliable backup, for if a single device goes down, routers will just route to the next lowest-cost available server. There are some reserved Anycast addresses, but for most services, an anycast address is just a global unicast address providing the any cast service.</p>
+
+<h4 id="multicast">Multicast</h4>
+<p>A multicast address identifies a set of devices - a <em>multicast group</em>. The first 8 bits of a multicast address are always 1s (FF00). The next 4 bits are the Flags. The following 4 bits are the Scope. Finally, the last 112 bits represent the Group ID.</p>
+
+<h4 id="address-type-identification">Address Type Identification</h4>
+<p>| <strong>Address Type</strong>      | <strong>Binary Prefic</strong> | <strong>IPv6 notation</strong> |
+| Unspecified  | 00…0 (128 bits) | ::/128 |
+| Loopback | 00…1 (128 bits) | ::1/128 |
+| Multicast | 11111111 | FF00::/8 |
+| Link-local Unicast | 1111111010 | FE80::/10 |
+| Unique-local Unicast | 11111100 | FC000::/10 |</p>
+
+<p>Global unicast addresses are everything else.</p>
+
+
+  </article>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+  </ul>
+</div>
+
+
+<div class="comments">
+  <h2>Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'http://bsrandall.github.io/general-routing/2017-04-16-IPv6-Address-Types'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/general-routing/IPv6-Address-Types'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = '//your_short_name.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/general-routing/2017-04-16-IPv6-General" class="prev"><i class="fa fa-angle-left"></i> IPv6 Addressing</a>                    
+        <a href="/general-routing/2017-04-17-IPv6-Neighbor-Discovery-Protocol" class="next">IPv6 Neighbor Discovery Protocol <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

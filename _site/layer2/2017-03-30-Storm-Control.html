@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Storm Control &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Storm Control</h1>
+  <span class="post-date">30 Mar 2017</span>
+   | 
+  
+    <a href="/blog/tags/#knowledge" class="post-tag">knowledge</a>
+  
+  
+  <article>
+    <p>Broadcast storms can create havoc on a Layer 2 network, quickly bringing the network to an unusable state. Software solutions to storm control are inefficient, because by the time the software has identified the storm, the hardware resources are at max utilization and there is no resources available to abate the storm.</p>
+
+<p>Cisco has a storm control feature built into its switches. It is a hardware based solution that allows us to set a threshold on interfaces to limit the amount of broadcast, multicast, or unknown unicast traffic an interface receives. It also allows us to select a couple of actions to take when that threshold is met.</p>
+
+<p>Let’s jump right into a configuration example.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level 30
+</code></pre>
+</div>
+
+<p>The ’30’ in the example above designates the rising threshold. When broadcast traffic exceeds 30% of the interface bandwidth, storm control will kick in and take action. The default action is to drop exceeding traffic.</p>
+
+<p>You can also specify bps as below. Adding k, m, or g identifies the value as Kbps, Mbps, or Gbps respectively. The example below would limit broadcast traffic to 30 Mbps on the Gigabit interface.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level bps 30m
+</code></pre>
+</div>
+
+<p>You can also designate a falling threshold. The falling threshold sets a value to which the traffic has to fall before that type of traffic is allowed again.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# interface GigabitEthernet0/1
+SW1(config-if)# storm-control broadcast level bps 30m 20m
+</code></pre>
+</div>
+<p>In the example above the broadcast traffic would have to drop below 20 Mbps before any broadcast traffic would be allowed into the port.</p>
+
+<p>We can also control the action. <code class="highlighter-rouge">storm-control action shutdown</code> shuts the interface down in case the level is exceeded. <code class="highlighter-rouge">storm-control action trap</code> sends an SNMP trap if the level is exceeded.</p>
+
+<p><code class="highlighter-rouge">show storm-control [unicast | multicast | broadcast]</code> is used to see the configuration as well as the current amount of traffic passing through the port.</p>
+
+  </article>
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+  </ul>
+</div>
+
+
+<div class="comments">
+  <h2>Comments</h2>
+  <div id="disqus_thread"></div>
+  <script>
+var disqus_config = function () {
+  this.page.url = 'http://bsrandall.github.io/layer2/2017-03-30-Storm-Control'; // Replace PAGE_URL with your page's canonical URL variable
+  this.page.identifier = '/layer2/Storm-Control'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = '//your_short_name.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/layer2/2017-03-30-Static-MAC-Address" class="prev"><i class="fa fa-angle-left"></i> Static MAC Address Entries</a>                    
+        <a href="/layer2/2017-03-30-Voice-VLAN" class="next">Voice VLAN <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>
