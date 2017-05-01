@@ -114,6 +114,39 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       
 
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
       <span class="">
         <a class="sidebar-nav-item " href="/about/">
           About
@@ -165,7 +198,7 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
   <p>By default, a Cisco router will run using one global routing and forwarding table. VRF Lite gives us the ability to virtualize the physical router into logical routers with their own independent IP routing tables. You can designate interfaces or sub interfaces to be associated with a particular VRF.</p>
 
 <p>Here is a simple VRF configuration.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# ip vrf red
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# ip vrf red
 R1(config-vrf)# exit
 R1(config)# ip vrf blue
 R1(config-vrf)# exit
@@ -180,12 +213,10 @@ R1(config-router)# network 192.168.0.0 0.0.0.255 area 0
 R1(config-router)# exit
 </code></pre>
 </div>
-<p>`
-To use ping, you will have to remember to specify the VRF or else the router will use the global routing table.</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`ping vrf Blue 1.1.1.1
+<p>To use ping, you will have to remember to specify the VRF or else the router will use the global routing table.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ping vrf Blue 1.1.1.1
 </code></pre>
 </div>
-<p>`</p>
 
 </div>
 
@@ -199,8 +230,8 @@ To use ping, you will have to remember to specify the VRF or else the router wil
 
 
     <div class="pagination">
-        <a href="/general-routing/3.1.20" class="prev .pagination-item"><i class="fa fa-angle-left"></i> 3.1.20 - On Demand Routing</a>                    
-        <a href="/general-routing/3.1.22" class="next .pagination-item">3.1.22 - Bidirectional Forwarding Detection <i class="fa fa-angle-right"></i></a>
+        <a href="/general-routing/3.1.20" class="prev .pagination-item"><i class="fa fa-angle-left"></i> ODR</a>                    
+        <a href="/general-routing/3.1.22" class="next .pagination-item">BFD <i class="fa fa-angle-right"></i></a>
     </div>
 
       

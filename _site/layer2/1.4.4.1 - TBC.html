@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      1.4.4.1 - MST Root Bridge Election &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">1.4.4.1 - MST Root Bridge Election</h1>
+  <p>Root bridge election in MST occurs in a similar manner to what we saw in PVST+ Root Election. The big difference is that there is a separate root per Multiple Spanning Tree Instance (MSTI). For example, we could have MSTI 1 for VLANs 10, 20, and 30, and MSTI 2 for VLANs 40, 50, and 60. To make SW1 the Root for MSTI 1 and SW2 the Root Bridge for MSTI 2, we would use the following commands.
+<strong>SW1</strong></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# spanning-tree mst configuration
+SW1(config-mst)# instance 1 vlan 10,20,30
+SW1(config-mst)# name Region1
+SW1(config-mst)# revision 1
+SW1(config-mst)# exit
+SW1(config)# spanning-tree mst 1 priority 0
+</code></pre>
+</div>
+<p>`<strong>SW2</strong></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW12config)# spanning-tree mst configuration
+SW2(config-mst)# instance 2 vlan 40,50,60
+SW2(config-mst)# name Region1
+SW2(config-mst)# revision 1
+SW2(config-mst)# exit
+SW2(config)# spanning-tree mst 2 priority 0
+</code></pre>
+</div>
+<p>`
+As always, don’t forget to change the spanning tree mode:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`SW1(config)# spanning-tree mode mst
+</code></pre>
+</div>
+<pre><code class="language-`">`SW2(config)# spanning-tree mode mst
+</code></pre>
+<p>`If this was our only configuration, the the Root Bridge for the IST of Region1 would happen organically - the switch with the lowest Bridge ID would become the IST Root Bridge.</p>
+
+<p>In the example above, both switches were in the same MST Region, and we can assume there was only one region. All of this goes out the door if there are multiple MST regions.</p>
+
+<p>When multiple regions exist, each Region has its own IST but there is a common CIST spanning across all regions. A single CIST Root is chosen across all regions and a CIST Regional Root is elected in every region. The CIST Regional Root must be a <strong>boundary switch</strong> and is elected based on the shortest external path cost to reach the CIST Root. The CIST Regional Root becomes the root of the IST for the given region as well, overriding the election process that might have been made if this was a single region in isolation.</p>
+
+</div>
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/layer2/1.4.3.2%20-%20TBC" class="prev .pagination-item"><i class="fa fa-angle-left"></i> RSTP Edge Ports</a>                    
+        <a href="/layer2/1.4.4.2%20-%20TBC" class="next .pagination-item">MST Root Bridge Election <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

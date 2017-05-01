@@ -114,6 +114,39 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       
 
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
       <span class="">
         <a class="sidebar-nav-item " href="/about/">
           About
@@ -206,21 +239,64 @@ Gi0/1.146      RM-R4-R6
 R1\#
 </code></pre>
 </div>
-<p><code class="highlighter-rouge">R1#show route-map
+<p>`R1#show route-map
 route-map RM-R4-R6, permit, sequence 10
   Match clauses:
-ip address (access-lists): FROM\_R4
+ip address (access-lists): FROM_R4
   Set clauses:
 ip next-hop 155.1.13.3
   Policy routing matches: 18 packets, 1116 bytes
 route-map RM-R4-R6, permit, sequence 20
   Match clauses:
-ip address (access-lists): FROM\_R6
+ip address (access-lists): FROM_R6
   Set clauses:
 ip next-hop 155.1.0.5
   Policy routing matches: 9 packets, 564 bytes
-</code>``
+```
 `</p>
+
+<h4 id="policy-routing-default-next-hop">Policy Routing Default Next Hop</h4>
+<p>When using policy routing and the <code class="highlighter-rouge">ip next-hop</code> set option in a route map, you can optionally use the <em>default</em> keyword. The difference is simple.</p>
+
+<p>When you do not use the default keyword, routing utilizes PBR first and consults the routing table if there is no match or non reachability. If you use the default keyword, then routing uses the routing table first and if no route can be found then attempts to use the Policy Based Routing process.</p>
+
+<p>Both the <code class="highlighter-rouge">set ip next-hop</code> and the <code class="highlighter-rouge">set ip default next-hop</code> commands require that the next-hop be found on a directly-connected subnet, otherwise PBR will fail and normal forwarding will be used. However, we can use <code class="highlighter-rouge">set ip next-hop recursive</code> to use an address off a subnet that <em>is not</em> directly connected.</p>
+
+<h4 id="policy-routing-verify-availability">Policy Routing Verify Availability</h4>
+<p>Within the route-map statement, there is an option when using <code class="highlighter-rouge">ip next-hop</code> of <code class="highlighter-rouge">verify-availability</code>. This article will describe what it does and the two flavors of utilization.</p>
+
+<p>If used solely by itself, <code class="highlighter-rouge">verify-availabilty</code> uses CDP to establish that the next-hop IP address is reachable. If the IP address used is in the CDP neighbor table, then the next-hop is deemed accessible, otherwise it is not.</p>
+
+<p><code class="highlighter-rouge">verify-availability</code> can be extended to also use a tracking object. Here is an example of that configuration.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R2(config)#route-map PBR permit 10
+R2(config-route-map)#match ip address HTTP-SERVER
+R2(config-route-map)#set ip next-hop verify-availability 192.168.24.4 1 track 1
+</code></pre>
+</div>
+<p>`
+If using either of these methods to implement <code class="highlighter-rouge">verify-reachability</code>, if the next-hop IP address is not reachable then routing is not performed based on the policy but is routed according to the the routing table.</p>
+
+<p>We can use a combination of commands to route a different way if our <code class="highlighter-rouge">verify-reachability</code> fails.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# route-map RM1
+R1(config-route-map)# match ip address AL1
+R1(config-route-map)# set ip next-hop 155.1.0.5
+R1(config-route-map)# set ip next-hop verify reachability
+R1(config-route-map)# set ip default next-hop 155.1.13.3
+</code></pre>
+</div>
+<p>`In this example, if we match to AL1 AND 155.1.0.5 is reachable (CDP check), then we route to 155.1.0.5. However if we match AL1 and 155.1.0.5 is not in the CDP neighbor table, then we route to 155.1.13.3.</p>
+
+<h4 id="policy-routing-order-of-operation">Policy Routing Order of Operation</h4>
+<p>A route-map can have multiple set operations on a single match clause. The list below shows the order of operations, regardless of the sequence number we use or the order we input them.</p>
+<ul>
+  <li><code class="highlighter-rouge">set ip next-hop verify-availability track</code> - first when used with object tracking</li>
+  <li><code class="highlighter-rouge">set ip next-hop</code> - alone or with the CDP (but without default) version of <code class="highlighter-rouge">verify-availability</code></li>
+  <li><code class="highlighter-rouge">set ip next-hop recursive</code></li>
+  <li>set interface</li>
+  <li>Route table</li>
+  <li>set ip default next-hop</li>
+  <li>set default interface</li>
+</ul>
 
 </div>
 
@@ -234,8 +310,8 @@ ip next-hop 155.1.0.5
 
 
     <div class="pagination">
-        <a href="/general-routing/3.1.13" class="prev .pagination-item"><i class="fa fa-angle-left"></i> 3.1.13 - Enhanced Object Tracking</a>                    
-        <a href="/general-routing/3.1.15" class="next .pagination-item">3.1.15 - Policy Routing and IP SLA <i class="fa fa-angle-right"></i></a>
+        <a href="/general-routing/3.1.13" class="prev .pagination-item"><i class="fa fa-angle-left"></i> Object Tracking</a>                    
+        <a href="/general-routing/3.1.15%20TBC" class="next .pagination-item">Policy Routing & IP SLA <i class="fa fa-angle-right"></i></a>
     </div>
 
       

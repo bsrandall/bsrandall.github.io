@@ -114,6 +114,39 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       
 
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
       <span class="">
         <a class="sidebar-nav-item " href="/about/">
           About
@@ -170,6 +203,21 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
 <p>One issue with default routes is that you lose a lot of the routing detail. One way this shows itself is the fact that sites with default routes will have no idea if the end destination network is available. Another issue with the loss of detail has to do with having multiple default routes. With only having default routes, there is no routing details to show which is the better path to reach the end destination.</p>
 
+<p>There are 3 ways (outside of dynamic routing protocols) to generate a default route.</p>
+<ul>
+  <li>ip default-gateway</li>
+  <li>ip default-network</li>
+  <li>ip route 0.0.0.0 0.0.0.0</li>
+</ul>
+
+<p><strong>ip default-gateway</strong> is used to define a default gateway when ip routing <em>is not</em> enabled on the device. This can be handy to transfer a Cisco software image to a device when the device is in boot mode.</p>
+
+<p><strong>ip default-network</strong> is used to define a default gateway when ip routing <em>is</em> enabled on the router. Default routes configured this way are propagated differently depending on which routing protocol is propagating the default route. For EIGRP to propagate the default route, the network specified by <strong>ip default-network</strong> must be known to EIGRP. The network must be an EIGRP derived network in the routing table, or the static route used to generate the route to the network must be redistributed into EIGRP.</p>
+
+<p>RIP advertises a route to network 0.0.0.0 if a gateway of last resort is configured using the <strong>ip default-network</strong> command.</p>
+
+<p>When using <strong>ip route 0.0.0.0 0.0.0.0</strong> to create a default route, EIGRP will propagate a route to network 0.0.0.0, but the static route must be redistributed into the routing protocol. With RIP, on most versions of IOS the default route created by <strong>ip route 0.0.0.0 0.0.0.0</strong> is automatically advertised by RIP. Not only are these routes not automatically propagated by OSPF, you cannot redistribute a default route into OSPF - you must use the <strong>default-information originate</strong> command.</p>
+
 </div>
 
       </div>
@@ -182,8 +230,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
 
     <div class="pagination">
-        <a href="/general-routing/3.1.7" class="prev .pagination-item"><i class="fa fa-angle-left"></i> 3.1.7 - Egress Interface vs Next Hop Static Routing</a>                    
-        <a href="/general-routing/3.1.9" class="next .pagination-item">3.1.9 - CEF <i class="fa fa-angle-right"></i></a>
+        <a href="/general-routing/3.1.7" class="prev .pagination-item"><i class="fa fa-angle-left"></i> Interface vs Next-hop routing</a>                    
+        <a href="/general-routing/3.1.9" class="next .pagination-item">CEF <i class="fa fa-angle-right"></i></a>
     </div>
 
       

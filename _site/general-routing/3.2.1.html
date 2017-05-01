@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      3.2.1 - IPv6 Link-Local Addressing &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">3.2.1 - IPv6 Link-Local Addressing</h1>
+  <p>Link local IPv6 addresses are only significant on the local link. For that reason, they are not necessarily guaranteed to be globally unique, as is the case with a global unicast address. Link local addresses will start with FE80::/10 or in binary 111 1110 10xx xxxx. In practical use, it will really always be FE80::/64.  This range will include everything from FE80:: through FEBF::, but once again in practical use you will almost always see FE80::. They are similar to the 169.254.0.0/16 in IPv4.</p>
+
+<p>Cisco implements link-local via EUI-64. If there are no Ethernet interfaces and the device needs an EUI-64 address, Cisco routers have a MAC pool for use. In Cisco IOS, an interface is automatically assigned a link-local address as soon as  IPv6 is explicitly enabled on the interface. Since the configuration is automatic, link-local addresses are a great addition to IP since they allow communication to occur via IPv6 before global unicast addresses have even been assigned.</p>
+
+<p>Though link-local address is automatic, you still have the ability to manually assign a link-local address if desired.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config-if)# ipv6 address fe80::1 ?
+  link-local  Use link-local address
+
+R1(config-if)# ipv6 address fe80::1 link-local
+R1(config-if)# do show ipv6 interface brief 
+FastEthernet0/0            [up/up]()
+FE80::C001:37FF:FE6C:0
+2001:DB8:0:12::1
+FastEthernet0/1            [up/up]()
+FE80::1
+</code></pre>
+</div>
+<p>`If you were to then issue the command <strong>no ipv6 fe80::1 link-local</strong>, the router would once again assign a EUI-64 generated link-local address.</p>
+
+<p>Packets sourced from or to a link-local address are not forwarded out of the layer 2 domain by routers. That makes these links useful for limiting the scope of traffic which should not be routed (for example, routing protocol advertisements).</p>
+
+
+</div>
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/general-routing/3.1.9" class="prev .pagination-item"><i class="fa fa-angle-left"></i> CEF</a>                    
+        <a href="/general-routing/3.2.99.1" class="next .pagination-item">IPv6 General <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

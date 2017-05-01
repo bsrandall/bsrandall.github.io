@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      3.1.23 - Performance Routing (PfR) &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">3.1.23 - Performance Routing (PfR)</h1>
+  <p>Note that this was moved to be a written only topic. So my coverage will be small and simple as can be for a very deep technology.</p>
+
+<p>Performance Routing (PfR), previously called Optimized Edge Routing (OER), introduces a new concept into IP routing. With traditional routing, path selection decisions do not consider a particular path’s traffic characteristics be it throughput, actual delay, packet loss, voice mean opinion score (MOS), monetary cost of a given path, or jitter. PfR enhances the classic destination-based routing concept centered on the shortest path (lowest-cost metric) by adding into the routing selection process, network performance and/or application performance aware intelligence.</p>
+
+<p>In the past, router’s simply did not have the physical resources to be able to route based on anything other than a simple metric. With the memory and CPU available in today’s routers, not routing based on advanced metrics is a waste of resources.</p>
+
+<p><img src="/assets/pfr1.png" alt="img" />
+Let’s say we have two links to the internet as shown above. The current situation is we have the T1 configured to be a backup circuit to the Ethernet circuit in case the Ethernet circuit goes down. In our PfR example, we will show how to use the T1 link when the Ethernet link hits 75% saturation. In our scenario, PfR will will automatically use NetFlow, the interface’s utilization, along with active probing with IP SLA to determine the availability of an alternate path. Knowledge of NetFlow and IP SLA is not needed as PfR manages the configuration of these technologies.</p>
+
+<p>Central to PfR is the concept of a Master Controller (MC) and Border Routers (BR). The MC is the centralized decision maker and is responsible for controlling the Bfs and acting as a central location to store and analyze data collected from the BRs. The MC does not need to be in the path of traffic flows but does need basic IP reachability to the BRs. The communication between the MC and BRs occurs over an authenticated TCP connection on port 3949 by default. The BR is responsible for initiating the TCP connection. The authentication is handled via key chains like we saw in RIP and EIGRP. The MC and the BR can be the same router, for lab or small networks.</p>
+
+<p><img src="/assets/pfr2.png" alt="img" /></p>
+
+<p>Let’s jump into the configuration. First we will set up the BR and tell it where it can find the MC, as well as provide the key chain used to authenticate. The older IOS versions use <strong>oer</strong> while the new IOS versions (&gt;15.0) use <strong>pfr</strong> commands.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R3(config)#oer border
+R3(config-oer-br)#local Loopback0
+R3(config-oer-br)#master 150.1.3.3 key-chain OER R3(config-oer-br)#exit
+</code></pre>
+</div>
+<p>`On the MC there is a little more configuration. We need to define the BR(s) as well as the internal and external interfaces. There must be at least 1 internal and 2 external interfaces in the PfR domain.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R3(config)#oer master
+R3(config-oer-mc)#border 150.1.3.3 key-chain OER
+R3(config-oer-mc-br)#interface FastEthernet0/0 internal
+R3(config-oer-mc-br)#interface Serial1/0.1 external
+R3(config-oer-mc-br-if)#interface FastEthernet0/1 external
+R3(config-oer-mc-br-if)#exit
+</code></pre>
+</div>
+<p>`
+In order to see the status, use the following.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1# show her master
+</code></pre>
+</div>
+<p>`
+Now, to tell the MC to start monitoring the Ethernet’s throughput rate so that traffic can be offloaded to the T1 once the 75% threshold has been reached, we have to enter the <strong>learn</strong> sub configuration mode on the MC.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R3(config-oer-mc)#learn
+R3(config-oer-mc-learn)#throughput
+</code></pre>
+</div>
+<p>`The default interface utilization threshold is 75% when monitoring throughput. This can be changed under the interface configuration sub-mode for a particular BR.</p>
+
+<p><em>Traffic classes</em> are used in PfR to designate types of traffic out of the traffic flow that we want to manipulate. The MC will learn up to 100 of these traffic classes by default. This can be changed using the <strong>prefixes &lt;1-100000&gt;</strong> command.Initially PfR only supported Layer 3 prefixes, but now it can learn traffic classes from Layer 4 ports or DSCP as well. For our example we will use layer 3 prefixes. PfR aggregates traffic flows into /24 prefixes by default before sending the information to the MC. We can change that in the learn configuration sub-mode with the <strong>aggregation-type prefix-length &lt;1-32&gt;</strong> command. We will do some final configuration on the MC. We will need to change the MC’s route control policy settings from observe (mode route observe) to route control (mode route control) so that the MC can instruct the BR to inject static routes allowing it to move traffic from the Ethernet link to the T1 link.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R3(config)#oer master
+R3(config-oer-mc)#mode route control
+</code></pre>
+</div>
+<p>`
+Now you may wonder how PfR knew to route to the T1 when the load hit 75%. Well there is no magic. The only way this would happen is if we have a secondary route to the same destination. In our example, we had a floating static route configured.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`ip route 0.0.0.0 0.0.0.0 192.10.1.1
+ip route 0.0.0.0 0.0.0.0 192.10.2.1 5
+</code></pre>
+</div>
+<p>`Without the second route, PfR would not have sent traffic across the Serial link, even after the Ethernet circuit hit 75% utilization. PfR calls these additional routes<em>parent routes</em>. They do not have to be installed in the routing table, they just have to be available in the configuration.parent</p>
+
+
+</div>
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/general-routing/3.1.22" class="prev .pagination-item"><i class="fa fa-angle-left"></i> BFD</a>                    
+        <a href="/general-routing/3.1.3" class="next .pagination-item">Longest Match Routing <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

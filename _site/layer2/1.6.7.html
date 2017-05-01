@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      1.6.7 - ERSPAN &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">1.6.7 - ERSPAN</h1>
+  <p>Encapsulated Remote SPAN (ERSPAN) is a variant of RSPAN in which we are encapsulating the Remote SPAN information. ERSPAN creates a GRE tunnel for all captured traffic and allows it to be extended across Layer 3 domains. This became an option with IOS-XE.</p>
+
+<p>In this ERSPAN example, ee will configure R1 to capture received traffic and send it to SW1 gig2/1.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>R1(config)# monitor session 1 type erspan-source
+R1(config-mon-erspan-src)# source interface gig1/1 rx
+R1(config-mon-erspan-src)# no shutdown
+R1(config-mon-erspan-src)# destination
+R1(config-mon-erspan-src-dst)# erspan-id 101
+R1(config-mon-erspan-src-dst)# ip address 10.1.1.1
+R1(config-mon-erspan-src-dst)# origin ip address 172.16.1.1
+</code></pre>
+</div>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(config)# monitor session 2 type erspan-destination
+SW1(config-mon-erspan-dst)# destination interface gig2/1
+SW1(config-mon-erspan-dst)# no shutdown
+SW1(config-mon-erspan-dst)# source
+SW1(config-mon-erspan-dst-src)# erspan-id 101
+SW1(config-mon-erspan-dst)# ip address 10.1.1.1
+</code></pre>
+</div>
+
+<p>A couple of configuration notes. First, you must make sure the destination port is not in a shutdown state or else the SPAN session will not come up.</p>
+
+<p>If you want to leave the original encapsulation of the frames intact, use the <code class="highlighter-rouge">encapsulation replicate</code> option on the monitor session destination command.</p>
+
+<p>One confusing option is the <code class="highlighter-rouge">ingress dot1q vlan 10</code> option on the destination interface. This is actually telling the switch to accept incoming frames on the <em>destination</em> monitor switch and place the frames in VLAN 10. This would let you use the destination port like a normal access port. Seems kind of silly to me as to why you would want to do that, but I am sure there is a reason.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>monitor session 1 destination interface gig0/24 ingress dot1q vlan 146
+</code></pre>
+</div>
+<p>The above accepts inbound packets with 802.1Q encapsulation with the given VLAN as the default VLAN. Compare that to the example below, which accepts incoming packets with untagged encapsulation type with the specified VLAN as the default VLAN.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>monitor session 1 destination interface gig0/24 ingress vlan 146
+</code></pre>
+</div>
+
+<p>To view the session, simply use <code class="highlighter-rouge">show monitor session 1</code>.</p>
+
+</div>
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/layer2/1.6.5" class="prev .pagination-item"><i class="fa fa-angle-left"></i> SPAN</a>                    
+        <a href="/layer2/1.6.9" class="next .pagination-item">Fallback Bridging <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

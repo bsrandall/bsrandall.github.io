@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      3.2.11 - IPv6 Tunneling &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">3.2.11 - IPv6 Tunneling</h1>
+  <p>An overlay tunnel encapsulates IPv6 packets in IPv4 packets for delivery across an IPv4 infrastructure. By using overlay tunnels, you can communicate with isolated IPv6 networks without upgrading the IPv4 infrastructure between them. Tunnel endpoint must support both IPv4 and IPv6 protocol stacks. IPv6 supports the following type of overlay tunneling mechanisms:</p>
+<ul>
+  <li>Manual</li>
+  <li>GRE</li>
+  <li>IPv4-compatible</li>
+  <li>6to4</li>
+  <li>Intrasite Automatic Tunnel Addressing Protocol (ISATAP)</li>
+</ul>
+
+<p>We will address Manual, GRE, and IPv4 compatible briefly here, while 6to4 and ISATAP are covered in later articles.</p>
+
+<h4 id="manual">Manual</h4>
+
+<p><a href="/assets/ipv6_tunnel.png">link</a></p>
+
+<p>The above diagram will be a recurring topic as we study IPv6 in IPv4 tunneling. We have two IPv6 hosts separated by an IPv4 only transit network. How can we get the two IPv6-only hosts to communicate with each other.</p>
+
+<p>We would use a manual tunnel in situations where the routers are static and regular IPv6 communication is needed to pass between the routers, as might be the case with Edge routers. To create the tunnel, you assign an IPv6 address to the tunnel, and you use the IPv4 addresses for the tunnel source and tunnel destination. Below would be a sample configuration to create a manual IPv6 tunnel.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)#interface tunnel 0
+R1(config-if)#ipv6 address 2001:13::1/64
+R1(config-if)#tunnel source fastethernet0/0
+R1(config-if)#tunnel destination 10.20.20.3
+R1(config-if)#tunnel mode ipv6ip
+R1(config-if)#ipv6 rip CCIERIP enable
+R1(config-if)#end
+
+R3(config)#interface tunnel 0
+R3(config-if)#ipv6 address 2001:13::3/64
+R3(config-if)#tunnel source fastethernet0/0
+R3(config-if)#tunnel destination 10.10.10.1
+R3(config-if)#tunnel mode ipv6ip
+R3(config-if)#ipv6 rip CCIERIP enable
+R3(config-if)#end
+</code></pre>
+</div>
+<p>`
+Pretty easy, almost like a GRE tunnel, we are just using the IPv4 addresses as the tunnel source and destination, but declaring the tunnel mode as 1ipv6ip.</p>
+
+<h4 id="gre">GRE</h4>
+<p>IPv6 tunneling over GRE is just as easy as the manual tunnels we saw above. Really the only reason this is needed vs the manual method is if you are using IS-IS, as IS-IS requires the use of the protocol field of the GRE header that allows identification of the passenger protocol.</p>
+
+<p>We will use the same topology as before.</p>
+
+<p><img src="/assets/ipv6_tunnel.png" alt="link" />
+<strong>Router 1</strong></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)#ipv6 unicast-routing
+R1(config)#interface loopback 0
+R1(config-if)#ipv6 rip CCIERIP enable
+R1(config-if)#exit
+R1(config)#interface tunnel 0
+R1(config-if)#ipv6 address 2001:13::1/64
+R1(config-if)#tunnel source fastethernet0/0
+R1(config-if)#tunnel destination 10.20.20.3
+R1(config-if)#tunnel mode gre ip
+R1(config-if)#ipv6 rip CCIERIP enable
+R1(config-if)#end
+</code></pre>
+</div>
+<p>`<strong>Router 3</strong></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R3(config)#ipv6 unicast-routing
+R3(config)#interface loopback 0
+R3(config-if)#ipv6 rip CCIERIP enable
+R3(config-if)#exit
+R3(config)#interface tunnel 0
+R3(config-if)#ipv6 address 2001:13::3/64
+R3(config-if)#tunnel source fastethernet0/0
+R3(config-if)#tunnel destination 10.10.10.1
+R3(config-if)#tunnel mode gre ip
+R3(config-if)#ipv6 rip CCIERIP enable
+R3(config-if)#end
+</code></pre>
+</div>
+<p>`
+You can see that the GRE tunnel also uses IPv4 addresses as the tunnel source and destination. Really, the only difference is the tunnel mode is <em>gre ip</em> as compared to <em>ipv6ip</em>.</p>
+
+<h4 id="ipv4-compatible">IPv4-compatible</h4>
+<p>This is not a Cisco recommend tunnel type, though it is supported in IOS. As compared to Manual tunnels and GRE tunnels above, IPv4-compatible tunnels are point-to-multipoint where the previous two are simple point-to-point.</p>
+
+<p>Automatic IPv4-compatible tunnels use IPv4-compatible IPv6 addresses. IPv4-compatible IPv6 addresses are IPv6 unicast addresses that have zeros in the high-order 96 bits of the address, and an IPv4 address in the low-order 32 bits. They can be written as 0:0:0:0:0:0:A.B.C.D or ::A.B.C.D, where “A.B.C.D” represents the embedded IPv4 address.</p>
+
+<p>The tunnel destination is automatically determined by the IPv4 address in the low-order 32 bits of IPv4-compatible IPv6 addresses. The host or router at each end of an IPv4-compatible tunnel must support both the IPv4 and IPv6 protocol stacks. IPv4-compatible tunnels can be configured between border-routers or between a border-router and a host. Using IPv4-compatible tunnels is an easy method to create tunnels for IPv6 over IPv4, but the technique does not scale for large networks.</p>
+
+<p>The configuration for this is similar to the above tunneling mechanisms. You do not specify a tunnel destination, and the tunnel mode is <strong>ipv6ip auto-tunnel</strong>.</p>
+
+<p>Cisco recommends using ISATAP tunnels when considering this type of solution.</p>
+
+<h4 id="6to4">6to4</h4>
+<p>These are point-to-multipoint tunnels that can be used to connect isolated IPv6 sites. It uses an address space of 2002::/16.</p>
+
+<h4 id="isatap">ISATAP</h4>
+<p>These are point-to-multipoint tunnels that can be used to connect systems <em>within</em> a site. It can utilize any IPv6 unicast address.</p>
+
+
+</div>
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/general-routing/3.2.10" class="prev .pagination-item"><i class="fa fa-angle-left"></i> IPv6 MP-BGP</a>                    
+        <a href="/general-routing/3.2.12" class="next .pagination-item">IPv6 6to4Tunneling <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>

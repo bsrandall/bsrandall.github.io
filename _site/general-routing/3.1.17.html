@@ -114,6 +114,39 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       
 
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
       <span class="">
         <a class="sidebar-nav-item " href="/about/">
           About
@@ -172,13 +205,12 @@ HQ(config-if)#tunnel destination 192.168.23.3
 HQ(config-if)#ip address 192.168.13.1 255.255.255.0
 </code></pre>
 </div>
-<p>````
-`Branch(config)#interface tunnel 1
+<p>```
+Branch(config)#interface tunnel 1
 Branch(config-if)#tunnel source fastEthernet 0/0
 Branch(config-if)#tunnel destination 192.168.12.1
 Branch(config-if)#ip address 192.168.13.3 255.255.255.0</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>`
-The default tunneling mode is GRE so it is not required to set it explicitly in this case.
+<div class="highlighter-rouge"><pre class="highlight"><code>The default tunneling mode is GRE so it is not required to set it explicitly in this case.
 
 Notice we are setting the destination address to be the outside interface that is reachable over the un-encapsulated network. You can also use loopback addresses.
 
@@ -190,7 +222,7 @@ Some options that GRE tunneling supports are:
 Those options are seen under the **tunnel** subcommand in interface configuration mode.
 </code></pre>
 </div>
-<p>`Router(config-if)# tunnel ?
+<p>Router(config-if)# tunnel ?
   bandwidth           Set tunnel bandwidth informational parameter
   <strong>checksum            enable end to end checksumming of packets</strong>
   destination         destination of tunnel
@@ -209,7 +241,8 @@ Those options are seen under the **tunnel** subcommand in interface configuratio
   udlr                associate tunnel with unidirectional interface
   vrf                 set tunnel vrf membership
 ```
-`</p>
+`
+By default, the state of a point-to-point GRE interface is determined by routing availability for the tunnel destination, thus as long as the router has a route for the tunnel destination, the tunnel interface state will be UP. However, this does not account for possible transit issues. To fix the problem, GRE keepalives can be enabled on the point-to-point GRE tunnels. The format of the command is <code class="highlighter-rouge">keepalive &lt;interval&gt; &lt;number_of_retries&gt;</code>. The interval defines the frequency in seconds for sending keepalives and the number of retries defines the maximum number of keepalives being sent after the first failed keepalive, before the router changes the tunnel state to DOWN. This can become important in certain situations such as when using the <strong>backup interface</strong> option.</p>
 
 
 </div>
@@ -224,8 +257,8 @@ Those options are seen under the **tunnel** subcommand in interface configuratio
 
 
     <div class="pagination">
-        <a href="/general-routing/3.1.16" class="prev .pagination-item"><i class="fa fa-angle-left"></i> 3.1.16 - Local Policy Routing</a>                    
-        <a href="/general-routing/3.1.18" class="next .pagination-item">3.1.18 - IP in IP Tunneling <i class="fa fa-angle-right"></i></a>
+        <a href="/general-routing/3.1.16" class="prev .pagination-item"><i class="fa fa-angle-left"></i> Local Policy Routing</a>                    
+        <a href="/general-routing/3.1.18" class="next .pagination-item">IP in IP Tunneling <i class="fa fa-angle-right"></i></a>
     </div>
 
       

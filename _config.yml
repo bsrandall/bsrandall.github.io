@@ -44,6 +44,10 @@ nav:
     - '/blog/'
     - { Categories: '/blog/categories/' }
     - { Tags: '/blog/tags/' }
+  Wiki:
+    - '/layer2/'
+    - 'general-routing/'
+    - 'rip/'
   About:          
     - '/about/'
   Github Project: 

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      3.2.12 - IPv6 Automatic 6to4 Tunneling &middot; No Excuses CCIE
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/main.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_SVG"> </script>
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } });
+  </script>
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <div class="sidebar-personal-info">
+      <div class="sidebar-personal-info-section">
+        <a href="http://gravatar.com/">
+          <img src="http://www.gravatar.com/avatar/?s=350" title="View on Gravatar" alt="View on Gravatar" />
+        </a>
+      </div>
+      <div class="sidebar-personal-info-section">
+        <p>A dedicated network professional, working hard every day for my wife and child.</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/blog/">
+          Home
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/blog/">
+          Blog
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/categories/">
+                Categories
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="/blog/tags/">
+                Tags
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="foldable">
+        <a class="sidebar-nav-item " href="/layer2/">
+          Wiki
+        </a>
+
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+          
+            
+            
+            
+              <a class="sidebar-nav-item sidebar-nav-item-sub " href="">
+                
+              </a>
+          
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="/about/">
+          About
+        </a>
+
+        
+      </span>
+
+    
+      
+      
+      
+
+      
+
+      <span class="">
+        <a class="sidebar-nav-item " href="http://bsrandall.github.io/">
+          Github Project
+        </a>
+
+        
+      </span>
+
+    
+
+    <span class="sidebar-nav-item">Currently v1.0.0</span>
+  </nav>
+
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home" title="No Excuses CCIE">
+              <img class="masthead-logo" src="/public/logo.png"/>
+            </a>
+            <small>My professional journey towards CCIE Route & Switch</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="page">
+  <h1 class="page-title">3.2.12 - IPv6 Automatic 6to4 Tunneling</h1>
+  <p>6to4 Tunneling is another method that allows communication between IPv6 and IPv4 networks. What is different about 6to4 is that it allows for automatic IPv6-to-IPv4 address translation, and treats the underlying IPv4 network as one big non-broadcast multiaccess network (NBMA), rather than a collection of independent point-to-point links. This approach is considered dynamic point-to-multipoint. Since it is a multipoint tunnel, you will see that we do NOT assign a tunnel destination.</p>
+
+<p>6to4 tunnels rely on reserved address space. The reserved space is 2002::/16. To this prefix, the IPv4 address of the border router is added, resulting in a /48 prefix.</p>
+
+<p>To best demonstrate, we will look at a 3-node network so we can examine the multipoint aspect. If it were just a 2 node network we could use manual or GRE.</p>
+
+<p><img src="/assets/6to4.png" alt="img" /></p>
+
+<p>Here would be the ensuing configurations for our 3 routers.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# interface tunnel0
+R1(config-if)# tunnel mode ipv6ip 6to4
+R1(config-if)# tunnel source 10.0.1.1
+R1(config-if)# ipv6 address 2002:a00:101::/128
+</code></pre>
+</div>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R2(config)# interface tunnel0
+R2(config-if)# tunnel mode ipv6ip 6to4
+R2(config-if)# tunnel source 10.0.2.1
+R2(config-if)# ipv6 address 2002:a00:201::/128
+```
+</code></pre>
+</div>
+<p>`R3(config)# interface tunnel0
+R3(config-if)# tunnel mode ipv6ip 6to4
+R3(config-if)# tunnel source 10.0.3.1
+R3(config-if)# ipv6 address 2002:a00:301::/128</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`
+Next, we would need to configure some routing since this is NBMA and we do not specify tunnel destinations.
+
+**R1**
+</code></pre>
+</div>
+<p>`ipv6 route 2002::/16 tunnel0
+ipv6 route 2001:db8:0:2::/64 2002:a00:201::
+ipv6 route 2001:db8:0:3::/64 2002:a00:301::</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`**R2**
+</code></pre>
+</div>
+<p>`ipv6 route 2002::/16 tunnel0
+ipv6 route 2001:db8:0:1::/64 2002:a00:101::
+ipv6 route 2001:db8:0:3::/64 2002:a00:301::</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`**R3**
+ipv6 route 2002::/16 tunnel0
+ipv6 route 2001:db8:0:1::/64 2002:a00:101::
+ipv6 route 2001:db8:0:2::/64 2002:a00:201::
+</code></pre>
+</div>
+<p>`
+Let’s examine host to host communication. Let’s say an IPv6 host behind R1 is trying to communicate with an IPv6 host that is across the IPv4 network behind R2. The packet begins as a normal IPv6 packet with an IPv6 host and destination address.</p>
+
+<p>The match in the routing table will be to the 2002:a00:201:: address we specified in our static route. This forces a recursive lookup for 2002:a00:201::, which results in sending the packet out interface Tunnel0.</p>
+
+<p>Now comes the 6to4 part. As the packet is sent out of R1 into Tunnel 0, it is encapsulated into IPv4. The source IPv4 address for the new header is taken from the tunnel source address. The destination IPv4 address is calculated from the next-hop address of our route toward 2002:a00:201:: - it is converted to 10.0.2.1.</p>
+
+<p>Please note that our example used static routes. EIGRP and OSPFv3 cannot be used across 6to4 tunnels because link-local addresses are not supported across 6to4 tunnels. BGP, which supports adjacencies based on global IPv6 addresses, can be used instead.</p>
+
+
+</div>
+
+      </div>
+    </div>
+      
+    
+
+
+
+
+
+    <div class="pagination">
+        <a href="/general-routing/3.2.11" class="prev .pagination-item"><i class="fa fa-angle-left"></i> IPv6 Tunneling</a>                    
+        <a href="/general-routing/3.2.13" class="next .pagination-item">IPv6 ISATAP <i class="fa fa-angle-right"></i></a>
+    </div>
+
+      
+      
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if (target === toggle) {
+            checkbox.checked = !checkbox.checked;
+            e.preventDefault();
+          } else if (checkbox.checked && !sidebar.contains(target)) {
+            /* click outside the sidebar when sidebar is open */
+            checkbox.checked = false;
+          }
+        }, false);
+      })(document);
+    </script>
+    
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-00000000-1', 'auto');
+ga('send', 'pageview');
+    </script>
+    
+  </body>
+  
+  <script id="dsq-count-scr" src="//your_short_name.disqus.com/count.js" async></script>
+  
+</html>
