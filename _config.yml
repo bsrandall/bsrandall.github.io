@@ -46,8 +46,8 @@ nav:
     - { Tags: '/blog/tags/' }
   Wiki:
     - '/layer2/'
-    - 'general-routing/'
-    - 'rip/'
+    - '/general-routing/'
+    - '/rip/'
   About:          
     - '/about/'
   Github Project: 
