@@ -11,7 +11,7 @@
 
   <title>
     
-      1.1.1 - Standard VLANs &middot; No Excuses CCIE
+      1.1.99.5 - Static MAC Addresses &middot; No Excuses CCIE
     
   </title>
 
@@ -194,14 +194,15 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="page">
-  <h1 class="page-title">1.1.1 - Standard VLANs</h1>
-  <p>Cisco calls VLANS 1 - 1005 Normal VLANs. Of those, VLAN 1 is the Cisco default. You can use this VLAN, but your are not allowed to delete it. VLANs 1002 - 1005 are the Cisco defaults for FDDI and Token Ring. These also cannot be deleted.</p>
-
-<p>That leaves us VLANs 2 - 1001 as Normal VLANs that we can add or delete as we wish.</p>
-
-<p>VLANs 2 - 1001 are pruning eligible, while VLANs 1006 - 4094 are not.</p>
-
-<p>When you delete a VLAN, any LAN ports configured as access ports for that VLAN become inactive until you assign them to a new VLAN.</p>
+  <h1 class="page-title">1.1.99.5 - Static MAC Addresses</h1>
+  <p>Sometimes you may need to add static MAC address entries to the CAM table. This is easily achieved with the following global configuration command:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(cone)# mac address-table static 0022.5627.1fc1 vlan 10 interface GigabitEthernet0/1
+</code></pre>
+</div>
+<p>You can also force traffic to a particular MAC address to be dropped, by either specifying an unused interface or with the following:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>SW1(conf)# mac address-table static 0022.5627.1fc1 vlan 10 drop
+</code></pre>
+</div>
 
 </div>
 
@@ -215,8 +216,8 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
 
     <div class="pagination">
-                            
-        <a href="/layer2/1.1.2" class="next .pagination-item">Extended VLANs <i class="fa fa-angle-right"></i></a>
+        <a href="/layer2/1.1.99.4" class="prev .pagination-item"><i class="fa fa-angle-left"></i> Virtual Switch System</a>                    
+        <a href="/layer2/1.2.0.99.1" class="next .pagination-item">VTP Header <i class="fa fa-angle-right"></i></a>
     </div>
 
       
