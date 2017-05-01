@@ -11,7 +11,7 @@
 
   <title>
     
-      RIP &middot; No Excuses CCIE
+      3.4.1.7.1 - RIPv2 Default Routing &middot; No Excuses CCIE
     
   </title>
 
@@ -203,59 +203,37 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="page">
-  <h1 class="page-title">RIP</h1>
-  	
-    <h3><a href="/rip/3.4.1.0.99.1">3.4.1.0.99.1 - RIP Messages</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.0.99.2">3.4.1.0.99.2 - RIP Classful Routing</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.1">3.4.1.1.1 - Enabling RIP</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.2">3.4.1.1.2 - RIP Send and Receive Versions</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.3">3.4.1.1.1 - Split Horizon</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.4">3.4.1.1.4 - RIPv2 Unicast Updates</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.5">3.4.1.1.5 - RIPv2 Broadcast Updates</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.6">3.4.1.1.6 - RIPv2 Source Validation</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.2.1">3.4.1.2.1 - Offset List</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.3.1">3.4.1.3.1 - Auto Summary</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.3.2">3.4.1.3.1 - Manual Summarization</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.4.2">3.4.1.4.2 - MD5 Authentication</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.4">3.4.1.4.1 - Clear Text Authentication</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.5.1">3.4.1.5.1 - RIPv2 Convergence Timers</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.5.2">3.4.1.5.2 - RIPv2 Triggered Updates</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.1">3.4.1.6.1 - Filtering with Passive Interface</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.2">3.4.1.6.2 - Filtering with Prefix-Lists</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.3">3.4.1.6.3 - Filtering with Standard Access-Lists</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.4">3.4.1.6.4 - Filtering with Extended Access Lists</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.5">3.4.1.6.5 - Filtering with Offset Lists</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.6">3.4.1.6.6 - Filtering with Administrative Distance</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.7">3.4.1.6.7 - Filtering with Per Neighbor Administrative Distance</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.7.1">3.4.1.7.1 - RIPv2 Default Routing</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.7.2">3.4.1.7.2 - RIPv2 Conditional Default Routing</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.7.3">3.4.1.7.3 - RIPv2 Reliable Conditional Default Routing</a></h3>			
-	
-    <h3><a href="/rip/3.4.2.1">3.4.2.1 - RIPng Overview</a></h3>			
+  <h1 class="page-title">3.4.1.7.1 - RIPv2 Default Routing</h1>
+  <p>Static routes that point to an interface are advertised via RIP (and EIGRP) regardless of whether <strong>redistribute static</strong> router configuration commands are specified for those routing protocols. This is because these routes are considered “connected” routes and lose their static nature. However, if there is no <strong>network</strong> command defined for that interface, then the default route will not be advertised unless a <strong>redistribute static</strong> command is configured.</p>
+
+<p>There are 3 ways (outside of dynamic routing protocols) to generate a default route.</p>
+<ul>
+  <li>ip default-gateway</li>
+  <li>ip default-network</li>
+  <li>ip route 0.0.0.0 0.0.0.0</li>
+</ul>
+
+<p><strong>ip default-gateway</strong> is used to define a default gateway when ip routing <em>is not</em> enabled on the device. This can be handy to transfer a Cisco software image to a device when the device is in boot mode.</p>
+
+<p><strong>ip default-network</strong> is used to define a default gateway when ip routing <em>is</em> enabled on the router. Default routes configured this way are propagated differently depending on which routing protocol is propagating the default route. For EIGRP to propagate the default route, the network specified by <strong>ip default-network</strong> must be known to EIGRP. The network must be an EIGRP derived network in the routing table, or the static route used to generate the route to the network must be redistributed into EIGRP.</p>
+
+<p>RIP advertises a route to network 0.0.0.0 if a gateway of last resort is configured using the <strong>ip default-network</strong> command.</p>
+
+<p>When using <strong>ip route 0.0.0.0 0.0.0.0</strong>, with RIP most versions of IOS the default route created by <strong>ip route 0.0.0.0 0.0.0.0</strong> is automatically advertised by RIP.</p>
+
+<p><strong>default-information originate</strong> is another option for default routing with RIP. It is a newer option than <strong>ip default-network</strong> for defining a default gateway with RIP. Once configured, by default it will send the default route out all interfaces. You can use a route map to limit the interfaces out of which it is sent. The default-information originate causes a RIP Update message to be sent out each interface that declares the interface as the default route for 0.0.0.0/0. RIP does not require that the router have a default route in its own RIB before it can announce itself as the default.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>default-information originate [on-passive</td>
+      <td>route-map map-name]()</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The optional <strong>on-passive</strong> keyword forces the router to advertise the default route even out of its passive interfaces.</p>
+
 
 </div>
 
@@ -267,6 +245,11 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
 
 
+
+    <div class="pagination">
+        <a href="/rip/3.4.1.6.7" class="prev .pagination-item"><i class="fa fa-angle-left"></i> RIPv2 Filtering with Per Neighbor AD</a>                    
+        <a href="/rip/3.4.1.7.2" class="next .pagination-item">RIPv2 Conditional Default Routing <i class="fa fa-angle-right"></i></a>
+    </div>
 
       
       

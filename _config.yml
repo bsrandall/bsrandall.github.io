@@ -74,3 +74,6 @@ collections:
     layer2:
         output: true
         permalink: /layer2/:path
+    rip:
+        output: true
+        permalink: /rip/:path

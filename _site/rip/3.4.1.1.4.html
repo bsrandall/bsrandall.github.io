@@ -11,7 +11,7 @@
 
   <title>
     
-      RIP &middot; No Excuses CCIE
+      3.4.1.1.4 - RIPv2 Unicast Updates &middot; No Excuses CCIE
     
   </title>
 
@@ -203,59 +203,14 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
       <div class="container content">
         <div class="page">
-  <h1 class="page-title">RIP</h1>
-  	
-    <h3><a href="/rip/3.4.1.0.99.1">3.4.1.0.99.1 - RIP Messages</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.0.99.2">3.4.1.0.99.2 - RIP Classful Routing</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.1">3.4.1.1.1 - Enabling RIP</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.2">3.4.1.1.2 - RIP Send and Receive Versions</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.3">3.4.1.1.1 - Split Horizon</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.4">3.4.1.1.4 - RIPv2 Unicast Updates</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.5">3.4.1.1.5 - RIPv2 Broadcast Updates</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.1.6">3.4.1.1.6 - RIPv2 Source Validation</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.2.1">3.4.1.2.1 - Offset List</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.3.1">3.4.1.3.1 - Auto Summary</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.3.2">3.4.1.3.1 - Manual Summarization</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.4.2">3.4.1.4.2 - MD5 Authentication</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.4">3.4.1.4.1 - Clear Text Authentication</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.5.1">3.4.1.5.1 - RIPv2 Convergence Timers</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.5.2">3.4.1.5.2 - RIPv2 Triggered Updates</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.1">3.4.1.6.1 - Filtering with Passive Interface</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.2">3.4.1.6.2 - Filtering with Prefix-Lists</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.3">3.4.1.6.3 - Filtering with Standard Access-Lists</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.4">3.4.1.6.4 - Filtering with Extended Access Lists</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.5">3.4.1.6.5 - Filtering with Offset Lists</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.6">3.4.1.6.6 - Filtering with Administrative Distance</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.6.7">3.4.1.6.7 - Filtering with Per Neighbor Administrative Distance</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.7.1">3.4.1.7.1 - RIPv2 Default Routing</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.7.2">3.4.1.7.2 - RIPv2 Conditional Default Routing</a></h3>			
-	
-    <h3><a href="/rip/3.4.1.7.3">3.4.1.7.3 - RIPv2 Reliable Conditional Default Routing</a></h3>			
-	
-    <h3><a href="/rip/3.4.2.1">3.4.2.1 - RIPng Overview</a></h3>			
+  <h1 class="page-title">3.4.1.1.4 - RIPv2 Unicast Updates</h1>
+  <p>RIP by default uses broadcast updates. RIPv2 by default uses Multicast updates. To perform unicast updates in RIP, use the <strong>neighbor</strong> command. The neighbor command in RIP has the sole purpose of enabling unicast updates between routers.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>`R1(config)# router rip
+R1(config-router)# neighbor 192.168.17.1
+R1(config-router)# end
+</code></pre>
+</div>
+<p>`</p>
 
 </div>
 
@@ -267,6 +222,11 @@ MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], proces
 
 
 
+
+    <div class="pagination">
+        <a href="/rip/3.4.1.1.2" class="prev .pagination-item"><i class="fa fa-angle-left"></i> RIP Send and Receive Versions</a>                    
+        <a href="/rip/3.4.1.1.5" class="next .pagination-item">RIPv2 Broadcast Updates <i class="fa fa-angle-right"></i></a>
+    </div>
 
       
       
