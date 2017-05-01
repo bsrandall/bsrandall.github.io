@@ -45,6 +45,7 @@ nav:
     - { Categories: '/blog/categories/' }
     - { Tags: '/blog/tags/' }
   Wiki:
+    - '/'
     - '/layer2/'
     - '/general-routing/'
     - '/rip/'
